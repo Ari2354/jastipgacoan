@@ -293,13 +293,10 @@
       const mapsLink = `https://www.google.com/maps?q=${latitude},${longitude}`;
       const locationMessage = `\n\n*Lokasi GPS:*\n- *Latitude:* ${latitude}\n- *Longitude:* ${longitude}\n- [Google Maps](${mapsLink})`;
 
-      // Prompt user to choose Admin 1 or Admin 2
-      const adminChoice = confirm('Kirim ke Admin? Klik OK untuk Admin 1, Cancel untuk Admin 2.');
-      const adminUrl = adminChoice 
-        ? `https://wa.me/?text=${encodeURIComponent(message + locationMessage)}`
-        : `https://wa.me/6285156226837?text=${encodeURIComponent(message + locationMessage)}`;
+      // WhatsApp URL for Admin 1
+      const adminUrl = `https://wa.me/6282245100209?text=${encodeURIComponent(message + locationMessage)}`;
 
-      // Redirect to the chosen Admin's WhatsApp
+      // Redirect to Admin 1's WhatsApp
       window.location.href = adminUrl;
     }, () => {
       alert('Gagal mendapatkan lokasi GPS. Pastikan izin lokasi diaktifkan.');
@@ -308,4 +305,3 @@
     alert('Perangkat Anda tidak mendukung GPS.');
   }
 });
-  </script>

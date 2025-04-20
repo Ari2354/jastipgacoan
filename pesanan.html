@@ -50,11 +50,10 @@
         return;
       }
 
-      // Pilihan untuk menghubungi Admin 1 atau Admin 2
-      const adminChoice = confirm('Apakah Anda ingin menghubungi Admin 1? Klik OK untuk Admin 1, Cancel untuk Admin 2.');
+      // Nomor WhatsApp Admin 1
+      const adminNumber = '6282245100209'; // Ganti dengan nomor WhatsApp Admin 1
 
       // Format pesan untuk dikirim ke WhatsApp
-      const adminNumber = adminChoice ? '' : '6285156226837'; // Nomor WhatsApp admin
       const message = `Halo Admin, saya ingin mengecek status pesanan saya.\n\nNama: ${name}\nTanggal Transaksi: ${transactionDate}\n\nMohon informasinya. Terima kasih.`;
 
       // Buat URL WhatsApp

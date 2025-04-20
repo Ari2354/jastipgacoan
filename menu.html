@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <title>Jastip Gacoan - Form Pemesanan</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet" />
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #f0f2f5;
+    }
+    .form-container {
+      background: #fff;
+      border-radius: 10px;
+      padding: 30px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      max-width: 600px;
+      margin: 50px auto;
+    }
+    .order-list {
+      margin-top: 20px;
+    }
+    .order-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+      border-bottom: 1px solid #ddd;
+    }
+    .order-item span {
+      flex: 1;
+    }
+    .order-item button {
+      background-color: #dc3545;
+      border: none;
+      color: white;
+      padding: 4px 8px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    .order-item button:hover {
+      background-color: #a71d2a;
+    }
+    .payment-method {
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="form-container">
+    <h2 class="text-center mb-4">Formulir Pemesanan Jastip Gacoan</h2>
+    <form id="orderForm">
+      <div class="mb-3">
+        <label for="name" class="form-label">Nama Lengkap</label>
+        <input type="text" id="name" class="form-control" required />
+      </div>
+      <div class="mb-3">
+        <label for="address" class="form-label">Alamat Pengiriman</label>
+        <textarea id="address" class="form-control" rows="2" required></textarea>
+      </div>
+      <div class="mb-3">
+        <label for="phone" class="form-label">No. HP</label>
+        <input type="tel" id="phone" class="form-control" required />
+      </div>
+      <hr />
+      <div class="mb-3">
+        <label for="menuItem" class="form-label">Pilih Menu</label>
+        <select id="menuItem" class="form-select">
+          <option value="Mie Gacoan Level 1|12000"><i class="fas fa-bowl-rice"></i> Mie Gacoan Level 1 - Rp 12.000</option>
+          <option value="Mie Gacoan Level 2|13000"><i class="fas fa-bowl-rice"></i> Mie Gacoan Level 2 - Rp 13.000</option>
+          <option value="Es Teh Manis|5000"><i class="fas fa-mug-hot"></i> Es Teh Manis - Rp 5.000</option>
+          <option value="Es Teh Tarik|6000"><i class="fas fa-mug-hot"></i> Es Teh Tarik - Rp 6.000</option>
+        </select>
+      </div>
+      <div class="mb-3 d-flex align-items-center gap-3">
+        <label for="quantity" class="form-label mb-0">Jumlah</label>
+        <input type="number" id="quantity" class="form-control" value="1" min="1" style="width: 80px;" required />
+        <button type="button" id="addItemBtn" class="btn btn-primary">Tambah</button>
+      </div>
+      <div class="payment-method">
+        <label for="paymentMethod" class="form-label">Metode Pembayaran</label>
+        <select id="paymentMethod" class="form-select">
+          <option value="Bank Transfer">Bank Transfer</option>
+          <option value="OVO">OVO</option>
+          <option value="GoPay">GoPay</option>
+          <option value="Cash On Delivery">Cash On Delivery</option>
+        </select>
+      </div>
+    </form>
+
+    <div class="order-list" id="orderListContainer">
+      <h5>Daftar Pesanan</h5>
+      <div id="orderList"></div>
+      <p id="totalPrice" class="mt-3 fw-bold">Total Harga: Rp 0</p>
+      <button id="proceedBtn" class="btn btn-success w-100" disabled>Lanjut ke Konfirmasi</button>
+    </div>
+  </div>
+
+  <script>
+    const orderList = {};
+    const orderListContainer = document.getElementById('orderList');
+    const totalPriceElem = document.getElementById('totalPrice');
+    const proceedBtn = document.getElementById('proceedBtn');
+
+    function updateOrderList() {
+      orderListContainer.innerHTML = '';
+      let totalPrice = 0;
+      const keys = Object.keys(orderList);
+      if (keys.length === 0) {
+        orderListContainer.innerHTML = '<p>Belum ada pesanan.</p>';
+        totalPriceElem.textContent = 'Total Harga: Rp 0';
+        proceedBtn.disabled = true;
+        return;
+      }
+      keys.forEach(key => {
+        const item = orderList[key];
+        const subtotal = item.price * item.quantity;
+        totalPrice += subtotal;
+
+        const div = document.createElement('div');
+        div.className = 'order-item';
+
+        const spanName = document.createElement('span');
+        spanName.textContent = item.name;
+
+        const spanQty = document.createElement('span');
+        spanQty.textContent = 'x' + item.quantity;
+
+        const spanPrice = document.createElement('span');
+        spanPrice.textContent = 'Rp ' + subtotal.toLocaleString('id-ID');
+
+        const btnRemove = document.createElement('button');
+        btnRemove.textContent = 'Hapus';
+        btnRemove.addEventListener('click', () => {
+          delete orderList[key];
+          updateOrderList();
+        });
+
+        div.appendChild(spanName);
+        div.appendChild(spanQty);
+        div.appendChild(spanPrice);
+        div.appendChild(btnRemove);
+
+        orderListContainer.appendChild(div);
+      });
+      totalPriceElem.textContent = 'Total Harga: Rp ' + totalPrice.toLocaleString('id-ID');
+      proceedBtn.disabled = false;
+    }
+
+    document.getElementById('addItemBtn').addEventListener('click', () => {
+      const menuSelect = document.getElementById('menuItem');
+      const quantityInput = document.getElementById('quantity');
+      const menuData = menuSelect.value.split('|');
+      const itemName = menuData[0];
+      const itemPrice = parseInt(menuData[1]);
+      const quantity = parseInt(quantityInput.value);
+
+      if (quantity < 1) {
+        alert('Jumlah harus minimal 1');
+        return;
+      }
+
+      const key = itemName;
+
+      if (orderList[key]) {
+        orderList[key].quantity += quantity;
+      } else {
+        orderList[key] = {
+          name: itemName,
+          price: itemPrice,
+          quantity: quantity
+        };
+      }
+
+      updateOrderList();
+    });
+
+    proceedBtn.addEventListener('click', () => {
+      const nameInput = document.getElementById('name');
+      const addressInput = document.getElementById('address');
+      const phoneInput = document.getElementById('phone');
+      const paymentMethodSelect = document.getElementById('paymentMethod');
+
+      const name = nameInput.value.trim();
+      const address = addressInput.value.trim();
+      const phone = phoneInput.value.trim();
+      const paymentMethod = paymentMethodSelect.value;
+
+      if (!name) {
+        alert('Mohon isi nama lengkap.');
+        nameInput.focus();
+        return;
+      }
+      if (!address) {
+        alert('Mohon isi alamat pengiriman.');
+        addressInput.focus();
+        return;
+      }
+      if (!phone) {
+        alert('Mohon isi nomor HP.');
+        phoneInput.focus();
+        return;
+      }
+
+      if (Object.keys(orderList).length === 0) {
+        alert('Belum ada pesanan yang ditambahkan.');
+        return;
+      }
+
+      // Save customer data and orders to localStorage
+      const customer = { name, address, phone, paymentMethod };
+      localStorage.setItem('customer', JSON.stringify(customer));
+      localStorage.setItem('orders', JSON.stringify(orderList));
+
+      // Redirect to WhatsApp admin for order confirmation
+      const message = `Pesanan Baru:\nNama: ${name}\nAlamat: ${address}\nNo. HP: ${phone}\nMetode Pembayaran: ${paymentMethod}\n\nPesanan:\n` + 
+                      Object.values(orderList).map(item => `${item.name} (x${item.quantity}) - Rp ${item.price * item.quantity}`).join('\n');
+      const whatsappUrl = `https://wa.me/6282245100209?text=${encodeURIComponent(message)}`;
+      window.location.href = whatsappUrl;
+    });
+  </script>
+</body>
+</html>

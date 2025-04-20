@@ -217,57 +217,64 @@
       const addressInput = document.getElementById('address');
       const phoneInput = document.getElementById('phone');
       const paymentMethodSelect = document.getElementById('paymentMethod');
-  
+    
       const name = nameInput.value.trim();
       const address = addressInput.value.trim();
       const phone = phoneInput.value.trim();
       const paymentMethod = paymentMethodSelect.value;
-  
+    
       if (!name) {
-        alert('Mohon isi nama lengkap.');
-        nameInput.focus();
-        return;
+      alert('Mohon isi nama lengkap.');
+      nameInput.focus();
+      return;
       }
       if (!address) {
-        alert('Mohon isi alamat pengiriman.');
-        addressInput.focus();
-        return;
+      alert('Mohon isi alamat pengiriman.');
+      addressInput.focus();
+      return;
       }
       if (!phone) {
-        alert('Mohon isi nomor HP.');
-        phoneInput.focus();
-        return;
+      alert('Mohon isi nomor HP.');
+      phoneInput.focus();
+      return;
       }
-  
+    
       if (Object.keys(orderList).length === 0) {
-        alert('Belum ada pesanan yang ditambahkan.');
-        return;
+      alert('Belum ada pesanan yang ditambahkan.');
+      return;
       }
-  
+    
       // Save customer data and orders to localStorage
       const customer = { name, address, phone, paymentMethod };
       localStorage.setItem('customer', JSON.stringify(customer));
       localStorage.setItem('orders', JSON.stringify(orderList));
-  
+    
       // Prepare message for WhatsApp
       const totalHarga = Object.values(orderList).reduce((total, item) => total + (item.price * item.quantity), 0);
       const message = `Pesanan Baru:\nNama: ${name}\nAlamat: ${address}\nNo. HP: ${phone}\nMetode Pembayaran: ${paymentMethod}\n\nPesanan:\n` + 
-              Object.values(orderList).map(item => `${item.name} (x${item.quantity}) - Rp ${item.price * item.quantity}`).join('\n') +
-              `\n\nTotal Harga: Rp ${totalHarga.toLocaleString('id-ID')}`;
-  
-      // Get GPS location and send to WhatsApp
+          Object.values(orderList).map(item => `${item.name} (x${item.quantity}) - Rp ${item.price * item.quantity}`).join('\n') +
+          `\n\nTotal Harga: Rp ${totalHarga.toLocaleString('id-ID')}`;
+    
+      // Get GPS location and generate Google Maps link, then send to WhatsApp
       if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(position => {
-          const latitude = position.coords.latitude;
-          const longitude = position.coords.longitude;
-          const locationMessage = `\n\nLokasi GPS:\nLatitude: ${latitude}\nLongitude: ${longitude}`;
-          const whatsappUrl = `https://wa.me/6282245100209?text=${encodeURIComponent(message + locationMessage)}`;
-          window.location.href = whatsappUrl;
-        }, () => {
-          alert('Gagal mendapatkan lokasi GPS. Pastikan izin lokasi diaktifkan.');
-        });
+      navigator.geolocation.getCurrentPosition(position => {
+        const latitude = position.coords.latitude;
+        const longitude = position.coords.longitude;
+        const mapsLink = `https://www.google.com/maps?q=${latitude},${longitude}`;
+        const locationMessage = `\n\nLokasi GPS:\nLatitude: ${latitude}\nLongitude: ${longitude}\nGoogle Maps: ${mapsLink}`;
+        
+        // WhatsApp links for Admin 1 and Admin 2
+        const admin1Url = `https://wa.me/6282245100209?text=${encodeURIComponent(message + locationMessage)}`;
+        const admin2Url = `https://wa.me/6285156226837?text=${encodeURIComponent(message + locationMessage)}`;
+        
+        // Redirect to Admin 1 or Admin 2 based on user choice
+        const sendToAdmin1 = confirm('Kirim ke Admin 1? Klik A1 untuk Admin 1, A2 untuk Admin 2.');
+        window.location.href = sendToAdmin1 ? admin1Url : admin2Url;
+      }, () => {
+        alert('Gagal mendapatkan lokasi GPS. Pastikan izin lokasi diaktifkan.');
+      });
       } else {
-        alert('Perangkat Anda tidak mendukung GPS.');
+      alert('Perangkat Anda tidak mendukung GPS.');
       }
     });
     

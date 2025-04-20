@@ -81,14 +81,8 @@
         <option value="Mie Gacoan Level 8|15000">Mie Gacoan Level 8 - Rp 15.000</option>
           </optgroup>
           <optgroup label="Mie Suite">
-        <option value="Mie Suite Level 1|16000">Mie Suite Level 1 - Rp 16.000</option>
-        <option value="Mie Suite Level 2|16000">Mie Suite Level 2 - Rp 16.000</option>
-        <option value="Mie Suite Level 3|16000">Mie Suite Level 3 - Rp 16.000</option>
-        <option value="Mie Suite Level 4|16000">Mie Suite Level 4 - Rp 16.000</option>
-        <option value="Mie Suite Level 5|16000">Mie Suite Level 5 - Rp 16.000</option>
-        <option value="Mie Suite Level 6|16000">Mie Suite Level 6 - Rp 16.000</option>
-        <option value="Mie Suite Level 7|16000">Mie Suite Level 7 - Rp 16.000</option>
-        <option value="Mie Suite Level 8|16000">Mie Suite Level 8 - Rp 16.000</option>
+        <option value="Mie Suite |16000">Mie Suite Level 1 - Rp 16.000</option>
+        
           </optgroup>
           <optgroup label="Mie Hompipa">
         <option value="Mie Hompipa Level 1|17000">Mie Hompipa Level 1 - Rp 17.000</option>
@@ -144,7 +138,7 @@
     const orderListContainer = document.getElementById('orderList');
     const totalPriceElem = document.getElementById('totalPrice');
     const proceedBtn = document.getElementById('proceedBtn');
-
+  
     function updateOrderList() {
       orderListContainer.innerHTML = '';
       let totalPrice = 0;
@@ -159,37 +153,37 @@
         const item = orderList[key];
         const subtotal = item.price * item.quantity;
         totalPrice += subtotal;
-
+  
         const div = document.createElement('div');
         div.className = 'order-item';
-
+  
         const spanName = document.createElement('span');
         spanName.textContent = item.name;
-
+  
         const spanQty = document.createElement('span');
         spanQty.textContent = 'x' + item.quantity;
-
+  
         const spanPrice = document.createElement('span');
         spanPrice.textContent = 'Rp ' + subtotal.toLocaleString('id-ID');
-
+  
         const btnRemove = document.createElement('button');
         btnRemove.textContent = 'Hapus';
         btnRemove.addEventListener('click', () => {
           delete orderList[key];
           updateOrderList();
         });
-
+  
         div.appendChild(spanName);
         div.appendChild(spanQty);
         div.appendChild(spanPrice);
         div.appendChild(btnRemove);
-
+  
         orderListContainer.appendChild(div);
       });
       totalPriceElem.textContent = 'Total Harga: Rp ' + totalPrice.toLocaleString('id-ID');
       proceedBtn.disabled = false;
     }
-
+  
     document.getElementById('addItemBtn').addEventListener('click', () => {
       const menuSelect = document.getElementById('menuItem');
       const quantityInput = document.getElementById('quantity');
@@ -197,14 +191,14 @@
       const itemName = menuData[0];
       const itemPrice = parseInt(menuData[1]);
       const quantity = parseInt(quantityInput.value);
-
+  
       if (quantity < 1) {
         alert('Jumlah harus minimal 1');
         return;
       }
-
+  
       const key = itemName;
-
+  
       if (orderList[key]) {
         orderList[key].quantity += quantity;
       } else {
@@ -214,21 +208,21 @@
           quantity: quantity
         };
       }
-
+  
       updateOrderList();
     });
-
+  
     proceedBtn.addEventListener('click', () => {
       const nameInput = document.getElementById('name');
       const addressInput = document.getElementById('address');
       const phoneInput = document.getElementById('phone');
       const paymentMethodSelect = document.getElementById('paymentMethod');
-
+  
       const name = nameInput.value.trim();
       const address = addressInput.value.trim();
       const phone = phoneInput.value.trim();
       const paymentMethod = paymentMethodSelect.value;
-
+  
       if (!name) {
         alert('Mohon isi nama lengkap.');
         nameInput.focus();
@@ -244,23 +238,36 @@
         phoneInput.focus();
         return;
       }
-
+  
       if (Object.keys(orderList).length === 0) {
         alert('Belum ada pesanan yang ditambahkan.');
         return;
       }
-
+  
       // Save customer data and orders to localStorage
       const customer = { name, address, phone, paymentMethod };
       localStorage.setItem('customer', JSON.stringify(customer));
       localStorage.setItem('orders', JSON.stringify(orderList));
-
-      // Redirect to WhatsApp admin for order confirmation
+  
+      // Prepare message for WhatsApp
+      const totalHarga = Object.values(orderList).reduce((total, item) => total + (item.price * item.quantity), 0);
       const message = `Pesanan Baru:\nNama: ${name}\nAlamat: ${address}\nNo. HP: ${phone}\nMetode Pembayaran: ${paymentMethod}\n\nPesanan:\n` + 
-                      Object.values(orderList).map(item => `${item.name} (x${item.quantity}) - Rp ${item.price * item.quantity}`).join('\n');
-      const whatsappUrl = `https://wa.me/6282245100209?text=${encodeURIComponent(message)}`;
-      window.location.href = whatsappUrl;
+              Object.values(orderList).map(item => `${item.name} (x${item.quantity}) - Rp ${item.price * item.quantity}`).join('\n') +
+              `\n\nTotal Harga: Rp ${totalHarga.toLocaleString('id-ID')}`;
+  
+      // Get GPS location and send to WhatsApp
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(position => {
+          const latitude = position.coords.latitude;
+          const longitude = position.coords.longitude;
+          const locationMessage = `\n\nLokasi GPS:\nLatitude: ${latitude}\nLongitude: ${longitude}`;
+          const whatsappUrl = `https://wa.me/6282245100209?text=${encodeURIComponent(message + locationMessage)}`;
+          window.location.href = whatsappUrl;
+        }, () => {
+          alert('Gagal mendapatkan lokasi GPS. Pastikan izin lokasi diaktifkan.');
+        });
+      } else {
+        alert('Perangkat Anda tidak mendukung GPS.');
+      }
     });
   </script>
-</body>
-</html>

@@ -238,69 +238,74 @@
     });
   
     proceedBtn.addEventListener('click', () => {
-      const nameInput = document.getElementById('name');
-      const addressInput = document.getElementById('address');
-      const phoneInput = document.getElementById('phone');
-      const paymentMethodSelect = document.getElementById('paymentMethod');
-  
-      const name = nameInput.value.trim();
-      const address = addressInput.value.trim();
-      const phone = phoneInput.value.trim();
-      const paymentMethod = paymentMethodSelect.value;
-  
-      if (!name) {
-        alert('Mohon isi nama lengkap.');
-        nameInput.focus();
-        return;
-      }
-      if (!address) {
-        alert('Mohon isi alamat pengiriman.');
-        addressInput.focus();
-        return;
-      }
-      if (!phone) {
-        alert('Mohon isi nomor HP.');
-        phoneInput.focus();
-        return;
-      }
-  
-      if (Object.keys(orderList).length === 0) {
-        alert('Belum ada pesanan yang ditambahkan.');
-        return;
-      }
-  
-      // Save customer data and orders to localStorage
-      const customer = { name, address, phone, paymentMethod };
-      localStorage.setItem('customer', JSON.stringify(customer));
-      localStorage.setItem('orders', JSON.stringify(orderList));
-  
-      // Prepare message for WhatsApp
-      const totalHarga = Object.values(orderList).reduce((total, item) => total + (item.price * item.quantity), 0);
-      const message = `Pesanan Baru:\nNama: ${name}\nAlamat: ${address}\nNo. HP: ${phone}\nMetode Pembayaran: ${paymentMethod}\n\nPesanan:\n` + 
-          Object.values(orderList).map(item => `${item.name} (x${item.quantity}) - Rp ${item.price * item.quantity}`).join('\n') +
-          `\n\nTotal Harga: Rp ${totalHarga.toLocaleString('id-ID')}`;
-  
-      // Get GPS location and generate Google Maps link, then send to WhatsApp
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(position => {
-          const latitude = position.coords.latitude;
-          const longitude = position.coords.longitude;
-          const mapsLink = `https://www.google.com/maps?q=${latitude},${longitude}`;
-          const locationMessage = `\n\nLokasi GPS:\nLatitude: ${latitude}\nLongitude: ${longitude}\nGoogle Maps: ${mapsLink}`;
-          
-          // Prompt user to choose Admin 1 or Admin 2
-          const adminChoice = confirm('Kirim ke Admin ? Klik OK untuk Admin 1, Cancel untuk Admin 2.');
-          const adminUrl = adminChoice 
-            ? `https://wa.me/6282245100209?text=${encodeURIComponent(message + locationMessage)}`
-            : `https://wa.me/6285156226837?text=${encodeURIComponent(message + locationMessage)}`;
-          
-          // Redirect to the chosen Admin's WhatsApp
-          window.location.href = adminUrl;
-        }, () => {
-          alert('Gagal mendapatkan lokasi GPS. Pastikan izin lokasi diaktifkan.');
-        });
-      } else {
-        alert('Perangkat Anda tidak mendukung GPS.');
-      }
+  const nameInput = document.getElementById('name');
+  const addressInput = document.getElementById('address');
+  const phoneInput = document.getElementById('phone');
+  const paymentMethodSelect = document.getElementById('paymentMethod');
+
+  const name = nameInput.value.trim();
+  const address = addressInput.value.trim();
+  const phone = phoneInput.value.trim();
+  const paymentMethod = paymentMethodSelect.value;
+
+  if (!name) {
+    alert('Mohon isi nama lengkap.');
+    nameInput.focus();
+    return;
+  }
+  if (!address) {
+    alert('Mohon isi alamat pengiriman.');
+    addressInput.focus();
+    return;
+  }
+  if (!phone) {
+    alert('Mohon isi nomor HP.');
+    phoneInput.focus();
+    return;
+  }
+
+  if (Object.keys(orderList).length === 0) {
+    alert('Belum ada pesanan yang ditambahkan.');
+    return;
+  }
+
+  // Save customer data and orders to localStorage
+  const customer = { name, address, phone, paymentMethod };
+  localStorage.setItem('customer', JSON.stringify(customer));
+  localStorage.setItem('orders', JSON.stringify(orderList));
+
+  // Prepare message for WhatsApp
+  const totalHarga = Object.values(orderList).reduce((total, item) => total + (item.price * item.quantity), 0);
+  const message = `*Pesanan Baru*\n\n` +
+    `*Nama:* ${name}\n` +
+    `*Alamat:* ${address}\n` +
+    `*No. HP:* ${phone}\n` +
+    `*Metode Pembayaran:* ${paymentMethod}\n\n` +
+    `*Detail Pesanan:*\n` +
+    Object.values(orderList).map(item => `- ${item.name} (x${item.quantity}) = Rp ${item.price * item.quantity}`).join('\n') +
+    `\n\n*Total Harga:* Rp ${totalHarga.toLocaleString('id-ID')}`;
+
+  // Get GPS location and generate Google Maps link, then send to WhatsApp
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(position => {
+      const latitude = position.coords.latitude;
+      const longitude = position.coords.longitude;
+      const mapsLink = `https://www.google.com/maps?q=${latitude},${longitude}`;
+      const locationMessage = `\n\n*Lokasi GPS:*\n- *Latitude:* ${latitude}\n- *Longitude:* ${longitude}\n- [Google Maps](${mapsLink})`;
+
+      // Prompt user to choose Admin 1 or Admin 2
+      const adminChoice = confirm('Kirim ke Admin? Klik OK untuk Admin 1, Cancel untuk Admin 2.');
+      const adminUrl = adminChoice 
+        ? `https://wa.me/?text=${encodeURIComponent(message + locationMessage)}`
+        : `https://wa.me/6285156226837?text=${encodeURIComponent(message + locationMessage)}`;
+
+      // Redirect to the chosen Admin's WhatsApp
+      window.location.href = adminUrl;
+    }, () => {
+      alert('Gagal mendapatkan lokasi GPS. Pastikan izin lokasi diaktifkan.');
     });
+  } else {
+    alert('Perangkat Anda tidak mendukung GPS.');
+  }
+});
   </script>

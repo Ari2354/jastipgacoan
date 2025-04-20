@@ -103,21 +103,23 @@
         document.addEventListener('DOMContentLoaded', function () {
             const loginForm = document.getElementById('loginForm');
             const loginMessage = document.getElementById('loginMessage');
-
+    
             loginForm.addEventListener('submit', function (e) {
                 e.preventDefault();
-
+    
                 const username = document.getElementById('username').value.trim();
                 const password = document.getElementById('password').value.trim();
-
+    
                 if (username === 'admin' && password === 'admin123') {
-                    // Sukses login
-                    window.location.href = 'admin.html'; // arahkan ke halaman admin
+                    // Simpan status login ke localStorage
+                    localStorage.setItem('isLoggedIn', 'true');
+                    // Arahkan ke halaman admin
+                    window.location.href = 'admin.html';
                 } else {
                     showMessage('Username atau password salah!', 'danger');
                 }
             });
-
+    
             function showMessage(message, type) {
                 loginMessage.style.display = 'block';
                 loginMessage.className = 'alert mt-3 alert-' + type;

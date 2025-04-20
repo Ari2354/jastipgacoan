@@ -2,7 +2,8 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <title>Rangkuman Transaksi WhatsApp</title>
+  <title>Rangkuman Pesanan WA</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -10,7 +11,7 @@
     }
     textarea {
       width: 100%;
-      height: 200px;
+      height: 250px;
       margin-bottom: 10px;
     }
     table {
@@ -18,70 +19,128 @@
       border-collapse: collapse;
       margin-top: 15px;
     }
-    table, th, td {
-      border: 1px solid #ccc;
-    }
     th, td {
+      border: 1px solid #ccc;
       padding: 8px;
-      text-align: left;
     }
-    .status {
-      font-weight: bold;
-      padding: 4px 8px;
-      border-radius: 5px;
+    .highlight {
+      background-color: #f2f2f2;
     }
-    .belum { background-color: orange; color: white; }
-    .dibayar { background-color: green; color: white; }
-    .dikirim { background-color: blue; color: white; }
   </style>
 </head>
 <body>
-  <h2>Panel Rangkuman Transaksi dari WhatsApp</h2>
-  <textarea id="waText" placeholder="Tempel salinan WhatsApp di sini..."></textarea>
-  <button onclick="prosesTransaksi()">Proses Transaksi</button>
+  <div class="container">
+    <h2 class="mb-4">Panel Rangkuman Pesanan WhatsApp</h2>
+    <textarea id="waText" class="form-control" placeholder="Tempel salinan pesan WhatsApp di sini..."></textarea>
+    <button class="btn btn-primary mt-2" onclick="prosesPesanan()">Proses Pesanan</button>
 
-  <table id="tabelTransaksi">
-    <thead>
-      <tr>
-        <th>Nama</th>
-        <th>Pesanan</th>
-        <th>Total</th>
-        <th>Status</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  </table>
-
+    <table id="tabelPesanan" class="table table-bordered mt-3">
+      <thead class="table-primary">
+        <tr>
+          <th>Nama</th>
+          <th>Alamat</th>
+          <th>No. HP</th>
+          <th>Pembayaran</th>
+          <th>Pesanan</th>
+          <th>Total</th>
+          <th>Lokasi</th>
+          <th>Aksi</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+  <button id="logoutBtn" class="btn btn-danger">Logout</button>
   <script>
-    function prosesTransaksi() {
+     document.getElementById('logoutBtn').addEventListener('click', function () {
+        // Hapus status login dari localStorage
+        localStorage.removeItem('isLoggedIn');
+        // Arahkan kembali ke halaman login
+        window.location.href = 'login.html';
+    });
+  
+    window.onload = function () {
+      // Muat data pesanan saat halaman dimuat
+      loadData();
+    }
+
+    function prosesPesanan() {
       const teks = document.getElementById("waText").value;
-      const baris = teks.split("\n");
-      let data = {};
-      const tabelBody = document.querySelector("#tabelTransaksi tbody");
-      tabelBody.innerHTML = "";
-
-      baris.forEach((line) => {
-        let [key, value] = line.split(":");
-        if (key && value) {
-          data[key.trim().toLowerCase()] = value.trim();
-        }
-
-        if (line.trim() === "") {
-          if (data.nama && data.pesanan && data.total && data.status) {
-            const row = tabelBody.insertRow();
-            row.insertCell(0).textContent = data.nama;
-            row.insertCell(1).textContent = data.pesanan;
-            row.insertCell(2).textContent = data.total;
-
-            const statusCell = row.insertCell(3);
-            statusCell.textContent = data.status;
-            statusCell.className = "status " + data.status.toLowerCase().replace(" ", "");
-
-            data = {}; // reset
-          }
-        }
+      const lines = teks.split("\n");
+      let data = {
+        nama: "", alamat: "", hp: "", pembayaran: "",
+        pesanan: "", total: "", lokasi: "", tanggal: ""
+      };
+  
+      lines.forEach(line => {
+        if (line.includes("Nama:")) data.nama = line.split("Nama:")[1].trim();
+        if (line.includes("Alamat:")) data.alamat = line.split("Alamat:")[1].trim();
+        if (line.includes("No. HP:")) data.hp = line.split("No. HP:")[1].trim();
+        if (line.includes("Metode Pembayaran:")) data.pembayaran = line.split("Metode Pembayaran:")[1].trim();
+        if (line.includes("Pesanan:")) data.pesanan = "";
+        if (line.match(/ - Rp /)) data.pesanan += line.trim() + "<br>";
+        if (line.includes("Total Harga:")) data.total = line.split(":")[1].trim();
+        if (line.includes("Latitude:")) data.lokasi = "Lat: " + line.split(":")[1].trim();
+        if (line.includes("Longitude:")) data.lokasi += ", Long: " + line.split(":")[1].trim();
       });
+  
+      // Tambahkan tanggal/hari sekarang
+      const now = new Date();
+      const hari = now.toLocaleDateString('id-ID', { weekday: 'long' });
+      const tgl = now.toLocaleDateString('id-ID');
+      data.tanggal = `${hari}, ${tgl}`;
+  
+      saveToLocalStorage(data);
+      tampilkanBaris(data);
+      document.getElementById("waText").value = ""; // Kosongkan textarea
+    }
+  
+    function saveToLocalStorage(data) {
+      let allData = JSON.parse(localStorage.getItem("pesananData")) || [];
+      allData.push(data);
+      localStorage.setItem("pesananData", JSON.stringify(allData));
+    }
+  
+    function loadData() {
+      let allData = JSON.parse(localStorage.getItem("pesananData")) || [];
+      allData.forEach(data => tampilkanBaris(data));
+    }
+  
+    function tampilkanBaris(data) {
+      const tbody = document.querySelector("#tabelPesanan tbody");
+      const row = tbody.insertRow();
+  
+      row.insertCell(0).innerText = data.nama;
+      row.insertCell(1).innerText = data.alamat;
+      row.insertCell(2).innerText = data.hp;
+      row.insertCell(3).innerText = data.pembayaran;
+      row.insertCell(4).innerHTML = data.pesanan;
+      row.insertCell(5).innerText = data.total;
+      row.insertCell(6).innerText = data.lokasi;
+      row.insertCell(7).innerText = data.tanggal;
+  
+      const actionCell = row.insertCell(8);
+      const deleteBtn = document.createElement("button");
+      deleteBtn.className = "btn btn-sm btn-danger";
+      deleteBtn.innerText = "Hapus";
+      deleteBtn.onclick = () => deleteRow(row, data);
+      actionCell.appendChild(deleteBtn);
+    }
+  
+    function deleteRow(row, dataToDelete) {
+      if (confirm("Apakah Anda yakin ingin menghapus data ini?")) {
+        let allData = JSON.parse(localStorage.getItem("pesananData")) || [];
+        allData = allData.filter(item =>
+          !(item.nama === dataToDelete.nama &&
+            item.hp === dataToDelete.hp &&
+            item.total === dataToDelete.total &&
+            item.tanggal === dataToDelete.tanggal)
+        );
+        localStorage.setItem("pesananData", JSON.stringify(allData));
+        row.remove();
+      }
     }
   </script>
+  
 </body>
 </html>

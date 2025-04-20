@@ -3,127 +3,110 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Panel Konfirmasi Pesanan</title>
+  <title>Menu Mie Gacoan</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
   <style>
     body {
       font-family: 'Poppins', sans-serif;
-      background: #f0f0f0;
+      background: #f8f9fa;
       padding: 30px;
     }
-    .panel-container {
-      max-width: 1000px;
-      margin: auto;
+    .menu-item {
+      display: flex;
+      align-items: center;
+      gap: 20px;
       background: #fff;
-      padding: 30px;
       border-radius: 10px;
-      box-shadow: 0 0 15px rgba(0,0,0,0.1);
-    }
-    .order-card {
-      border: 1px solid #ddd;
       padding: 20px;
-      border-radius: 8px;
-      margin-bottom: 30px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      cursor: pointer;
     }
-    .status {
-      padding: 6px 10px;
-      border-radius: 5px;
-      color: white;
-      font-weight: bold;
+    .menu-item:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
     }
-    .proses { background-color: #ffc107; color: #212529; }
-    .diambil { background-color: #17a2b8; }
-    .diantar { background-color: #007bff; }
-    .selesai { background-color: #28a745; }
-    table {
-      width: 100%;
-      margin-top: 10px;
-      border-collapse: collapse;
+    .menu-image {
+      width: 100px;
+      height: 100px;
+      border-radius: 10px;
+      object-fit: cover;
     }
-    th, td {
-      padding: 8px;
-      border-bottom: 1px solid #ddd;
-      text-align: left;
+    .menu-details {
+      flex-grow: 1;
+    }
+    .menu-name {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    .menu-description {
+      color: #666;
+      margin-bottom: 12px;
+    }
+    .menu-price {
+      font-weight: 700;
+      color: #007bff;
+      font-size: 1.1rem;
     }
   </style>
 </head>
 <body>
-  <div class="panel-container">
-    <h2 class="mb-4 text-primary">Daftar Pesanan</h2>
-    <div id="orderList"></div>
+  <div class="container">
+    <h2 class="mb-4 text-primary text-center">Menu Mie Gacoan</h2>
+    <div id="menuList" class="row g-4"></div>
   </div>
 
   <script>
-    const statusLabel = {
-      proses: '<span class="status proses">Dalam Proses</span>',
-      diambil: '<span class="status diambil">Sedang Diambil</span>',
-      diantar: '<span class="status diantar">Sedang Diantar</span>',
-      selesai: '<span class="status selesai">Selesai</span>'
-    };
+    const menuItems = [
+      { name: "Mie Gacoan Level 1", description: "Mie pedas level 1.", price: 15000, image: "https://i.imgur.com/1.jpg" },
+      { name: "Mie Gacoan Level 2", description: "Mie pedas level 2.", price: 15000, image: "https://i.imgur.com/2.jpg" },
+      { name: "Mie Gacoan Level 3", description: "Mie pedas level 3.", price: 15000, image: "https://i.imgur.com/3.jpg" },
+      { name: "Mie Gacoan Level 4", description: "Mie pedas level 4.", price: 15000, image: "https://i.imgur.com/4.jpg" },
+      { name: "Mie Gacoan Level 5", description: "Mie pedas level 5.", price: 15000, image: "https://i.imgur.com/5.jpg" },
+      { name: "Mie Gacoan Level 6", description: "Mie pedas level 6.", price: 16000, image: "https://i.imgur.com/6.jpg" },
+      { name: "Mie Gacoan Level 7", description: "Mie pedas level 7.", price: 16000, image: "https://i.imgur.com/7.jpg" },
+      { name: "Mie Gacoan Level 8", description: "Mie pedas level 8.", price: 16000, image: "https://i.imgur.com/8.jpg" },
+      { name: "Mie Suite", description: "Mie dengan topping spesial.", price: 15000, image: "https://i.imgur.com/9.jpg" },
+      { name: "Mie Hompimpa Level 1", description: "Mie Hompimpa pedas level 1.", price: 15000, image: "https://i.imgur.com/10.jpg" },
+      { name: "Mie Hompimpa Level 2", description: "Mie Hompimpa pedas level 2.", price: 15000, image: "https://i.imgur.com/20.jpg" },
+      { name: "Mie Hompimpa Level 3", description: "Mie Hompimpa pedas level 3.", price: 15000, image: "https://i.imgur.com/21.jpg" },
+      { name: "Mie Hompimpa Level 4", description: "Mie Hompimpa pedas level 4.", price: 15000, image: "https://i.imgur.com/22.jpg" },
+      { name: "Mie Hompimpa Level 5", description: "Mie Hompimpa pedas level 5.", price: 15000, image: "https://i.imgur.com/23.jpg" },
+      { name: "Mie Hompimpa Level 6", description: "Mie Hompimpa pedas level 6.", price: 16000, image: "https://i.imgur.com/24.jpg" },
+      { name: "Mie Hompimpa Level 7", description: "Mie Hompimpa pedas level 7.", price: 16000, image: "https://i.imgur.com/25.jpg" },
+      { name: "Mie Hompimpa Level 8", description: "Mie Hompimpa pedas level 8.", price: 16000, image: "https://i.imgur.com/26.jpg" },
+      { name: "Dimsum Udang Rambutan", description: "Dimsum dengan udang dan kulit renyah.", price: 12000, image: "https://i.imgur.com/11.jpg" },
+      { name: "Dimsum Udang Keju", description: "Dimsum dengan udang dan keju.", price: 12000, image: "https://i.imgur.com/12.jpg" },
+      { name: "Lumpia Udang", description: "Lumpia dengan isian udang segar.", price: 10000, image: "https://i.imgur.com/13.jpg" },
+      { name: "Sioamy", description: "Dimsum klasik dengan saus khas.", price: 10000, image: "https://i.imgur.com/14.jpg" },
+      { name: "Es Teh Manis", description: "Minuman es teh manis segar.", price: 5000, image: "https://i.imgur.com/15.jpg" },
+      { name: "Es Ilo", description: "Minuman segar dengan rasa unik.", price: 7000, image: "https://i.imgur.com/16.jpg" },
+      { name: "Es Orange", description: "Minuman jeruk segar.", price: 7000, image: "https://i.imgur.com/17.jpg" },
+      { name: "Es Teklek", description: "Minuman dingin dengan rasa khas.", price: 8000, image: "https://i.imgur.com/18.jpg" },
+      { name: "Es Genderuwo", description: "Minuman dingin dengan rasa pedas manis.", price: 9000, image: "https://i.imgur.com/19.jpg" }
+    ];
 
-    const orderListContainer = document.getElementById("orderList");
+    const menuList = document.getElementById("menuList");
 
-    function fetchOrdersFromLocalStorage() {
-      const ordersJSON = localStorage.getItem('orders');
-      if (!ordersJSON) {
-        orderListContainer.innerHTML = '<p>Belum ada pesanan yang dibuat.</p>';
-        return;
-      }
+    menuItems.forEach(item => {
+      const div = document.createElement("div");
+      div.className = "col-md-6 col-lg-4";
 
-      const orders = JSON.parse(ordersJSON);
-      if (Object.keys(orders).length === 0) {
-        orderListContainer.innerHTML = '<p>Belum ada pesanan yang dibuat.</p>';
-        return;
-      }
-
-      orderListContainer.innerHTML = '';
-
-      // Group orders by customer name is not possible here since localStorage only stores cart items
-      // So we display the items directly
-
-      let total = 0;
-      let itemsHTML = '';
-
-      for (const key in orders) {
-        const item = orders[key];
-        const subtotal = item.price * item.quantity;
-        total += subtotal;
-        itemsHTML += `
-          <tr>
-            <td>${item.name}</td>
-            <td>${item.quantity}</td>
-            <td>Rp ${item.price.toLocaleString("id-ID")}</td>
-            <td>Rp ${subtotal.toLocaleString("id-ID")}</td>
-          </tr>
-        `;
-      }
-
-      orderListContainer.innerHTML = `
-        <div class="order-card">
-          <table>
-            <thead>
-              <tr>
-                <th>Item</th>
-                <th>Qty</th>
-                <th>Harga</th>
-                <th>Subtotal</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${itemsHTML}
-            </tbody>
-            <tfoot>
-              <tr>
-                <td colspan="3" style="text-align:right;"><strong>Total:</strong></td>
-                <td><strong>Rp ${total.toLocaleString("id-ID")}</strong></td>
-              </tr>
-            </tfoot>
-          </table>
+      div.innerHTML = `
+        <div class="menu-item">
+          <img src="${item.image}" alt="${item.name}" class="menu-image" />
+          <div class="menu-details">
+            <div class="menu-name">${item.name}</div>
+            <div class="menu-description">${item.description}</div>
+            <div class="menu-price">Rp ${item.price.toLocaleString('id-ID')}</div>
+          </div>
         </div>
       `;
-    }
 
-    document.addEventListener('DOMContentLoaded', fetchOrdersFromLocalStorage);
+      menuList.appendChild(div);
+    });
   </script>
 </body>
 </html>

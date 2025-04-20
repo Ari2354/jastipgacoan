@@ -2,87 +2,66 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8" />
-  <title>History Pemesanan - Jastip Gacoan</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cek Status Pesanan</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
   <style>
     body {
-      font-family: 'Poppins', sans-serif;
-      background-color: #f7f9fb;
-    }
-    .card {
-      border-radius: 12px;
-      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+      font-family: Arial, sans-serif;
+      background-color: #f8f9fa;
       padding: 20px;
-      margin-top: 20px;
     }
-    table {
+    .form-container {
+      max-width: 500px;
+      margin: auto;
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+    .btn-primary {
       width: 100%;
-      border-collapse: collapse;
-      margin-top: 15px;
-    }
-    th, td {
-      padding: 10px;
-      border: 1px solid #ddd;
-      text-align: left;
     }
   </style>
 </head>
 <body>
-  <div class="container py-5">
-    <div class="card">
-      <h3 class="mb-4">History Pemesanan</h3>
-      <hr>
+  <div class="form-container">
+    <h2 class="text-center mb-4">Cek Status Pesanan</h2>
+    <form id="statusForm">
       <div class="mb-3">
-        <strong>Detail Transaksi:</strong>
-        <table id="tabelPesanan" class="table table-bordered mt-3">
-          <thead class="table-primary">
-            <tr>
-              <th>Nama</th>
-              <th>Alamat</th>
-              <th>No. HP</th>
-              <th>Pembayaran</th>
-              <th>Pesanan</th>
-              <th>Total</th>
-              <th>Lokasi</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
+        <label for="name" class="form-label">Nama Lengkap</label>
+        <input type="text" id="name" class="form-control" placeholder="Masukkan nama lengkap Anda" required />
       </div>
-    </div>
+      <div class="mb-3">
+        <label for="transactionDate" class="form-label">Tanggal Transaksi</label>
+        <input type="date" id="transactionDate" class="form-control" required />
+      </div>
+      <button type="button" id="sendToWhatsApp" class="btn btn-primary">Kirim ke Admin</button>
+    </form>
   </div>
 
   <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const orders = JSON.parse(localStorage.getItem('orders')) || [];
+    document.getElementById('sendToWhatsApp').addEventListener('click', function () {
+      const name = document.getElementById('name').value.trim();
+      const transactionDate = document.getElementById('transactionDate').value;
 
-      if (orders.length === 0) {
-        alert('Tidak ada history pemesanan.');
-        window.location.href = 'menu.html';
+      if (!name || !transactionDate) {
+        alert('Mohon lengkapi semua data.');
         return;
       }
 
-      const tbody = document.querySelector('#tabelPesanan tbody');
+      // Pilihan untuk menghubungi Admin 1 atau Admin 2
+      const adminChoice = confirm('Apakah Anda ingin menghubungi Admin 1? Klik OK untuk Admin 1, Cancel untuk Admin 2.');
 
-      // Load saved data from localStorage key 'pesananData'
-      let allData = JSON.parse(localStorage.getItem('pesananData')) || [];
+      // Format pesan untuk dikirim ke WhatsApp
+      const adminNumber = adminChoice ? '6282245100209' : '6285156226837'; // Nomor WhatsApp admin
+      const message = `Halo Admin, saya ingin mengecek status pesanan saya.\n\nNama: ${name}\nTanggal Transaksi: ${transactionDate}\n\nMohon informasinya. Terima kasih.`;
 
-      allData.forEach(data => {
-        const row = document.createElement('tr');
+      // Buat URL WhatsApp
+      const whatsappURL = `https://wa.me/${adminNumber}?text=${encodeURIComponent(message)}`;
 
-        row.innerHTML = `
-          <td>${data.nama}</td>
-          <td>*** Disembunyikan ***</td>
-          <td>*** Disembunyikan ***</td>
-          <td>${data.pembayaran}</td>
-          <td>${data.pesanan}</td>
-          <td>${data.total}</td>
-          <td>*** Disembunyikan ***</td>
-        `;
-        tbody.appendChild(row);
-      });
+      // Arahkan pengguna ke WhatsApp
+      window.open(whatsappURL, '_blank');
     });
   </script>
 </body>

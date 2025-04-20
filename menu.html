@@ -19,6 +19,10 @@
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
       max-width: 600px;
       margin: 50px auto;
+      transition: transform 0.3s;
+    }
+    .form-container:hover {
+      transform: scale(1.02);
     }
     .order-list {
       margin-top: 20px;
@@ -48,6 +52,17 @@
     .payment-method {
       margin-top: 20px;
     }
+    .btn-primary {
+      transition: background-color 0.3s ease;
+    }
+    .btn-primary:hover {
+      background-color: #0056b3;
+    }
+    .confirmation-message {
+      color: green;
+      font-weight: bold;
+      margin-top: 10px;
+    }
   </style>
 </head>
 <body>
@@ -71,41 +86,40 @@
         <label for="menuItem" class="form-label">Pilih Menu</label>
         <select id="menuItem" class="form-select">
           <optgroup label="Mie Gacoan">
-        <option value="Mie Gacoan Level 1|15000">Mie Gacoan Level 1 - Rp 15.000</option>
-        <option value="Mie Gacoan Level 2|15000">Mie Gacoan Level 2 - Rp 15.000</option>
-        <option value="Mie Gacoan Level 3|15000">Mie Gacoan Level 3 - Rp 15.000</option>
-        <option value="Mie Gacoan Level 4|15000">Mie Gacoan Level 4 - Rp 15.000</option>
-        <option value="Mie Gacoan Level 5|15000">Mie Gacoan Level 5 - Rp 15.000</option>
-        <option value="Mie Gacoan Level 6|15000">Mie Gacoan Level 6 - Rp 15.000</option>
-        <option value="Mie Gacoan Level 7|15000">Mie Gacoan Level 7 - Rp 15.000</option>
-        <option value="Mie Gacoan Level 8|15000">Mie Gacoan Level 8 - Rp 15.000</option>
+            <option value="Mie Gacoan Level 1|15000">Mie Gacoan Level 1 - Rp 15.000</option>
+            <option value="Mie Gacoan Level 2|15000">Mie Gacoan Level 2 - Rp 15.000</option>
+            <option value="Mie Gacoan Level 3|15000">Mie Gacoan Level 3 - Rp 15.000</option>
+            <option value="Mie Gacoan Level 4|15000">Mie Gacoan Level 4 - Rp 15.000</option>
+            <option value="Mie Gacoan Level 5|15000">Mie Gacoan Level 5 - Rp 15.000</option>
+            <option value="Mie Gacoan Level 6|15000">Mie Gacoan Level 6 - Rp 15.000</option>
+            <option value="Mie Gacoan Level 7|15000">Mie Gacoan Level 7 - Rp 15.000</option>
+            <option value="Mie Gacoan Level 8|15000">Mie Gacoan Level 8 - Rp 15.000</option>
           </optgroup>
           <optgroup label="Mie Suite">
-        <option value="Mie Suite |16000">Mie Suite Level 1 - Rp 16.000</option>
-        
+            <option value="Mie Suite |16000">Mie Suite Level 1 - Rp 16.000</option>
           </optgroup>
           <optgroup label="Mie Hompipa">
-        <option value="Mie Hompipa Level 1|15000">Mie Hompipa Level 1 - Rp 15.000</option>
-        <option value="Mie Hompipa Level 2|15000">Mie Hompipa Level 2 - Rp 15.000</option>
-        <option value="Mie Hompipa Level 3|15000">Mie Hompipa Level 3 - Rp 15.000</option>
-        <option value="Mie Hompipa Level 4|15000">Mie Hompipa Level 4 - Rp 15.000</option>
-        <option value="Mie Hompipa Level 5|15000">Mie Hompipa Level 5 - Rp 15.000</option>
-        <option value="Mie Hompipa Level 6|15000">Mie Hompipa Level 6 - Rp 15.000</option>
-        <option value="Mie Hompipa Level 7|15000">Mie Hompipa Level 7 - Rp 15.000</option>
-        <option value="Mie Hompipa Level 8|15000">Mie Hompipa Level 8 - Rp 15.000</option>
+            <option value="Mie Hompipa Level 1|15000">Mie Hompipa Level 1 - Rp 15.000</option>
+            <option value="Mie Hompipa Level 2|15000">Mie Hompipa Level 2 - Rp 15.000</option>
+            <option value="Mie Hompipa Level 3|15000">Mie Hompipa Level 3 - Rp 15.000</option>
+            <option value="Mie Hompipa Level 4|15000">Mie Hompipa Level 4 - Rp 15.000</option>
+            <option value="Mie Hompipa Level 5|15000">Mie Hompipa Level 5 - Rp 15.000</option>
+            <option value="Mie Hompipa Level 6|15000">Mie Hompipa Level 6 - Rp 15.000</option>
+            <option value="Mie Hompipa Level 7|15000">Mie Hompipa Level 7 - Rp 15.000</option>
+            <option value="Mie Hompipa Level 8|15000">Mie Hompipa Level 8 - Rp 15.000</option>
           </optgroup>
           <optgroup label="Dimsum">
-        <option value="Udang Keju|14000">Udang Keju - Rp 14.000</option>
-        <option value="Udang Rambutan|14000">Udang Rambutan - Rp 14.000</option>
-        <option value="Lumpia Udang|14000">Lumpia Udang - Rp 14.000</option>
-        <option value="Siomay|14000">Siomay - Rp 14.000</option>
+            <option value="Udang Keju|14000">Udang Keju - Rp 14.000</option>
+            <option value="Udang Rambutan|14000">Udang Rambutan - Rp 14.000</option>
+            <option value="Lumpia Udang|14000">Lumpia Udang - Rp 14.000</option>
+            <option value="Siomay|14000">Siomay - Rp 14.000</option>
           </optgroup>
           <optgroup label="Minuman">
-        <option value="Es Teh|8000">Es Teh - Rp 8.000</option>
-        <option value="Orange|10000">Orange - Rp 10.000</option>
-        <option value="Milo|13000">Milo - Rp 13.000</option>
-        <option value="Es Teklek|15000">Es Teklek - Rp 15.000</option>
-        <option value="Es Genderuwo|15000">Es Genderuwo - Rp 15.000</option>
+            <option value="Es Teh|8000">Es Teh - Rp 8.000</option>
+            <option value="Orange|10000">Orange - Rp 10.000</option>
+            <option value="Milo|13000">Milo - Rp 13.000</option>
+            <option value="Es Teklek|15000">Es Teklek - Rp 15.000</option>
+            <option value="Es Genderuwo|15000">Es Genderuwo - Rp 15.000</option>
           </optgroup>
         </select>
       </div>
@@ -117,9 +131,14 @@
       <div class="payment-method">
         <label for="paymentMethod" class="form-label">Metode Pembayaran</label>
         <select id="paymentMethod" class="form-select">
-          <option value="Bank Transfer">Bank Transfer</option>
-          <option value="OVO">OVO</option>
-          <option value="GoPay">GoPay</option>
+          <optgroup label ="Bank Transfer (atas nama Ar* Fai** W**** L******)">
+            <option value="Bank BCA">BCA-2001166818</option>
+            <option value="Bank BNI">BNI-1729830120</option>
+          </optgroup>
+          <optgroup label="Uang Elektronik">
+            <option value="Qris">QRIS</option>
+            <img src="path/to/qris-image.png" alt="QRIS Payment" style="width: 100px; height: auto; margin-top: 10px;" />
+          </optgroup>
           <option value="Cash On Delivery">Cash On Delivery</option>
         </select>
       </div>
@@ -130,6 +149,7 @@
       <div id="orderList"></div>
       <p id="totalPrice" class="mt-3 fw-bold">Total Harga: Rp 0</p>
       <button id="proceedBtn" class="btn btn-success w-100" disabled>Lanjut ke Konfirmasi</button>
+      <div class="confirmation-message" id="confirmationMessage"></div>
     </div>
   </div>
 
@@ -138,6 +158,7 @@
     const orderListContainer = document.getElementById('orderList');
     const totalPriceElem = document.getElementById('totalPrice');
     const proceedBtn = document.getElementById('proceedBtn');
+    const confirmationMessage = document.getElementById('confirmationMessage');
   
     function updateOrderList() {
       orderListContainer.innerHTML = '';
@@ -210,6 +231,10 @@
       }
   
       updateOrderList();
+      confirmationMessage.textContent = `${itemName} telah ditambahkan ke daftar pesanan.`;
+      setTimeout(() => {
+        confirmationMessage.textContent = '';
+      }, 3000);
     });
   
     proceedBtn.addEventListener('click', () => {
@@ -217,65 +242,65 @@
       const addressInput = document.getElementById('address');
       const phoneInput = document.getElementById('phone');
       const paymentMethodSelect = document.getElementById('paymentMethod');
-    
+  
       const name = nameInput.value.trim();
       const address = addressInput.value.trim();
       const phone = phoneInput.value.trim();
       const paymentMethod = paymentMethodSelect.value;
-    
+  
       if (!name) {
-      alert('Mohon isi nama lengkap.');
-      nameInput.focus();
-      return;
+        alert('Mohon isi nama lengkap.');
+        nameInput.focus();
+        return;
       }
       if (!address) {
-      alert('Mohon isi alamat pengiriman.');
-      addressInput.focus();
-      return;
+        alert('Mohon isi alamat pengiriman.');
+        addressInput.focus();
+        return;
       }
       if (!phone) {
-      alert('Mohon isi nomor HP.');
-      phoneInput.focus();
-      return;
+        alert('Mohon isi nomor HP.');
+        phoneInput.focus();
+        return;
       }
-    
+  
       if (Object.keys(orderList).length === 0) {
-      alert('Belum ada pesanan yang ditambahkan.');
-      return;
+        alert('Belum ada pesanan yang ditambahkan.');
+        return;
       }
-    
+  
       // Save customer data and orders to localStorage
       const customer = { name, address, phone, paymentMethod };
       localStorage.setItem('customer', JSON.stringify(customer));
       localStorage.setItem('orders', JSON.stringify(orderList));
-    
+  
       // Prepare message for WhatsApp
       const totalHarga = Object.values(orderList).reduce((total, item) => total + (item.price * item.quantity), 0);
       const message = `Pesanan Baru:\nNama: ${name}\nAlamat: ${address}\nNo. HP: ${phone}\nMetode Pembayaran: ${paymentMethod}\n\nPesanan:\n` + 
           Object.values(orderList).map(item => `${item.name} (x${item.quantity}) - Rp ${item.price * item.quantity}`).join('\n') +
           `\n\nTotal Harga: Rp ${totalHarga.toLocaleString('id-ID')}`;
-    
+  
       // Get GPS location and generate Google Maps link, then send to WhatsApp
       if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(position => {
-        const latitude = position.coords.latitude;
-        const longitude = position.coords.longitude;
-        const mapsLink = `https://www.google.com/maps?q=${latitude},${longitude}`;
-        const locationMessage = `\n\nLokasi GPS:\nLatitude: ${latitude}\nLongitude: ${longitude}\nGoogle Maps: ${mapsLink}`;
-        
-        // WhatsApp links for Admin 1 and Admin 2
-        const admin1Url = `https://wa.me/6282245100209?text=${encodeURIComponent(message + locationMessage)}`;
-        const admin2Url = `https://wa.me/6285156226837?text=${encodeURIComponent(message + locationMessage)}`;
-        
-        // Redirect to Admin 1 or Admin 2 based on user choice
-        const sendToAdmin1 = confirm('Kirim ke Admin 1? Klik A1 untuk Admin 1, A2 untuk Admin 2.');
-        window.location.href = sendToAdmin1 ? admin1Url : admin2Url;
-      }, () => {
-        alert('Gagal mendapatkan lokasi GPS. Pastikan izin lokasi diaktifkan.');
-      });
+        navigator.geolocation.getCurrentPosition(position => {
+          const latitude = position.coords.latitude;
+          const longitude = position.coords.longitude;
+          const mapsLink = `https://www.google.com/maps?q=${latitude},${longitude}`;
+          const locationMessage = `\n\nLokasi GPS:\nLatitude: ${latitude}\nLongitude: ${longitude}\nGoogle Maps: ${mapsLink}`;
+          
+          // Prompt user to choose Admin 1 or Admin 2
+          const adminChoice = confirm('Kirim ke Admin ? Klik OK untuk Admin 1, Cancel untuk Admin 2.');
+          const adminUrl = adminChoice 
+            ? `https://wa.me/6282245100209?text=${encodeURIComponent(message + locationMessage)}`
+            : `https://wa.me/6285156226837?text=${encodeURIComponent(message + locationMessage)}`;
+          
+          // Redirect to the chosen Admin's WhatsApp
+          window.location.href = adminUrl;
+        }, () => {
+          alert('Gagal mendapatkan lokasi GPS. Pastikan izin lokasi diaktifkan.');
+        });
       } else {
-      alert('Perangkat Anda tidak mendukung GPS.');
+        alert('Perangkat Anda tidak mendukung GPS.');
       }
     });
-    
   </script>

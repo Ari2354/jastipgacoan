@@ -51,7 +51,17 @@
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
         <span class="navbar-toggler-icon"></span>
       </button>
-     
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link active" href="#">Beranda</a></li>
+          <li class="nav-item"><a class="nav-link" href="menu.html">Menu</a></li>
+          <li class="nav-item"><a class="nav-link" href="pesanan.html">Pesanan</a></li>
+          <li class="nav-item"><a class="nav-link" href="kontakkami.html">Kontak</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
   <!-- HERO SECTION -->
   <section class="hero">
     <div class="container">
@@ -75,17 +85,19 @@
           </div>
         </a>
       </div>
+
       <div class="col-md-4">
         <a href="pesanan.html" class="text-decoration-none">
           <div class="card text-center shadow-sm menu-card">
             <div class="card-body">
               <i class="bi bi-receipt-cutoff display-5 text-primary"></i>
-              <h5 class="card-title mt-2">histori Pesanan </h5>
-              <p class="card-text">lihat riwayat pesanan Anda.</p>
+              <h5 class="card-title mt-2">Histori Pesanan</h5>
+              <p class="card-text">Lihat riwayat pesanan Anda.</p>
             </div>
           </div>
         </a>
       </div>
+
       <div class="col-md-4">
         <a href="kontakkami.html" class="text-decoration-none">
           <div class="card text-center shadow-sm menu-card">
@@ -103,33 +115,94 @@
           <div class="card text-center shadow-sm menu-card">
             <div class="card-body">
               <i class="bi bi-calendar2-check-fill display-5 text-primary"></i>
-              <h5 class="card-title mt-2">lihat Menu lengkap</h5>
-              <p class="card-text">Cek Menu tersedia</p>
+              <h5 class="card-title mt-2">Menu Lengkap</h5>
+              <p class="card-text">Cek semua menu yang tersedia.</p>
             </div>
           </div>
         </a>
       </div>
+
       <div class="col-md-4">
         <a href="jadwal.html" class="text-decoration-none">
           <div class="card text-center shadow-sm menu-card">
             <div class="card-body">
               <i class="bi bi-door-open-fill display-5 text-primary"></i>
-              <h5 class="card-title mt-2">Website Buka/Tutup</h5>
-              <p class="card-text">Status layanan saat ini.</p>
+              <h5 class="card-title mt-2">Status Layanan</h5>
+              <p class="card-text">Lihat apakah layanan sedang dibuka atau ditutup.</p>
             </div>
           </div>
         </a>
       </div>
+
       <div class="col-md-4">
         <a href="login.html" class="text-decoration-none">
           <div class="card text-center shadow-sm menu-card">
             <div class="card-body">
               <i class="bi bi-box-arrow-in-right display-5 text-primary"></i>
-              <h5 class="card-title mt-2">Login</h5>
-              <p class="card-text">hanya admin.</p>
+              <h5 class="card-title mt-2">Login Admin</h5>
+              <p class="card-text">Hanya untuk akses admin.</p>
             </div>
           </div>
         </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT SECTION -->
+  <section class="container my-5">
+    <div class="row">
+      <div class="col-md-6">
+        <h2>Tentang Jastip Gacoan</h2>
+        <p>Jastip Gacoan adalah layanan jasa titip terpercaya yang membantu Anda mendapatkan produk favorit tanpa repot. Kami hadir untuk mempermudah kebutuhan belanja Anda, khususnya untuk produk-produk dari Mie Gacoan yang terkenal dengan cita rasa lezat dan harga terjangkau.</p>
+        <p>Website ini dirancang untuk memberikan pengalaman pengguna yang mudah dan nyaman. Anda dapat melihat menu, memesan, dan menghubungi admin dengan cepat melalui platform ini.</p>
+      </div>
+      <div class="col-md-6">
+        <img src="https://cdn-icons-png.flaticon.com/512/3595/3595455.png" alt="Jastip Gacoan" class="img-fluid rounded shadow">
+      </div>
+    </div>
+  </section>
+
+  <!-- HISTORY SECTION -->
+  <section class="container my-5">
+    <div class="row">
+      <div class="col-md-6">
+        <img src="https://mie-gacoan.com/wp-content/uploads/2021/09/mie-gacoan.jpg" alt="Mie Gacoan" class="img-fluid rounded shadow">
+      </div>
+      <div class="col-md-6">
+        <h2>Asal Usul Mie Gacoan</h2>
+        <p>Mie Gacoan adalah salah satu restoran mie yang sedang populer di Indonesia. Dikenal dengan menu mie pedasnya yang menggugah selera, Mie Gacoan telah menjadi favorit banyak orang. Nama "Gacoan" sendiri berasal dari istilah Jawa yang berarti andalan atau jagoan.</p>
+        <p>Restoran ini menawarkan berbagai pilihan mie dengan tingkat kepedasan yang dapat disesuaikan, serta menu pelengkap seperti dimsum dan minuman segar. Dengan harga yang terjangkau, Mie Gacoan menjadi pilihan utama bagi pecinta kuliner.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- REVIEWS SECTION -->
+  <section class="container my-5">
+    <h2 class="text-center mb-4">Ulasan Pelanggan</h2>
+    <div class="row g-4">
+      <div class="col-md-4">
+        <div class="card shadow-sm">
+          <div class="card-body">
+            <p class="card-text">"Pelayanan Jastip Gacoan sangat cepat dan terpercaya. Saya bisa mendapatkan Mie Gacoan favorit tanpa harus antre lama!"</p>
+            <p class="text-muted">- Rina, Surabaya</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card shadow-sm">
+          <div class="card-body">
+            <p class="card-text">"Mie Gacoan memang juara! Rasanya enak dan pedasnya pas. Terima kasih Jastip Gacoan sudah membantu saya memesan."</p>
+            <p class="text-muted">- Andi, Jakarta</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card shadow-sm">
+          <div class="card-body">
+            <p class="card-text">"Website ini sangat mudah digunakan. Saya bisa melihat menu dan memesan dengan cepat. Sangat membantu!"</p>
+            <p class="text-muted">- Siti, Bandung</p>
+          </div>
+        </div>
       </div>
     </div>
   </section>

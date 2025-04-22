@@ -465,16 +465,16 @@
          }
 
          .confirmation-message {
-             color: var(--confirmation-color);
              font-weight: bold;
              margin-top: 15px;
              text-align: center;
+             /* Using Bootstrap alert classes will handle colors and display */
          }
 
           /* Style for QRIS image placeholder */
           .qris-image {
               display: block; /* Make it a block element */
-              margin-top: 10px;
+              margin: 15px auto 10px; /* Center and add space */
               max-width: 150px; /* Example max width */
               height: auto;
               border: 1px solid #ccc; /* Optional border */
@@ -1099,7 +1099,7 @@
             });
 
 
-             // --- Order Form & Menu Interaction Logic (from form.html, adapted) ---
+             // --- Order Form & Menu Interaction Logic ---
 
              const orderList = {}; // Object to store ordered items {itemName: {name, price, quantity}}
              const orderListContainer = document.getElementById('orderList'); // Div to display items in summary
@@ -1274,6 +1274,8 @@
              // Listener for Payment Method select to show/hide QRIS image
              paymentMethodSelect.addEventListener('change', function() {
                  if (paymentMethodSelect.value === 'QRIS') {
+                     // PERHATIAN: Ganti src dengan path gambar QRIS Anda yang sebenarnya
+                     qrisImageContainer.querySelector('.qris-image').src = 'path/to/qris-image.png'; // Ensure correct path is set
                      qrisImageContainer.style.display = 'block';
                  } else {
                      qrisImageContainer.style.display = 'none';
@@ -1283,6 +1285,10 @@
 
              // Listener for Proceed to WhatsApp button
              proceedBtn.addEventListener('click', () => {
+                 // Disable button immediately to prevent double clicks
+                 proceedBtn.disabled = true;
+                 showMessage('Memproses pesanan...', 'info'); // Indicate processing
+
                  const name = nameInput.value.trim();
                  const address = addressInput.value.trim();
                  const phone = phoneInput.value.trim();
@@ -1291,7 +1297,8 @@
                  // Re-validate before proceeding (redundant if checkFormValidity works, but good fail-safe)
                  if (!name || !address || !phone || Object.keys(orderList).length === 0) {
                      alert('Mohon lengkapi data diri dan tambahkan pesanan.');
-                      checkFormValidity();
+                      checkFormValidity(); // Re-check validity to re-enable if needed
+                     showMessage('Mohon lengkapi data.', 'warning');
                      return;
                  }
 
@@ -1321,27 +1328,36 @@
                          const latitude = position.coords.latitude;
                          const longitude = position.coords.longitude;
                           // Correct Google Maps link format (using Google Maps web URL)
+                         // Note: The format might vary slightly between devices/browsers,
+                         // but lat,lon should be understood by Google Maps app/web.
                          const mapsLink = `https://maps.google.com/?q=${latitude},${longitude}`;
+
 
                          const locationMessage = `\n\n*Lokasi Pengiriman:*\n- Latitude: ${latitude}\n- Longitude: ${longitude}\n- [Lihat di Google Maps](${mapsLink})`; // Clearer labels and link text
 
-                         const adminNumber = '6285156226837'; // Admin's WhatsApp number
+                         const adminNumber = '6285156226837'; // Admin's WhatsApp number (pastikan format ini benar untuk link wa.me)
                          // Encode the full message including location
                          const adminUrl = `https://wa.me/${adminNumber}?text=${encodeURIComponent(message + locationMessage)}`;
 
-                         // Redirect to WhatsApp
+                         // Redirect to WhatsApp (use window.open to keep the current page)
                           showMessage('Lokasi didapat. Mengarahkan ke WhatsApp...', 'info');
-                         window.open(adminUrl, '_blank'); // Use window.open to keep page
-                         // window.location.href = adminUrl; // Use window.location.href to leave page
+                         const newWindow = window.open(adminUrl, '_blank');
 
-
-                         // Optional: Clear form and order list after successful redirect attempt
+                         // Add a slight delay before potentially clearing the form
                           setTimeout(() => {
-                              document.getElementById('orderForm').reset(); // Reset customer info form
-                              orderList = {}; // Clear the orderList object
-                              updateOrderListDisplay(); // Update the display
-                              showMessage('Pesanan berhasil dikirim (silakan cek jendela WhatsApp).', 'success');
-                          }, 1000);
+                              // Check if the new window was successfully opened (optional check)
+                              // if (newWindow && !newWindow.closed) {
+                                   document.getElementById('orderForm').reset(); // Reset customer info form
+                                   orderList = {}; // Clear the orderList object
+                                   updateOrderListDisplay(); // Update the display
+                                   showMessage('Pesanan berhasil dikirim (silakan cek jendela WhatsApp).', 'success');
+                              // } else {
+                                  // Handle cases where popup blocker or browser prevents opening
+                                  // showMessage('Gagal membuka WhatsApp. Pastikan pop-up tidak diblokir.', 'warning');
+                                  // checkFormValidity(); // Re-enable button if sending failed
+                              // }
+                               checkFormValidity(); // Ensure button state is correct after process
+                          }, 2000); // Delay increased to 2 seconds
 
 
                      }, (error) => {
@@ -1366,16 +1382,20 @@
                          // Proceed to WhatsApp without location
                          const adminNumber = '6285156226837';
                          const adminUrl = `https://wa.me/${adminNumber}?text=${encodeURIComponent(message + "\n\n*Catatan:* Lokasi GPS tidak dapat diperoleh.")}`;
-                         window.open(adminUrl, '_blank'); // Use window.open
+                         const newWindow = window.open(adminUrl, '_blank'); // Use window.open
 
                           // Optional: Clear form after sending without location
                            setTimeout(() => {
-                               document.getElementById('orderForm').reset();
-                               orderList = {};
-                               updateOrderListDisplay();
-                               showMessage('Pesanan berhasil dikirim (silakan cek jendela WhatsApp), tanpa lokasi GPS.', 'success');
-                           }, 1000);
-
+                               // if (newWindow && !newWindow.closed) {
+                                   document.getElementById('orderForm').reset();
+                                   orderList = {};
+                                   updateOrderListDisplay();
+                                   showMessage('Pesanan berhasil dikirim (silakan cek jendela WhatsApp), tanpa lokasi GPS.', 'success');
+                              // } else {
+                                   // showMessage('Gagal membuka WhatsApp. Pastikan pop-up tidak diblokir.', 'warning');
+                              // }
+                                checkFormValidity(); // Ensure button state is correct after process
+                           }, 2000); // Delay increased
                      });
                  } else {
                      // Browser doesn't support Geolocation
@@ -1384,23 +1404,31 @@
                       // Proceed to WhatsApp without location
                       const adminNumber = '6285156226837';
                       const adminUrl = `https://wa.me/${adminNumber}?text=${encodeURIComponent(message + "\n\n*Catatan:* Perangkat tidak mendukung Geolocation (GPS).")}`;
-                      window.open(adminUrl, '_blank'); // Use window.open
+                      const newWindow = window.open(adminUrl, '_blank'); // Use window.open
 
                        // Optional: Clear form after sending without location
                        setTimeout(() => {
-                           document.getElementById('orderForm').reset();
-                           orderList = {};
-                           updateOrderListDisplay();
-                           showMessage('Pesanan berhasil dikirim (silakan cek jendela WhatsApp), tanpa lokasi GPS.', 'success');
-                       }, 1000);
+                           // if (newWindow && !newWindow.closed) {
+                               document.getElementById('orderForm').reset();
+                               orderList = {};
+                               updateOrderListDisplay();
+                               showMessage('Pesanan berhasil dikirim (silakan cek jendela WhatsApp), tanpa lokasi GPS.', 'success');
+                          // } else {
+                               // showMessage('Gagal membuka WhatsApp. Pastikan pop-up tidak diblokir.', 'warning');
+                          // }
+                           checkFormValidity(); // Ensure button state is correct after process
+                       }, 2000); // Delay increased
                  }
              });
 
              // Function to show temporary messages (using Bootstrap alerts)
              function showMessage(msg, type) {
+                 // Always ensure display is block when showing a message
                  confirmationMessage.style.display = 'block';
-                  // Remove existing alert classes
-                 confirmationMessage.classList.remove('alert-success', 'alert-info', 'alert-warning', 'alert-danger');
+
+                  // Remove existing alert classes and fade/show classes
+                 confirmationMessage.classList.remove('alert-success', 'alert-info', 'alert-warning', 'alert-danger', 'fade', 'show');
+
                  // Add new alert class based on type
                   let alertClass;
                   switch(type) {
@@ -1410,8 +1438,18 @@
                       case 'danger': alertClass = 'alert-danger'; break;
                       default: alertClass = 'alert-secondary';
                   }
-                 confirmationMessage.className = 'confirmation-message alert alert-dismissible fade show ' + alertClass; // Use Bootstrap alert classes
-                 confirmationMessage.innerHTML = msg + '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>'; // Add close button
+                 // Set the new classes and innerHTML, add fade and show to trigger Bootstrap transition
+                 confirmationMessage.className = 'confirmation-message alert alert-dismissible fade show ' + alertClass;
+                 confirmationMessage.innerHTML = msg + '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>';
+
+                 // Optional: Automatically hide the message after a few seconds (unless it's a danger message)
+                 // if (type !== 'danger') {
+                 //     setTimeout(() => {
+                 //         // Use Bootstrap's dismiss method or just hide
+                 //         // new bootstrap.Alert(confirmationMessage).hide(); // Requires Bootstrap's JS Alert component
+                 //         confirmationMessage.style.display = 'none';
+                 //     }, 5000); // Hide after 5 seconds
+                 // }
              }
 
              // Initial check on page load (button should be disabled initially)

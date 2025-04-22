@@ -1,146 +1,441 @@
 <!DOCTYPE html>
-<html lang="id">
-<head>
-  <meta charset="UTF-8">
-  <title>Rangkuman Pesanan WA</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      padding: 20px;
-    }
-    textarea {
-      width: 100%;
-      height: 250px;
-      margin-bottom: 10px;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 15px;
-    }
-    th, td {
-      border: 1px solid #ccc;
-      padding: 8px;
-    }
-    .highlight {
-      background-color: #f2f2f2;
-    }
-  </style>
+<html lang="id" data-theme="light"> <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <title>Jastip Gacoan - Panel Pesanan</title> <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* CSS Variables for Themes (Sama seperti style.css di index.html) */
+        :root {
+            /* Light Theme Colors (Based on Gacoan Logo Red) */
+            --background-color: #ffffff;
+            --text-color: #333333; /* Dark grey for text */
+            --primary-color: #E53935; /* Gacoan-like Red */
+            --secondary-color: #757575; /* Medium grey */
+            --accent-color: #FFA000; /* Orange/Yellow from logo */
+            --card-background: #ffffff;
+            --card-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.1);
+            --section-title-color: #E53935; /* Red title */
+            --navbar-bg-light: rgba(255, 255, 255, 0.9);
+            --table-header-bg-light: #E53935; /* Primary color for table header */
+            --table-border-color: #dee2e6; /* Default Bootstrap border */
+            --highlight-color: #f2f2f2; /* Light grey highlight */
+        }
+
+        /* Dark Theme Colors */
+        html[data-theme="dark"] {
+            --background-color: #1a1a1a; /* Very dark grey background */
+            --text-color: #e0e0e0; /* Light grey text */
+            --primary-color: #EF5350; /* Slightly brighter red for dark mode contrast */
+            --secondary-color: #BDBDBD; /* Lighter grey */
+            --accent-color: #FFB300; /* Slightly brighter orange/yellow */
+            --card-background: #2b2b2b; /* Dark card background */
+            --card-shadow: 0 0.125rem 0.25rem rgba(255, 255, 255, 0.1);
+            --section-title-color: #EF5350; /* Red title */
+            --navbar-bg-dark: rgba(26, 26, 26, 0.9);
+            --table-header-bg-dark: #421212; /* Dark red for table header */
+            --table-border-color: #444; /* Darker border */
+            --highlight-color: #3b3b3b; /* Dark grey highlight */
+        }
+
+        /* --- Global Styles --- */
+        body {
+            font-family: 'Poppins', sans-serif; /* Menggunakan font Poppins */
+            background-color: var(--background-color);
+            color: var(--text-color);
+            padding: 20px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        h2 {
+             color: var(--section-title-color);
+             font-weight: 700;
+             margin-bottom: 30px !important; /* More space below title */
+        }
+
+        textarea {
+            width: 100%;
+            height: 250px;
+            margin-bottom: 20px; /* More space below textarea */
+            padding: 15px; /* More padding */
+            border: 1px solid var(--secondary-color); /* Border color based on theme */
+            background-color: var(--card-background); /* Background based on theme */
+            color: var(--text-color); /* Text color based on theme */
+            border-radius: 8px; /* Rounded corners */
+            box-shadow: var(--card-shadow); /* Add shadow */
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            resize: vertical; /* Allow vertical resize only */
+        }
+
+        textarea::placeholder {
+             color: var(--secondary-color); /* Placeholder color */
+             opacity: 0.8;
+        }
+
+        textarea:focus {
+            border-color: var(--primary-color); /* Highlight on focus */
+            box-shadow: 0 0 8px rgba(var(--primary-color-rgb), 0.5); /* Glow effect (requires RGB variable) */
+            outline: none; /* Remove default outline */
+        }
+         /* Define RGB variables for glow effect (approximate) */
+        :root { --primary-color-rgb: 229, 57, 53; } /* E53935 */
+        html[data-theme="dark"] { --primary-color-rgb: 239, 83, 80; } /* EF5350 */
+
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            color: white;
+            padding: 10px 20px;
+            font-size: 1rem;
+            border-radius: 5px;
+            transition: background-color 0.3s ease, border-color 0.3s ease, opacity 0.3s ease;
+        }
+
+        .btn-primary:hover {
+             background-color: #D32F2F; /* Slightly darker red */
+             border-color: #D32F2F; /* Slightly darker red */
+             color: white;
+             opacity: 0.9;
+        }
+
+
+        /* --- Table Styles --- */
+        .table { /* Using Bootstrap's .table class */
+            margin-top: 30px !important; /* More space above table */
+            border: 1px solid var(--table-border-color); /* Apply border variable */
+            border-radius: 8px; /* Rounded corners for table container */
+            overflow: hidden; /* Hide overflow from rounded corners */
+            box-shadow: var(--card-shadow); /* Add shadow */
+        }
+
+        .table th,
+        .table td {
+            border: 1px solid var(--table-border-color); /* Apply border variable to cells */
+            padding: 12px; /* More padding in cells */
+            vertical-align: top; /* Align cell content to top */
+            color: var(--text-color); /* Text color based on theme */
+            background-color: var(--background-color); /* Default cell background */
+        }
+
+        .table thead th {
+            background-color: var(--table-header-bg-light); /* Header color light theme */
+            color: white; /* Header text white */
+            font-weight: 600;
+        }
+
+        html[data-theme="dark"] .table thead th {
+             background-color: var(--table-header-bg-dark); /* Header color dark theme */
+             color: var(--text-color); /* Header text in dark mode */
+        }
+
+        .highlight {
+            background-color: var(--highlight-color); /* Highlight color based on theme */
+        }
+
+         /* Style for the Pesanan column */
+        .table td:nth-child(5) { /* Selects the 5th column (Pesanan) */
+            font-size: 0.9rem; /* Smaller font size */
+            white-space: normal; /* Allow text wrapping */
+            word-break: break-word; /* Break long words */
+        }
+
+        /* Style for action button inside table */
+        .table .btn-danger {
+            background-color: #dc3545; /* Bootstrap danger */
+            border-color: #dc3545;
+            padding: .25rem .5rem; /* Smaller padding */
+            font-size: .875rem; /* Smaller font size */
+            border-radius: .2rem; /* Smaller border radius */
+            transition: opacity 0.3s ease;
+        }
+
+        .table .btn-danger:hover {
+             opacity: 0.8;
+        }
+
+
+        /* --- Logout Button --- */
+         #logoutBtn {
+            margin-top: 20px; /* Space above logout button */
+            background-color: #dc3545; /* Bootstrap danger */
+            border-color: #dc3545;
+            transition: opacity 0.3s ease;
+            border-radius: 5px;
+         }
+
+         #logoutBtn:hover {
+             opacity: 0.8;
+         }
+
+
+        /* --- Theme Toggle Button (Sama seperti index.html) --- */
+        #theme-toggle {
+            position: fixed;
+            bottom: 20px; /* Jarak dari bawah */
+            right: 20px; /* Jarak dari kanan */
+            z-index: 1030;
+        }
+
+        #theme-toggle-button {
+            background-color: var(--card-background);
+            border-color: var(--secondary-color);
+            color: var(--text-color);
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, transform 0.2s ease;
+            border-radius: 50%; /* Make it round */
+            box-shadow: var(--card-shadow); /* Add shadow */
+        }
+
+        #theme-toggle-button:hover {
+             background-color: var(--secondary-color);
+             color: var(--card-background);
+             border-color: var(--secondary-color);
+             transform: scale(1.1);
+        }
+
+    </style>
 </head>
 <body>
-  <div class="container">
-    <h2 class="mb-4">Panel Rangkuman Pesanan WhatsApp</h2>
-    <textarea id="waText" class="form-control" placeholder="Tempel salinan pesan WhatsApp di sini..."></textarea>
-    <button class="btn btn-primary mt-2" onclick="prosesPesanan()">Proses Pesanan</button>
+    <div id="theme-toggle">
+        <button type="button" class="btn btn-secondary" id="theme-toggle-button">
+            <i class="bi bi-moon-fill"></i>
+        </button>
+    </div>
 
-    <table id="tabelPesanan" class="table table-bordered mt-3">
-      <thead class="table-primary">
-        <tr>
-          <th>Nama</th>
-          <th>Alamat</th>
-          <th>No. HP</th>
-          <th>Pembayaran</th>
-          <th>Pesanan</th>
-          <th>Total</th>
-          <th>Lokasi</th>
-          <th>Aksi</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
-  </div>
-  <button id="logoutBtn" class="btn btn-danger">Logout</button>
-  <script>
-     document.getElementById('logoutBtn').addEventListener('click', function () {
-        // Hapus status login dari localStorage
-        localStorage.removeItem('isLoggedIn');
-        // Arahkan kembali ke halaman login
-        window.location.href = 'login.html';
-    });
-  
-    window.onload = function () {
-      // Muat data pesanan saat halaman dimuat
-      loadData();
-    }
+    <div class="container">
+        <h2 class="text-center">Panel Rangkuman Pesanan WhatsApp</h2> <div class="mb-3"> <textarea id="waText" class="form-control" placeholder="Tempel salinan pesan WhatsApp di sini..."></textarea>
+             <button class="btn btn-primary" onclick="prosesPesanan()">Proses Pesanan</button>
+        </div>
 
-    function prosesPesanan() {
-      const teks = document.getElementById("waText").value;
-      const lines = teks.split("\n");
-      let data = {
-        nama: "", alamat: "", hp: "", pembayaran: "",
-        pesanan: "", total: "", lokasi: "", tanggal: ""
-      };
-  
-      lines.forEach(line => {
-        if (line.includes("Nama:")) data.nama = line.split("Nama:")[1].trim();
-        if (line.includes("Alamat:")) data.alamat = line.split("Alamat:")[1].trim();
-        if (line.includes("No. HP:")) data.hp = line.split("No. HP:")[1].trim();
-        if (line.includes("Metode Pembayaran:")) data.pembayaran = line.split("Metode Pembayaran:")[1].trim();
-        if (line.includes("Pesanan:")) data.pesanan = "";
-        if (line.match(/ - Rp /)) data.pesanan += line.trim() + "<br>";
-        if (line.includes("Total Harga:")) data.total = line.split(":")[1].trim();
-        if (line.includes("Latitude:")) data.lokasi = "Lat: " + line.split(":")[1].trim();
-        if (line.includes("Longitude:")) data.lokasi += ", Long: " + line.split(":")[1].trim();
-      });
-  
-      // Tambahkan tanggal/hari sekarang
-      const now = new Date();
-      const hari = now.toLocaleDateString('id-ID', { weekday: 'long' });
-      const tgl = now.toLocaleDateString('id-ID');
-      data.tanggal = `${hari}, ${tgl}`;
-  
-      saveToLocalStorage(data);
-      tampilkanBaris(data);
-      document.getElementById("waText").value = ""; // Kosongkan textarea
-    }
-  
-    function saveToLocalStorage(data) {
-      let allData = JSON.parse(localStorage.getItem("pesananData")) || [];
-      allData.push(data);
-      localStorage.setItem("pesananData", JSON.stringify(allData));
-    }
-  
-    function loadData() {
-      let allData = JSON.parse(localStorage.getItem("pesananData")) || [];
-      allData.forEach(data => tampilkanBaris(data));
-    }
-  
-    function tampilkanBaris(data) {
-      const tbody = document.querySelector("#tabelPesanan tbody");
-      const row = tbody.insertRow();
-  
-      row.insertCell(0).innerText = data.nama;
-      row.insertCell(1).innerText = data.alamat;
-      row.insertCell(2).innerText = data.hp;
-      row.insertCell(3).innerText = data.pembayaran;
-      row.insertCell(4).innerHTML = data.pesanan;
-      row.insertCell(5).innerText = data.total;
-      row.insertCell(6).innerText = data.lokasi;
-      row.insertCell(7).innerText = data.tanggal;
-  
-      const actionCell = row.insertCell(8);
-      const deleteBtn = document.createElement("button");
-      deleteBtn.className = "btn btn-sm btn-danger";
-      deleteBtn.innerText = "Hapus";
-      deleteBtn.onclick = () => deleteRow(row, data);
-      actionCell.appendChild(deleteBtn);
-    }
-  
-    function deleteRow(row, dataToDelete) {
-      if (confirm("Apakah Anda yakin ingin menghapus data ini?")) {
-        let allData = JSON.parse(localStorage.getItem("pesananData")) || [];
-        allData = allData.filter(item =>
-          !(item.nama === dataToDelete.nama &&
-            item.hp === dataToDelete.hp &&
-            item.total === dataToDelete.total &&
-            item.tanggal === dataToDelete.tanggal)
-        );
-        localStorage.setItem("pesananData", JSON.stringify(allData));
-        row.remove();
-      }
-    }
-  </script>
-  
+
+        <table id="tabelPesanan" class="table table-bordered"> <thead>
+                <tr>
+                    <th>Nama</th>
+                    <th>Alamat</th>
+                    <th>No. HP</th>
+                    <th>Pembayaran</th>
+                    <th>Pesanan</th>
+                    <th>Total</th>
+                    <th>Lokasi</th>
+                    <th>Tanggal</th> <th>Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                </tbody>
+        </table>
+
+        <button id="logoutBtn" class="btn btn-danger">Logout</button>
+
+    </div> <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+             // --- Theme Toggle Functionality (Sama seperti script.js di index.html) ---
+            const themeToggleButton = document.getElementById('theme-toggle-button');
+            const htmlElement = document.documentElement; // Get the <html> element
+
+            // Check for saved theme preference in localStorage
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                htmlElement.setAttribute('data-theme', savedTheme);
+                updateThemeButtonIcon(savedTheme);
+            } else {
+                // Default to light theme if no preference saved
+                htmlElement.setAttribute('data-theme', 'light');
+                 localStorage.setItem('theme', 'light'); // Save default preference
+                updateThemeButtonIcon('light');
+            }
+
+            // Add click listener to the toggle button
+            themeToggleButton.addEventListener('click', toggleTheme);
+
+            function toggleTheme() {
+                const currentTheme = htmlElement.getAttribute('data-theme');
+                const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+
+                htmlElement.setAttribute('data-theme', newTheme);
+                localStorage.setItem('theme', newTheme); // Save preference
+                updateThemeButtonIcon(newTheme);
+            }
+
+            function updateThemeButtonIcon(theme) {
+                const icon = themeToggleButton.querySelector('i.bi');
+                if (theme === 'dark') {
+                    icon.classList.remove('bi-moon-fill');
+                    icon.classList.add('bi-brightness-high-fill'); // Icon for light mode
+                } else {
+                    icon.classList.remove('bi-brightness-high-fill');
+                    icon.classList.add('bi-moon-fill'); // Icon for dark mode
+                }
+            }
+            // --- End Theme Toggle Functionality ---
+
+
+            // --- Logout Functionality ---
+            document.getElementById('logoutBtn').addEventListener('click', function () {
+                // Hapus status login dari localStorage
+                localStorage.removeItem('isLoggedIn');
+                // Arahkan kembali ke halaman login
+                window.location.href = 'login.html';
+            });
+            // --- End Logout Functionality ---
+
+            // --- Load Data on Page Load ---
+            loadData(); // Muat data pesanan saat halaman dimuat
+            // --- End Load Data ---
+        });
+
+
+        // --- Order Processing Functions ---
+        function prosesPesanan() {
+            const teks = document.getElementById("waText").value;
+            const lines = teks.split("\n");
+            let data = {
+                nama: "", alamat: "", hp: "", pembayaran: "",
+                pesanan: "", total: "", lokasi: "", tanggal: "" // Initialize tanggal
+            };
+
+            // Basic parsing logic (might need adjustments based on exact WA format)
+            let isParsingPesanan = false;
+            lines.forEach(line => {
+                const lowerLine = line.toLowerCase(); // Case-insensitive matching
+
+                if (lowerLine.startsWith("nama:")) {
+                    data.nama = line.split("Nama:")[1].trim();
+                    isParsingPesanan = false; // Stop parsing pesanan
+                } else if (lowerLine.startsWith("alamat:")) {
+                    data.alamat = line.split("Alamat:")[1].trim();
+                     isParsingPesanan = false; // Stop parsing pesanan
+                } else if (lowerLine.startsWith("no. hp:")) {
+                    data.hp = line.split("No. HP:")[1].trim();
+                     isParsingPesanan = false; // Stop parsing pesanan
+                } else if (lowerLine.startsWith("metode pembayaran:")) {
+                    data.pembayaran = line.split("Metode Pembayaran:")[1].trim();
+                     isParsingPesanan = false; // Stop parsing pesanan
+                } else if (lowerLine.startsWith("pesanan:")) {
+                    // Start capturing lines below "Pesanan:" until a known field is found or end of text
+                    data.pesanan = ""; // Clear initial value
+                    isParsingPesanan = true;
+                } else if (lowerLine.includes("total harga:")) {
+                     data.total = line.split("Total Harga:")[1].trim();
+                     isParsingPesanan = false; // Stop parsing pesanan
+                }
+                 // Added check for Latitude/Longitude to correctly capture location
+                 else if (lowerLine.includes("latitude:") || lowerLine.includes("longitude:")) {
+                     if (lowerLine.includes("latitude:")) {
+                         data.lokasi = "Lat: " + line.split("Latitude:")[1].trim();
+                     }
+                      if (lowerLine.includes("longitude:")) {
+                         if(data.lokasi) data.lokasi += ", "; // Add comma if lat is already there
+                         else data.lokasi = ""; // Ensure it's not null
+                         data.lokasi += "Long: " + line.split("Longitude:")[1].trim();
+                     }
+                     isParsingPesanan = false; // Stop parsing pesanan
+                 }
+                else if (isParsingPesanan && line.trim() !== "") {
+                    // If currently parsing pesanan and line is not empty
+                    data.pesanan += line.trim() + "<br>";
+                }
+            });
+
+            // Remove trailing <br> from pesanan if any
+             if (data.pesanan.endsWith("<br>")) {
+                 data.pesanan = data.pesanan.slice(0, -4);
+             }
+
+            // Tambahkan tanggal/hari sekarang
+            const now = new Date();
+            const hari = now.toLocaleDateString('id-ID', { weekday: 'long' });
+            const tgl = now.toLocaleDateString('id-ID');
+            // Format tanggal DD/MM/YYYY HH:mm
+            const jam = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+            data.tanggal = `${hari}, ${tgl} ${jam}`; // Include time
+
+            // Basic validation before saving
+            if (!data.nama || !data.pesanan || !data.total) {
+                alert("Data pesanan tidak lengkap. Pastikan format pesan benar.");
+                return; // Stop processing if essential data is missing
+            }
+
+            saveToLocalStorage(data);
+            tampilkanBaris(data);
+            document.getElementById("waText").value = ""; // Kosongkan textarea
+        }
+
+        function saveToLocalStorage(data) {
+            let allData = JSON.parse(localStorage.getItem("pesananData")) || [];
+            allData.push(data);
+            localStorage.setItem("pesananData", JSON.stringify(allData));
+        }
+
+        function loadData() {
+            let allData = JSON.parse(localStorage.getItem("pesananData")) || [];
+             // Urutkan data pesanan berdasarkan tanggal terbaru (opsional)
+             allData.sort((a, b) => new Date(b.tanggal) - new Date(a.tanggal)); // Sort by date descending
+            allData.forEach(data => tampilkanBaris(data));
+        }
+
+        function tampilkanBaris(data) {
+            const tbody = document.querySelector("#tabelPesanan tbody");
+            const row = tbody.insertRow(0); // Insert at the top (index 0) for newest first
+
+            // Apply highlight class (optional, based on your needs)
+            // row.classList.add('highlight');
+
+            row.insertCell(0).innerText = data.nama || '-'; // Use '-' if data is missing
+            row.insertCell(1).innerText = data.alamat || '-';
+            row.insertCell(2).innerText = data.hp || '-';
+            row.insertCell(3).innerText = data.pembayaran || '-';
+            row.insertCell(4).innerHTML = data.pesanan || '-';
+            row.insertCell(5).innerText = data.total || '-';
+            row.insertCell(6).innerText = data.lokasi || '-';
+            row.insertCell(7).innerText = data.tanggal || '-'; // Tanggal cell
+
+            const actionCell = row.insertCell(8);
+            const deleteBtn = document.createElement("button");
+            deleteBtn.className = "btn btn-sm btn-danger";
+            deleteBtn.innerText = "Hapus";
+            // Pass the row element and the data object to deleteRow
+            deleteBtn.onclick = () => deleteRow(row, data);
+            actionCell.appendChild(deleteBtn);
+        }
+
+        // Function to delete a row and update LocalStorage
+        function deleteRow(rowElement, dataToDelete) {
+            if (confirm("Apakah Anda yakin ingin menghapus data ini?")) {
+                // Get all data from LocalStorage
+                let allData = JSON.parse(localStorage.getItem("pesananData")) || [];
+
+                // Filter out the item that matches the dataToDelete object
+                // We need a robust way to identify the exact item to delete.
+                // A simple check based on multiple fields is used here.
+                // A unique ID for each order would be more reliable in a real app.
+                allData = allData.filter(item =>
+                    !(item.nama === dataToDelete.nama &&
+                      item.hp === dataToDelete.hp &&
+                      item.total === dataToDelete.total &&
+                      item.tanggal === dataToDelete.tanggal && // Use tanggal for uniqueness
+                      item.pesanan === dataToDelete.pesanan) // Also check pesanan
+                );
+
+
+                // Save the updated data back to LocalStorage
+                localStorage.setItem("pesananData", JSON.stringify(allData));
+
+                // Remove the row from the table
+                rowElement.remove();
+            }
+        }
+        // --- End Order Processing Functions ---
+
+    </script>
+
 </body>
 </html>

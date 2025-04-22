@@ -1,238 +1,639 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" data-theme="light">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Jastip Gacoan - Beranda</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
-  <style>
-    body {
-      font-family: 'Segoe UI', Arial, sans-serif;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jastip Gacoan - Beranda</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 
-    .hero {
-      background: linear-gradient(135deg, #0d6efd, #66b3ff);
-      color: white;
-      padding: 60px 20px;
-      text-align: center;
-    }
+    <style>
+        /* Google Fonts */
+        body {
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.6;
+            transition: background-color 0.3s ease, color 0.3s ease; /* Smooth transition for theme change */
+        }
 
-    .hero img {
-      max-width: 250px;
-    }
+        /* CSS Variables for Themes - Based on Gacoan Logo Red */
+        :root {
+            /* Light Theme Colors */
+            --background-color: #ffffff;
+            --text-color: #333333; /* Dark grey for text */
+            --primary-color: #E53935; /* Gacoan-like Red */
+            --secondary-color: #757575; /* Medium grey */
+            --accent-color: #FFA000; /* Orange/Yellow from logo */
+            --card-background: #ffffff;
+            --card-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.1);
+            --section-title-color: #E53935; /* Red title */
+            --hero-gradient: linear-gradient(135deg, #E53935, #FF7043); /* Red to light orange gradient */
+            --footer-background: #E53935; /* Red footer */
+            --footer-text-color: white;
+            --navbar-bg-light: rgba(255, 255, 255, 0.9);
+        }
 
-    .menu-card {
-      transition: transform 0.3s ease;
-    }
+        /* Dark Theme Colors */
+        html[data-theme="dark"] {
+            --background-color: #1a1a1a; /* Very dark grey background */
+            --text-color: #e0e0e0; /* Light grey text */
+            --primary-color: #EF5350; /* Slightly brighter red for dark mode contrast */
+            --secondary-color: #BDBDBD; /* Lighter grey */
+            --accent-color: #FFB300; /* Slightly brighter orange/yellow */
+            --card-background: #2b2b2b; /* Dark card background */
+            --card-shadow: 0 0.125rem 0.25rem rgba(255, 255, 255, 0.1);
+            --section-title-color: #EF5350; /* Red title */
+            --hero-gradient: linear-gradient(135deg, #0d0d0d, #421212); /* Dark grey to dark red gradient */
+            --footer-background: #0d0d0d; /* Almost black footer */
+            --footer-text-color: #BDBDBD; /* Secondary grey text */
+            --navbar-bg-dark: rgba(26, 26, 26, 0.9); /* Semi-transparent dark */
+        }
 
-    .menu-card:hover {
-      transform: translateY(-5px);
-    }
 
-    footer {
-      background-color: #0d6efd;
-      color: white;
-    }
+        /* --- Global Styles --- */
+        body {
+            background-color: var(--background-color);
+            color: var(--text-color);
+        }
 
-    @media (max-width: 768px) {
-      .hero {
-        padding: 40px 10px;
-      }
-    }
-  </style>
+        h1, h2, h3, h4, h5, h6 {
+            color: var(--section-title-color);
+        }
+
+        a {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        a:hover {
+            color: var(--accent-color); /* Accent color on hover */
+            text-decoration: underline;
+        }
+
+        .text-primary {
+            color: var(--primary-color) !important;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            /* Manual hover color */
+            background-color: #D32F2F; /* Slightly darker red */
+            border-color: #D32F2F; /* Slightly darker red */
+            color: white;
+        }
+
+        .btn-outline-primary {
+            color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        .btn-outline-primary:hover {
+            background-color: var(--primary-color);
+            color: var(--background-color);
+        }
+
+        /* --- Navbar --- */
+        #main-navbar {
+            background-color: var(--navbar-bg-light); /* Semi-transparent background */
+            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+            transition: background-color 0.3s ease; /* Smooth transition */
+            z-index: 1020; /* Ensure navbar is above most content */
+            position: fixed; /* Stay fixed at the top */
+            top: 0;
+            left: 0;
+            right: 0;
+        }
+
+        html[data-theme="dark"] #main-navbar {
+             background-color: var(--navbar-bg-dark);
+        }
+
+        #main-navbar .navbar-brand {
+            color: var(--text-color) !important; /* Ensure brand color changes */
+            font-weight: 700;
+        }
+
+        #main-navbar .navbar-brand img {
+            /* Adjust logo color if needed - e.g., invert if it's a dark logo for dark mode */
+             filter: invert(var(--filter-invert-logo, 0));
+        }
+
+         html[data-theme="dark"] #main-navbar .navbar-brand img {
+              /* Example: invert dark logo in dark mode */
+              /* filter: invert(1); */
+         }
+
+
+        #main-navbar .nav-link {
+            color: var(--text-color) !important; /* Ensure link color changes */
+        }
+
+        #main-navbar .nav-link.active {
+             color: var(--primary-color) !important; /* Active link color */
+             font-weight: 600;
+        }
+
+        #main-navbar .nav-link:hover {
+             color: var(--primary-color) !important;
+        }
+
+        #main-navbar .navbar-toggler-icon {
+            filter: invert(var(--filter-invert, 0)); /* Adjust toggler icon color */
+        }
+
+        html[data-theme="dark"] #main-navbar .navbar-toggler-icon {
+             filter: invert(1); /* Invert for dark mode */
+        }
+
+        /* Scroll effect for navbar */
+        #main-navbar.scrolled {
+            background-color: var(--background-color) !important; /* Solid background on scroll */
+            box-shadow: var(--card-shadow);
+        }
+
+
+        /* --- Hero Section --- */
+        .hero {
+            min-height: 100vh;
+            background: var(--hero-gradient);
+            color: white; /* Ensure text is white/light on gradient */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 120px 20px 40px; /* Adjust padding considering fixed navbar */
+            position: relative;
+            overflow: hidden;
+            text-shadow: 1px 1px 4px rgba(0,0,0,0.3); /* Text shadow for readability */
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url('gacoan_bg_pattern.png'); /* Optional: Add a subtle background pattern */
+            background-repeat: repeat;
+            opacity: 0.15; /* Adjust opacity */
+            z-index: 0;
+        }
+
+        .hero .container {
+            z-index: 1;
+        }
+
+        .hero-icon {
+            width: 150px; /* Larger icon */
+            filter: drop-shadow(0 5px 10px rgba(0,0,0,0.3)); /* Shadow for icon */
+            animation: float 3s ease-in-out infinite; /* Floating animation */
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0); }
+        }
+
+
+        /* --- General Sections --- */
+        .container {
+            max-width: 1200px;
+        }
+
+        section {
+             padding-top: 80px; /* Add consistent top padding to sections */
+             padding-bottom: 80px; /* Add consistent bottom padding to sections */
+        }
+
+
+        .section-title {
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            position: relative;
+            padding-bottom: 10px;
+            color: var(--section-title-color); /* Use variable */
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            bottom: 0;
+            transform: translateX(-50%);
+            height: 4px; /* Thicker underline */
+            width: 80px; /* Wider underline */
+            background-color: var(--accent-color); /* Accent color underline */
+            border-radius: 2px;
+        }
+
+        /* Align underline to the left for text-left sections on larger screens */
+        #product-intro .section-title::after,
+        #about .section-title::after,
+        #origin .section-title::after {
+             left: 0;
+             transform: translateX(0);
+        }
+
+        @media (max-width: 768px) {
+            .section-title {
+                text-align: center;
+            }
+            /* Center underline on mobile */
+            #product-intro .section-title::after,
+            #about .section-title::after,
+            #origin .section-title::after {
+                 left: 50%;
+                 transform: translateX(-50%);
+            }
+        }
+
+
+        /* --- Cards (Features, Reviews) --- */
+        .card {
+            background-color: var(--card-background);
+            color: var(--text-color);
+            border: none;
+            box-shadow: var(--card-shadow);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            overflow: hidden; /* Clip shadow */
+        }
+
+        .feature-card:hover,
+        .review-card:hover {
+            transform: translateY(-10px); /* More pronounced lift */
+            box-shadow: 0 15px 25px rgba(0, 0, 0, 0.25); /* Stronger shadow */
+        }
+
+        html[data-theme="dark"] .feature-card:hover,
+        html[data-theme="dark"] .review-card:hover {
+             box-shadow: 0 15px 25px rgba(255, 255, 255, 0.08);
+        }
+
+        .card-link {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .card-link:hover .card {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 25px rgba(0, 0, 0, 0.25);
+        }
+        html[data-theme="dark"] .card-link:hover .card {
+             box-shadow: 0 15px 25px rgba(255, 255, 255, 0.08);
+        }
+
+
+        .feature-icon {
+            transition: color 0.3s ease, transform 0.3s ease;
+        }
+
+        .feature-card:hover .feature-icon {
+            color: var(--accent-color) !important; /* Change icon color to accent on hover */
+            transform: scale(1.1); /* Slightly enlarge icon */
+        }
+
+
+        /* --- Images --- */
+        .img-hover-effect {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .img-hover-effect:hover {
+            transform: scale(1.05); /* Slightly enlarge image on hover */
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+        html[data-theme="dark"] .img-hover-effect:hover {
+            box-shadow: 0 10px 20px rgba(255,255,255,0.1);
+        }
+
+
+        /* --- Reviews Section --- */
+        #reviews .card-text {
+            font-size: 1.1rem;
+            font-style: italic; /* Ensure italic style */
+        }
+
+        #reviews .blockquote-footer {
+            color: var(--secondary-color);
+        }
+
+        #reviews .bi-star-fill,
+        #reviews .bi-star-half {
+            color: var(--accent-color) !important; /* Star color using accent */
+        }
+
+
+        /* --- Footer --- */
+        footer {
+            background-color: var(--footer-background);
+            color: var(--footer-text-color);
+            padding: 30px 0;
+            margin-top: 80px;
+        }
+
+        footer a {
+            color: var(--footer-text-color);
+        }
+
+        /* --- Theme Toggle Button --- */
+        #theme-toggle {
+            z-index: 1030;
+        }
+
+        #theme-toggle-button {
+            background-color: var(--card-background);
+            border-color: var(--secondary-color);
+            color: var(--text-color);
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, transform 0.2s ease;
+        }
+
+        #theme-toggle-button:hover {
+             background-color: var(--secondary-color);
+             color: var(--card-background);
+             border-color: var(--secondary-color);
+             transform: scale(1.1);
+        }
+
+
+        /* Utility to darken color (Requires Sass or manually define hover colors) */
+        /*
+        @function darken($color, $percentage) {
+          @return mix(black, $color, $percentage);
+        }
+        */
+
+        /* Custom Scrollbar (Optional) */
+        /*
+        ::-webkit-scrollbar {
+          width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+          background: var(--background-color);
+        }
+
+        ::-webkit-scrollbar-thumb {
+          background: var(--primary-color);
+          border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+          background: var(--accent-color);
+        }
+        */
+
+    </style>
 </head>
 <body>
 
-  <!-- HEADER -->
-  <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow">
-    <div class="container">
-      <a class="navbar-brand" href="#">Jastip Gacoan</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav ms-auto">
-          <li class="nav-item"><a class="nav-link active" href="#">Beranda</a></li>
-          <li class="nav-item"><a class="nav-link" href="menu.html">Pesan Sekarang</a></li>
-          <li class="nav-item"><a class="nav-link" href="pesanan.html">Pesanan</a></li>
-          <li class="nav-item"><a class="nav-link" href="kontakkami.html">Kontak</a></li>
-        </ul>
-      </div>
+    <div id="theme-toggle" class="position-fixed bottom-0 end-0 p-3" style="z-index: 1030;">
+        <button type="button" class="btn btn-secondary rounded-circle shadow" id="theme-toggle-button">
+            <i class="bi bi-moon-fill"></i>
+        </button>
     </div>
-  </nav>
 
-  <!-- HERO SECTION -->
-  <section class="hero">
-    <div class="container">
-      <h1 class="display-5">Selamat Datang di Jastip Gacoan</h1>
-      <p class="lead">Layanan jastip terpercaya untuk kebutuhan belanja Anda</p>
-      <div class="container mt-4">
-        <div class="card shadow">
-            <div class="d-flex justify-content-center">
-            <img src="gacoan 4.jpg" alt="Mie Gacoan" class="card-img-top img-fluid rounded" style="max-width: 700px; height: auto;">
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-transparent" id="main-navbar">
+            <div class="container">
+                <a class="navbar-brand d-flex align-items-center" href="#">
+                    <img src="logojastipgacoan.jpg" alt="Logo Jastip Gacoan" height="40" class="me-2">
+                    Jastip Gacoan
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item"><a class="nav-link active" aria-current="page" href="#">Beranda</a></li>
+                        <li class="nav-item"><a class="nav-link" href="menu.html">Pesan Sekarang</a></li>
+                        <li class="nav-item"><a class="nav-link" href="pesanan.html">Pesanan</a></li>
+                        <li class="nav-item"><a class="nav-link" href="kontakkami.html">Kontak</a></li>
+                        <li class="nav-item"><a class="nav-link" href="jadwal.html">Status Layanan</a></li>
+                        <li class="nav-item"><a class="nav-link btn btn-outline-light btn-sm ms-2" href="login.html">Login Admin</a></li>
+                    </ul>
+                </div>
             </div>
-          <div class="card-body">
-            <h5 class="card-title">Mie Gacoan</h5>
-            <p class="card-text">Nikmati kelezatan Mie Gacoan dengan berbagai pilihan level pedas yang menggugah selera. Pesan sekarang dan rasakan sensasi makan yang berbeda!</p>
-            <a href="menu.html" class="btn btn-primary">Pesan Sekarang</a>
-          </div>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero d-flex align-items-center justify-content-center text-white text-center">
+            <div class="container">
+                 <img src="logojastipgacoan.jpg" alt="Gacoan Icon" class="img-fluid mb-4 hero-icon"> <h1 class="display-3 fw-bold mb-3">Jastip Gacoan</h1>
+                <p class="lead mb-4">Dapatkan Mie Gacoan favorit Anda tanpa antre panjang!</p>
+                <a href="menu.html" class="btn btn-light btn-lg shadow-lg">Pesan Sekarang</a> </div>
+        </section>
+
+        <section class="container" id="product-intro">
+            <div class="row align-items-center g-5">
+                <div class="col-md-6"> <img src="gacoan 1.jpg" alt="Mie Gacoan Pedas" class="img-fluid rounded-4 shadow-lg img-hover-effect">
+                </div>
+                <div class="col-md-6"> <h2 class="mb-3 section-title">Nikmati Lezatnya Mie Gacoan Tanpa Antre!</h2>
+                    <p class="lead mb-4">Kami hadir untuk mempermudah Anda menikmati sensasi pedas Mie Gacoan kapan saja. Pilih level pedas dan topping favorit Anda, sisanya biar kami yang urus!</p>
+                    <a href="menu.html" class="btn btn-primary btn-lg">Lihat Menu Lengkap</a>
+                </div>
+            </div>
+        </section>
+
+        <section class="container" id="features">
+            <h2 class="text-center mb-5 section-title">Layanan Unggulan Kami</h2>
+            <div class="row g-4 justify-content-center">
+
+                <div class="col-sm-6 col-md-4 col-lg-3">
+                    <a href="menu.html" class="card-link">
+                        <div class="card text-center h-100 shadow-sm feature-card"> <div class="card-body d-flex flex-column justify-content-center align-items-center">
+                                <i class="bi bi-cart3 display-4 text-primary mb-3 feature-icon"></i>
+                                <h5 class="card-title mb-2">Pesan Cepat & Mudah</h5>
+                                <p class="card-text">Proses pemesanan praktis via website.</p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="col-sm-6 col-md-4 col-lg-3">
+                     <a href="pesanan.html" class="card-link">
+                        <div class="card text-center h-100 shadow-sm feature-card"> <div class="card-body d-flex flex-column justify-content-center align-items-center">
+                                <i class="bi bi-clock-history display-4 text-primary mb-3 feature-icon"></i>
+                                <h5 class="card-title mb-2">Histori Pesanan</h5>
+                                <p class="card-text">Lacak dan lihat kembali pesanan Anda.</p>
+                            </div>
+                        </div>
+                     </a>
+                </div>
+
+                <div class="col-sm-6 col-md-4 col-lg-3">
+                    <a href="kontakkami.html" class="card-link">
+                        <div class="card text-center h-100 shadow-sm feature-card"> <div class="card-body d-flex flex-column justify-content-center align-items-center">
+                                <i class="bi bi-whatsapp display-4 text-primary mb-3 feature-icon"></i>
+                                <h5 class="card-title mb-2">Kontak Admin</h5>
+                                <p class="card-text">Hubungi admin via WhatsApp.</p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                 <div class="col-sm-6 col-md-4 col-lg-3">
+                    <a href="jadwal.html" class="card-link">
+                        <div class="card text-center h-100 shadow-sm feature-card"> <div class="card-body d-flex flex-column justify-content-center align-items-center">
+                                <i class="bi bi-calendar-check display-4 text-primary mb-3 feature-icon"></i>
+                                <h5 class="card-title mb-2">Status Layanan</h5>
+                                <p class="card-text">Cek jam buka dan tutup layanan.</p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+            </div>
+        </section>
+
+        <section class="container" id="about">
+            <div class="row align-items-center g-5">
+                <div class="col-md-6 order-md-2"> <img src="gacoan 2.jpg" alt="Jastip Gacoan Layanan" class="img-fluid rounded-4 shadow-lg img-hover-effect">
+                </div>
+                <div class="col-md-6 order-md-1"> <h2 class="mb-3 section-title">Tentang Jastip Gacoan</h2>
+                    <p class="lead mb-4">Kami adalah solusi praktis bagi Anda yang ingin menikmati Mie Gacoan tanpa harus repot. Dengan layanan jastip kami, pesanan Anda akan segera diproses dan diantar.</p>
+                    <p>Berawal dari keinginan untuk mempermudah para pecinta Mie Gacoan, Jastip Gacoan hadir untuk menjadi jembatan antara Anda dan hidangan favorit Anda. Kepuasan Anda adalah prioritas kami.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="container" id="origin">
+            <div class="row align-items-center g-5">
+                <div class="col-md-6"> <img src="gacoan 3.jpg" alt="Asal Usul Mie Gacoan" class="img-fluid rounded-4 shadow-lg img-hover-effect">
+                </div>
+                <div class="col-md-6"> <h2 class="mb-3 section-title">Mengenal Lebih Dekat Mie Gacoan</h2>
+                    <p class="lead mb-4">Mie Gacoan adalah brand kuliner yang fenomenal di Indonesia, terkenal dengan mie pedas berlevel dan harga terjangkau.</p>
+                    <p>Nama "Gacoan" sendiri berasal dari bahasa Jawa yang berarti 'andalan' atau 'jagoan', mencerminkan harapan brand ini untuk menjadi favorit banyak orang. Dengan beragam menu pendamping dan minuman unik, Mie Gacoan menawarkan pengalaman kuliner yang tak terlupakan.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="container" id="reviews">
+            <h2 class="text-center mb-5 section-title">Apa Kata Pelanggan Kami?</h2>
+            <div class="row g-4 justify-content-center">
+
+                <div class="col-md-6 col-lg-4">
+                    <div class="card h-100 shadow-sm review-card"> <div class="card-body">
+                            <div class="d-flex mb-3">
+                                <i class="bi bi-star-fill text-warning me-1"></i>
+                                <i class="bi bi-star-fill text-warning me-1"></i>
+                                <i class="bi bi-star-fill text-warning me-1"></i>
+                                <i class="bi bi-star-fill text-warning me-1"></i>
+                                <i class="bi bi-star-half text-warning"></i> (4.5/5)
+                            </div>
+                            <p class="card-text fst-italic">"Pelayanan Jastip Gacoan sangat cepat dan terpercaya. Saya bisa mendapatkan Mie Gacoan favorit tanpa harus antre lama!"</p>
+                            <footer class="blockquote-footer mt-3">Rina, <cite title="Source Title">Pelanggan Setia</cite></footer>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-4">
+                     <div class="card h-100 shadow-sm review-card"> <div class="card-body">
+                             <div class="d-flex mb-3">
+                                <i class="bi bi-star-fill text-warning me-1"></i>
+                                <i class="bi bi-star-fill text-warning me-1"></i>
+                                <i class="bi bi-star-fill text-warning me-1"></i>
+                                <i class="bi bi-star-fill text-warning me-1"></i>
+                                <i class="bi bi-star-fill text-warning"></i> (5/5)
+                            </div>
+                            <p class="card-text fst-italic">"Mie Gacoan memang juara! Rasanya enak dan pedasnya pas. Terima kasih Jastip Gacoan sudah membantu saya memesan. Website-nya juga gampang dipakai."</p>
+                            <footer class="blockquote-footer mt-3">Andi, <cite title="Source Title">Pecinta Mie Pedas</cite></footer>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-4">
+                     <div class="card h-100 shadow-sm review-card"> <div class="card-body">
+                             <div class="d-flex mb-3">
+                                <i class="bi bi-star-fill text-warning me-1"></i>
+                                <i class="bi bi-star-fill text-warning me-1"></i>
+                                <i class="bi bi-star-fill text-warning me-1"></i>
+                                <i class="bi bi-star-fill text-warning me-1"></i>
+                                <i class="bi bi-star-fill text-warning"></i> (5/5)
+                            </div>
+                            <p class="card-text fst-italic">"Sangat membantu! Proses cepat, admin ramah, dan Mie Gacoan sampai dengan selamat. Desain websitenya juga keren, apalagi ada mode gelapnya!"</p>
+                            <footer class="blockquote-footer mt-3">Siti, <cite title="Source Title">Dari Jember</cite></footer>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+    </main>
+
+    <footer class="text-center py-4">
+        <div class="container">
+            <p class="mb-0">&copy; 2024 Jastip Gacoan. Hak cipta dilindungi.</p>
         </div>
-      </div>
-</section>
-      
-      <style>
-        .card-img-top {
-          transition: transform 0.3s ease;
-        }
-        .card-img-top:hover {
-          transform: scale(1.05);
-        }
-      </style>
-    </div>
-  </section>
+    </footer>
 
-  <!-- MENU SECTION -->
-  <section class="container my-5">
-    <div class="row g-4">
-      <div class="col-md-4">
-        <a href="menu.html" class="text-decoration-none">
-          <div class="card text-center shadow-sm menu-card">
-            <div class="card-body">
-              <i class="bi bi-bag-check-fill display-5 text-primary"></i>
-              <h5 class="card-title mt-2">Pesan Sekarang</h5>
-              <p class="card-text">Lihat daftar Menu Dan Pesan Gacoan yang Sekarang.</p>
-            </div>
-          </div>
-        </a>
-      </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-      <div class="col-md-4">
-        <a href="pesanan.html" class="text-decoration-none">
-          <div class="card text-center shadow-sm menu-card">
-            <div class="card-body">
-              <i class="bi bi-receipt-cutoff display-5 text-primary"></i>
-              <h5 class="card-title mt-2">Histori Pesanan</h5>
-              <p class="card-text">Lihat riwayat pesanan Anda.</p>
-            </div>
-          </div>
-        </a>
-      </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const themeToggleButton = document.getElementById('theme-toggle-button');
+            const htmlElement = document.documentElement; // Get the <html> element
 
-      <div class="col-md-4">
-        <a href="kontakkami.html" class="text-decoration-none">
-          <div class="card text-center shadow-sm menu-card">
-            <div class="card-body">
-              <i class="bi bi-chat-dots-fill display-5 text-primary"></i>
-              <h5 class="card-title mt-2">Kontak Admin</h5>
-              <p class="card-text">Hubungi admin untuk bantuan lebih lanjut.</p>
-            </div>
-          </div>
-        </a>
-      </div>
+            // Check for saved theme preference in localStorage
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                htmlElement.setAttribute('data-theme', savedTheme);
+                updateThemeButtonIcon(savedTheme);
+            } else {
+                // Default to light theme if no preference saved
+                htmlElement.setAttribute('data-theme', 'light');
+                updateThemeButtonIcon('light');
+            }
 
-      <div class="col-md-4">
-        <a href="proses.html" class="text-decoration-none">
-          <div class="card text-center shadow-sm menu-card">
-            <div class="card-body">
-              <i class="bi bi-calendar2-check-fill display-5 text-primary"></i>
-              <h5 class="card-title mt-2">Menu Lengkap</h5>
-              <p class="card-text">Cek semua menu yang tersedia.</p>
-            </div>
-          </div>
-        </a>
-      </div>
+            // Add click listener to the toggle button
+            themeToggleButton.addEventListener('click', toggleTheme);
 
-      <div class="col-md-4">
-        <a href="jadwal.html" class="text-decoration-none">
-          <div class="card text-center shadow-sm menu-card">
-            <div class="card-body">
-              <i class="bi bi-door-open-fill display-5 text-primary"></i>
-              <h5 class="card-title mt-2">Status Layanan</h5>
-              <p class="card-text">Lihat apakah layanan sedang dibuka atau ditutup.</p>
-            </div>
-          </div>
-        </a>
-      </div>
+            function toggleTheme() {
+                const currentTheme = htmlElement.getAttribute('data-theme');
+                const newTheme = currentTheme === 'light' ? 'dark' : 'light';
 
-      <div class="col-md-4">
-        <a href="login.html" class="text-decoration-none">
-          <div class="card text-center shadow-sm menu-card">
-            <div class="card-body">
-              <i class="bi bi-box-arrow-in-right display-5 text-primary"></i>
-              <h5 class="card-title mt-2">Login Admin</h5>
-              <p class="card-text">Hanya untuk akses admin.</p>
-            </div>
-          </div>
-        </a>
-      </div>
-    </div>
-  </section>
+                htmlElement.setAttribute('data-theme', newTheme);
+                localStorage.setItem('theme', newTheme); // Save preference
+                updateThemeButtonIcon(newTheme);
+            }
 
-  <!-- ABOUT SECTION -->
-  <section class="container my-5">
-    <div class="row">
-      <div class="col-md-6">
-        <h2>Tentang Jastip Gacoan</h2>
-        <p>Jastip Gacoan adalah layanan jasa titip terpercaya yang membantu Anda mendapatkan produk favorit tanpa repot. Kami hadir untuk mempermudah kebutuhan belanja Anda, khususnya untuk produk-produk dari Mie Gacoan yang terkenal dengan cita rasa lezat dan harga terjangkau.</p>
-        <p>Website ini dirancang untuk memberikan pengalaman pengguna yang mudah dan nyaman. Anda dapat melihat menu, memesan, dan menghubungi admin dengan cepat melalui platform ini.</p>
-      </div>
-      <div class="col-md-6">
-        <img src="gacoan 2.jpg" alt="Jastip Gacoan" class="img-fluid rounded shadow">
-      </div>
-    </div>
-  </section>
+            function updateThemeButtonIcon(theme) {
+                const icon = themeToggleButton.querySelector('i.bi');
+                if (theme === 'dark') {
+                    icon.classList.remove('bi-moon-fill');
+                    icon.classList.add('bi-brightness-high-fill'); // Icon for light mode
+                } else {
+                    icon.classList.remove('bi-brightness-high-fill');
+                    icon.classList.add('bi-moon-fill'); // Icon for dark mode
+                }
+            }
 
-  <!-- HISTORY SECTION -->
-  <section class="container my-5">
-    <div class="row">
-      <div class="col-md-6">
-        <img src="gacoan 1.jpg" alt="Mie Gacoan" class="img-fluid rounded shadow">
-      </div>
-      <div class="col-md-6">
-        <h2>Asal Usul Mie Gacoan</h2>
-        <p>Mie Gacoan adalah salah satu restoran mie yang sedang populer di Indonesia. Dikenal dengan menu mie pedasnya yang menggugah selera, Mie Gacoan telah menjadi favorit banyak orang. Nama "Gacoan" sendiri berasal dari istilah Jawa yang berarti andalan atau jagoan.</p>
-        <p>Restoran ini menawarkan berbagai pilihan mie dengan tingkat kepedasan yang dapat disesuaikan, serta menu pelengkap seperti dimsum dan minuman segar. Dengan harga yang terjangkau, Mie Gacoan menjadi pilihan utama bagi pecinta kuliner.</p>
-      </div>
-    </div>
-  </section>
+            // Add a class to navbar on scroll for better visibility
+            const navbar = document.getElementById('main-navbar');
+            let scrolled = false;
 
-  <!-- REVIEWS SECTION -->
-  <section class="container my-5">
-    <h2 class="text-center mb-4">Ulasan Pelanggan</h2>
-    <div class="row g-4">
-      <div class="col-md-4">
-        <div class="card shadow-sm">
-          <div class="card-body">
-            <p class="card-text">"Pelayanan Jastip Gacoan sangat cepat dan terpercaya. Saya bisa mendapatkan Mie Gacoan favorit tanpa harus antre lama!"</p>
-            <p class="text-muted">- Rina, Jember</p>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <div class="card shadow-sm">
-          <div class="card-body">
-            <p class="card-text">"Mie Gacoan memang juara! Rasanya enak dan pedasnya pas. Terima kasih Jastip Gacoan sudah membantu saya memesan."</p>
-            <p class="text-muted">- Andi, Jember</p>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <div class="card shadow-sm">
-          <div class="card-body">
-            <p class="card-text">"Website ini sangat mudah digunakan. Saya bisa melihat menu dan memesan dengan cepat. Sangat membantu!"</p>
-            <p class="text-muted">- Siti, Jember</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- FOOTER -->
-  <footer class="text-center py-3">
-    <p class="mb-0">&copy; 2024 Jastip Gacoan. Hak cipta dilindungi.</p>
-  </footer>
-
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+            window.addEventListener('scroll', function() {
+                if (window.scrollY > 50 && !scrolled) { // Add 'scrolled' class after scrolling down 50px
+                    navbar.classList.add('scrolled');
+                    scrolled = true;
+                } else if (window.scrollY <= 50 && scrolled) { // Remove 'scrolled' class when back at top
+                    navbar.classList.remove('scrolled');
+                    scrolled = false;
+                }
+            });
+        });
+    </script>
 </body>
 </html>

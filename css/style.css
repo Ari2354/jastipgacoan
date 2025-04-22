@@ -1,108 +1,344 @@
-/* General styles */
+/* Google Fonts */
 body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f9f9f9;
-    color: #333;
+    font-family: 'Poppins', sans-serif;
+    line-height: 1.6;
+    transition: background-color 0.3s ease, color 0.3s ease; /* Smooth transition for theme change */
 }
 
-header {
-    background-color: #007bff;
-    color: white;
-    padding: 1rem 2rem;
+/* CSS Variables for Themes */
+:root {
+    /* Light Theme Colors */
+    --background-color: #ffffff;
+    --text-color: #333;
+    --primary-color: #0d6efd; /* Bootstrap Primary Blue */
+    --secondary-color: #6c757d; /* Bootstrap Secondary Grey */
+    --card-background: #ffffff;
+    --card-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    --section-title-color: #333;
+    --hero-gradient: linear-gradient(135deg, #0d6efd, #66b3ff); /* Light Blue Gradient */
+    --footer-background: #0d6efd;
+    --footer-text-color: white;
 }
 
-header h1 {
-    margin: 0;
+/* Dark Theme Colors */
+html[data-theme="dark"] {
+    --background-color: #1a1a1a;
+    --text-color: #e0e0e0;
+    --primary-color: #00bfff; /* Brighter blue for contrast */
+    --secondary-color: #adb5bd;
+    --card-background: #2b2b2b;
+    --card-shadow: 0 0.125rem 0.25rem rgba(255, 255, 255, 0.1);
+    --section-title-color: #ffffff;
+    --hero-gradient: linear-gradient(135deg, #000000, #434343); /* Dark Gradient */
+    --footer-background: #0d0d0d;
+    --footer-text-color: #adb5bd;
 }
 
-nav ul {
-    list-style: none;
-    padding: 0;
-    margin: 0.5rem 0 0 0;
-    display: flex;
-    gap: 1rem;
+
+/* --- Global Styles --- */
+body {
+    background-color: var(--background-color);
+    color: var(--text-color);
 }
 
-nav ul li {
+h1, h2, h3, h4, h5, h6 {
+    color: var(--section-title-color);
 }
 
-nav ul li a {
-    color: white;
+a {
+    color: var(--primary-color);
     text-decoration: none;
-    font-weight: bold;
-    padding: 0.5rem 1rem;
-    border-radius: 4px;
 }
 
-nav ul li a.active,
-nav ul li a:hover {
-    background-color: #0056b3;
+a:hover {
+    color: var(--primary-color); /* Keep primary color on hover or use a slightly darker/lighter shade */
+    text-decoration: underline;
 }
 
-main {
-    padding: 2rem;
-    max-width: 800px;
-    margin: 0 auto;
-    background-color: white;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    border-radius: 8px;
+.text-primary {
+    color: var(--primary-color) !important;
 }
 
-footer {
-    text-align: center;
-    padding: 1rem;
-    background-color: #007bff;
-    color: white;
-    position: fixed;
-    width: 100%;
+.btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-primary:hover {
+    background-color: darken(var(--primary-color), 10%); /* Needs Sass function or a defined hover color */
+    border-color: darken(var(--primary-color), 10%);
+    /* Alternative without Sass: */
+    /* background-color: #0a58ca; 
+       border-color: #0a58ca; */
+}
+
+.btn-outline-primary {
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-outline-primary:hover {
+    background-color: var(--primary-color);
+    color: var(--background-color); /* Text color changes to match background */
+}
+
+/* --- Navbar --- */
+#main-navbar {
+    background-color: rgba(var(--background-color, #ffffff), 0.9) !important; /* Semi-transparent background */
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    transition: background-color 0.3s ease; /* Smooth transition */
+}
+
+html[data-theme="dark"] #main-navbar {
+     background-color: rgba(var(--background-color, #1a1a1a), 0.9) !important; 
+}
+
+#main-navbar .navbar-brand,
+#main-navbar .nav-link {
+    color: var(--text-color) !important; /* Ensure link color changes */
+}
+
+#main-navbar .nav-link.active {
+     color: var(--primary-color) !important; /* Active link color */
+     font-weight: 600;
+}
+
+#main-navbar .nav-link:hover {
+     color: var(--primary-color) !important;
+}
+
+#main-navbar .navbar-toggler-icon {
+    filter: invert(var(--filter-invert, 0)); /* Adjust toggler icon color */
+}
+
+html[data-theme="dark"] #main-navbar .navbar-toggler-icon {
+     filter: invert(1); /* Invert for dark mode */
+}
+
+/* Scroll effect for navbar (optional) */
+.navbar.scrolled {
+    background-color: var(--background-color) !important; /* Solid background on scroll */
+    box-shadow: var(--card-shadow);
+}
+
+
+/* --- Hero Section --- */
+.hero {
+    min-height: 100vh; /* Full viewport height */
+    background: var(--hero-gradient);
+    display: flex; /* Center content */
+    align-items: center;
+    justify-content: center;
+    padding: 100px 20px 40px; /* Adjust padding considering fixed navbar */
+    position: relative; /* For potential background effects */
+    overflow: hidden; /* Hide overflow from animations */
+}
+
+.hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
     bottom: 0;
+    background-image: url('gacoan_bg_pattern.png'); /* Optional: Add a subtle background pattern */
+    background-repeat: repeat;
+    opacity: 0.1; /* Adjust opacity */
+    z-index: 0;
 }
 
-/* Form styles */
-form {
+.hero .container {
+    z-index: 1; /* Ensure content is above background pattern */
+}
+
+.hero-icon {
+    width: 120px; /* Size of the icon */
+    animation: bounce 2s infinite; /* Simple bounce animation */
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+    }
+    40% {
+        transform: translateY(-20px);
+    }
+    60% {
+        transform: translateY(-10px);
+    }
+}
+
+
+/* --- General Sections --- */
+.container {
+    max-width: 1200px; /* Max width for content */
+}
+
+.section-title {
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    position: relative;
+    padding-bottom: 10px;
+}
+
+.section-title::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    transform: translateX(-50%);
+    height: 3px;
+    width: 60px;
+    background-color: var(--primary-color);
+    border-radius: 3px;
+}
+
+#product-intro .section-title::after,
+#about .section-title::after,
+#origin .section-title::after {
+     left: 0; /* Align underline to the left for text-left sections */
+     transform: translateX(0);
+}
+
+@media (max-width: 768px) {
+    .section-title {
+        text-align: center; /* Center title on mobile */
+    }
+    #product-intro .section-title::after,
+    #about .section-title::after,
+    #origin .section-title::after {
+         left: 50%; /* Center underline on mobile */
+         transform: translateX(-50%);
+    }
+}
+
+
+/* --- Cards (Features, Reviews) --- */
+.card {
+    background-color: var(--card-background);
+    color: var(--text-color);
+    border: none; /* Remove default card border */
+    box-shadow: var(--card-shadow);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.feature-card:hover,
+.review-card:hover {
+    transform: translateY(-8px); /* More pronounced lift */
+    box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.2); /* Stronger shadow on hover */
+}
+
+html[data-theme="dark"] .feature-card:hover,
+html[data-theme="dark"] .review-card:hover {
+     box-shadow: 0 1rem 2rem rgba(255, 255, 255, 0.1);
+}
+
+.card-link {
+    text-decoration: none;
+    color: inherit; /* Inherit color from parent (card) */
+}
+
+.card-link:hover .card {
+    transform: translateY(-8px); /* Apply lift effect via parent hover */
+    box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.2);
+}
+html[data-theme="dark"] .card-link:hover .card {
+     box-shadow: 0 1rem 2rem rgba(255, 255, 255, 0.1);
+}
+
+
+.feature-icon {
+    transition: color 0.3s ease;
+}
+
+.feature-card:hover .feature-icon {
+    color: var(--secondary-color) !important; /* Change icon color on hover */
+}
+
+
+/* --- Images --- */
+.img-hover-effect {
+    transition: transform 0.3s ease;
+}
+
+.img-hover-effect:hover {
+    transform: scale(1.03); /* Slightly enlarge image on hover */
+}
+
+/* --- Reviews Section --- */
+#reviews .card-text {
+    font-size: 1.1rem;
+}
+
+#reviews .blockquote-footer {
+    color: var(--secondary-color);
+}
+
+
+/* --- Footer --- */
+footer {
+    background-color: var(--footer-background);
+    color: var(--footer-text-color);
+    padding: 30px 0;
+    margin-top: 80px; /* Space above footer */
+}
+
+footer a {
+    color: var(--footer-text-color);
+}
+
+/* --- Theme Toggle Button --- */
+#theme-toggle {
+    z-index: 1030; /* Above most content */
+}
+
+#theme-toggle-button {
+    background-color: var(--card-background);
+    border-color: var(--secondary-color);
+    color: var(--text-color);
+    width: 45px;
+    height: 45px;
     display: flex;
-    flex-direction: column;
-    gap: 1rem;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
 }
 
-label {
-    font-weight: bold;
+#theme-toggle-button:hover {
+     background-color: var(--secondary-color);
+     color: var(--card-background);
+     border-color: var(--secondary-color);
 }
 
-input[type="text"],
-input[type="number"],
-textarea {
-    padding: 0.5rem;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 1rem;
-    resize: vertical;
+/* --- Optional: Animation library (like Animate.css) --- */
+/* Add Animate.css link to <head> if you want to use classes like animate__fadeInUp */
+/* <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/> */
+
+
+/* --- Custom Scrollbar (Optional) --- */
+/*
+::-webkit-scrollbar {
+  width: 10px;
 }
 
-button {
-    background-color: #007bff;
-    color: white;
-    border: none;
-    padding: 0.75rem;
-    font-size: 1rem;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+::-webkit-scrollbar-track {
+  background: var(--background-color);
 }
 
-button:hover {
-    background-color: #0056b3;
+::-webkit-scrollbar-thumb {
+  background: var(--primary-color);
+  border-radius: 5px;
 }
 
-/* Section styles */
-.intro, .user-panel, .admin-panel {
-    margin-bottom: 2rem;
+::-webkit-scrollbar-thumb:hover {
+  background: darken(var(--primary-color), 15%);
 }
+*/
 
-#orderMessage {
-    margin-top: 1rem;
-    font-weight: bold;
-    color: green;
-}
+
+/* Utility to darken color (requires Sass, or manually define hover colors) */
+/* @function darken($color, $percentage) {
+  @return mix(black, $color, $percentage);
+} */
+

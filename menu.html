@@ -3,12 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Menu & Pesan - Jastip Gacoan</title> <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Menu & Pesan - Jastip Gacoan</title> <!-- Judul Halaman -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <!-- Google Fonts - Poppins -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome (Opsional, jika butuh ikon tambahan) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
 
 
+    <!-- Custom Styles (CSS) -->
     <style>
         /* CSS Variables for Themes (Sama seperti file CSS lainnya) */
         :root {
@@ -32,12 +36,27 @@
              --menu-item-border: #ddd; /* Menu item border */
              --form-container-bg: var(--card-background); /* Form background */
              --button-success-background: #28a745; /* Bootstrap green for success button */
-             --button-success-border: #28a745;
+             --button-success-border: #28a45;
              --button-success-hover: #218838;
              --order-item-border-list: #ddd; /* Border for list items in summary */
              --confirmation-color: #28a745; /* Green for confirmation */
              /* RGB colors for glow effect */
             --primary-color-rgb: 229, 57, 53; /* E53935 */
+
+             /* Alert/Notification Colors */
+            --alert-success-bg: #d4edda;
+            --alert-success-border: #c3e6cb;
+            --alert-success-text: #155724;
+            --alert-info-bg: #cfe2ff; /* Changed to Bootstrap blue/info */
+            --alert-info-border: #b9d1ea;
+            --alert-info-text: #084298; /* Changed to Bootstrap blue/info */
+            --alert-warning-bg: #fff3cd;
+            --alert-warning-border: #ffeeba;
+            --alert-warning-text: #664d03; /* Adjusted text color for better contrast */
+            --alert-danger-bg: #f8d7da;
+            --alert-danger-border: #f5c6cb;
+            --alert-danger-text: #721c24;
+
         }
 
         /* Dark Theme Colors */
@@ -67,6 +86,20 @@
              --confirmation-color: #218838; /* Darker green */
              /* RGB colors for glow effect */
             --primary-color-rgb: 239, 83, 80; /* EF5350 */
+
+            /* Alert/Notification Colors (Dark Mode) */
+             --alert-success-bg: #1c3c20;
+             --alert-success-border: #234f28;
+             --alert-success-text: #c3e6cb;
+             --alert-info-bg: #11263e; /* Changed to dark blue/info */
+             --alert-info-border: #173b5b;
+             --alert-info-text: #a0cce5; /* Changed to dark blue/info */
+             --alert-warning-bg: #4e3d0b;
+             --alert-warning-border: #66510e;
+             --alert-warning-text: #ffeeba;
+             --alert-danger-bg: #4a171e;
+             --alert-danger-border: #62212a;
+             --alert-danger-text: #f5c6cb;
         }
 
 
@@ -464,12 +497,66 @@
               font-weight: 700 !important;
          }
 
-         .confirmation-message {
-             font-weight: bold;
-             margin-top: 15px;
-             text-align: center;
-             /* Using Bootstrap alert classes will handle colors and display */
+         /* --- Fixed Notification Style (NEW) --- */
+         #confirmationMessage {
+             position: fixed; /* Fixed position relative to viewport */
+             top: 20px; /* 20px from the top */
+             left: 50%; /* Start at 50% from the left */
+             transform: translateX(-50%); /* Shift back by half its width to center */
+             z-index: 1050; /* Higher than navbar/modals */
+             max-width: 90%; /* Max width */
+             width: 400px; /* Preferred width */
+             padding: 15px;
+             border-radius: 8px;
+             box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+             display: none; /* Hidden by default */
+             opacity: 0; /* Start transparent for fade-in */
+             transition: opacity 0.3s ease-in-out, top 0.3s ease-in-out; /* Smooth fade and slide transition */
          }
+
+         /* Bootstrap Alert classes for colors */
+          #confirmationMessage.alert-success {
+              background-color: var(--alert-success-bg);
+              border-color: var(--alert-success-border);
+              color: var(--alert-success-text);
+          }
+          #confirmationMessage.alert-info {
+              background-color: var(--alert-info-bg);
+              border-color: var(--alert-info-border);
+              color: var(--alert-info-text);
+          }
+           #confirmationMessage.alert-warning {
+              background-color: var(--alert-warning-bg);
+              border-color: var(--alert-warning-border);
+              color: var(--alert-warning-text);
+          }
+           #confirmationMessage.alert-danger {
+              background-color: var(--alert-danger-bg);
+              border-color: var(--alert-danger-border);
+              color: var(--alert-danger-text);
+          }
+
+         /* Style for the close button within the fixed alert */
+         #confirmationMessage .btn-close {
+             padding: 0.5em; /* Adjust padding */
+             margin: -0.5em -0.5em -0.5em auto; /* Negative margin to pull close button out slightly */
+             background: transparent url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23000'%3e%3cpath d='M.293.293a1 1 0 0 1 1.414 0L8 6.586 14.293.293a1 1 0 1 1 1.414 1.414L9.414 8l6.293 6.293a1 1 0 0 1-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 0 1-1.414-1.414L6.586 8 .293 1.707a1 1 0 0 1 0-1.414z'/%3e%3c/svg%3e") center / 1em auto no-repeat;
+             opacity: 0.5;
+         }
+          html[data-theme="dark"] #confirmationMessage .btn-close {
+             /* Invert close button color for dark mode */
+              filter: invert(1) grayscale(100%) brightness(200%);
+         }
+         #confirmationMessage .btn-close:hover {
+             opacity: 1;
+         }
+
+         /* Class to trigger fade-in */
+         #confirmationMessage.show {
+             opacity: 1;
+             top: 20px; /* Final position after fade-in */
+         }
+
 
           /* Style for QRIS image placeholder */
           .qris-image {
@@ -557,16 +644,21 @@
 </head>
 <body>
 
+    <!-- Tombol Theme Toggle -->
     <div id="theme-toggle">
         <button type="button" class="btn btn-secondary" id="theme-toggle-button" aria-label="Toggle theme">
+            <!-- Icon akan diganti oleh script -->
             <i class="bi bi-moon-fill"></i>
         </button>
     </div>
 
+    <!-- HEADER (Navbar) -->
     <header>
         <nav class="navbar navbar-expand-lg navbar-dark bg-transparent fixed-top" id="main-navbar">
             <div class="container">
-                <a class="navbar-brand d-flex align-items-center" href="index.html"> <img src="logojastipgacoan.jpg" alt="Logo Jastip Gacoan" height="30" class="me-2">
+                <a class="navbar-brand d-flex align-items-center" href="index.html"> <!-- Link kembali ke Beranda -->
+                    <!-- Ganti 'logo_gacoan_small.svg' dengan path logo Anda di navbar -->
+                    <img src="logojastipgacoan.jpg" alt="Logo Jastip Gacoan" height="30" class="me-2">
                     Jastip Gacoan
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -575,7 +667,8 @@
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav ms-auto">
                         <li class="nav-item"><a class="nav-link" href="index.html">Beranda</a></li>
-                        <li class="nav-item"><a class="nav-link active" aria-current="page" href="#">Pesan Sekarang</a></li> <li class="nav-item"><a class="nav-link" href="pesanan.html">Pesanan</a></li>
+                        <li class="nav-item"><a class="nav-link active" aria-current="page" href="#">Pesan Sekarang</a></li> <!-- Aktifkan link ini -->
+                        <li class="nav-item"><a class="nav-link" href="pesanan.html">Pesanan</a></li>
                         <li class="nav-item"><a class="nav-link" href="kontakkami.html">Kontak</a></li>
                         <li class="nav-item"><a class="nav-link" href="jadwal.html">Status Layanan</a></li>
                          <li class="nav-item"><a class="nav-link btn btn-outline-light btn-sm ms-2" href="login.html">Login Admin</a></li>
@@ -585,18 +678,27 @@
         </nav>
     </header>
 
+    <!-- BRANDING SECTION -->
     <section class="branding-section">
         <div class="container text-center">
-             <img src="logojastipgacoan.jpg" alt="Jastip Gacoan Logo" class="branding-logo">
-            <h1>Menu & Pesan</h1> <p>Pilih menu favorit Anda dan lengkapi detail pemesanan di sini.</p> </div>
+             <!-- Ganti 'gacoan_logo_large.png' dengan path logo besar Anda di sini -->
+            <img src="logojastipgacoan.jpg" alt="Jastip Gacoan Logo" class="branding-logo">
+            <h1>Menu & Pesan</h1> <!-- Judul Halaman -->
+            <p>Pilih menu favorit Anda dan lengkapi detail pemesanan di sini.</p> <!-- Tagline Menu -->
+        </div>
     </section>
 
 
     <main>
         <div class="container">
+            <!-- Menu Display Section -->
             <section id="menu-display-section">
-                 <h3 class="menu-category">Mie Gacoan (Rp 15.000)</h3>
+                 <!-- Judul section jika perlu, atau cukup category titles -->
+                 <!-- <h2 class="section-title">Daftar Menu</h2> -->
+
+                <h3 class="menu-category">Mie Gacoan (Rp 15.000)</h3>
                 <div class="row g-4">
+                    <!-- Item Mie Gacoan Level 1-8 -->
                     <div class="col-sm-6 col-md-4 col-lg-3">
                         <div class="card menu-item-card">
                             <div class="card-body">
@@ -685,8 +787,11 @@
                             </div>
                         </div>
                     </div>
-                </div> <h3 class="menu-category">Mie Suit (Original)</h3>
+                </div> <!-- End Row Mie Gacoan -->
+
+                 <h3 class="menu-category">Mie Suit (Original)</h3>
                 <div class="row g-4">
+                    <!-- Item Mie Suit Original -->
                     <div class="col-sm-6 col-md-4 col-lg-3">
                         <div class="card menu-item-card">
                             <div class="card-body">
@@ -698,8 +803,11 @@
                             </div>
                         </div>
                     </div>
-                </div> <h3 class="menu-category">Mie Hompimpa (Rp 15.000)</h3>
+                </div> <!-- End Row Mie Suit -->
+
+                <h3 class="menu-category">Mie Hompimpa (Rp 15.000)</h3>
                 <div class="row g-4">
+                     <!-- Item Mie Hompimpa Level 1-8 -->
                      <div class="col-sm-6 col-md-4 col-lg-3">
                          <div class="card menu-item-card">
                              <div class="card-body">
@@ -788,8 +896,11 @@
                              </div>
                          </div>
                      </div>
-                </div> <h3 class="menu-category">Dimsum (Rp 14.000)</h3>
+                </div> <!-- End Row Mie Hompimpa -->
+
+                 <h3 class="menu-category">Dimsum (Rp 14.000)</h3>
                 <div class="row g-4">
+                    <!-- Item Udang Rambutan -->
                     <div class="col-sm-6 col-md-4 col-lg-3">
                         <div class="card menu-item-card">
                             <div class="card-body">
@@ -801,7 +912,8 @@
                             </div>
                         </div>
                     </div>
-                     <div class="col-sm-6 col-md-4 col-lg-3">
+                     <!-- Item Lumpia Udang -->
+                    <div class="col-sm-6 col-md-4 col-lg-3">
                         <div class="card menu-item-card">
                             <div class="card-body">
                                 <h5 class="card-title">Lumpia Udang</h5>
@@ -812,7 +924,8 @@
                             </div>
                         </div>
                     </div>
-                     <div class="col-sm-6 col-md-4 col-lg-3">
+                     <!-- Item Udang Keju -->
+                    <div class="col-sm-6 col-md-4 col-lg-3">
                         <div class="card menu-item-card">
                             <div class="card-body">
                                 <h5 class="card-title">Udang Keju</h5>
@@ -823,7 +936,8 @@
                             </div>
                         </div>
                     </div>
-                     <div class="col-sm-6 col-md-4 col-lg-3">
+                     <!-- Item Siomay -->
+                    <div class="col-sm-6 col-md-4 col-lg-3">
                         <div class="card menu-item-card">
                             <div class="card-body">
                                 <h5 class="card-title">Siomay</h5>
@@ -834,7 +948,8 @@
                             </div>
                         </div>
                     </div>
-                     <div class="col-sm-6 col-md-4 col-lg-3">
+                     <!-- Item Pangsit Goreng -->
+                    <div class="col-sm-6 col-md-4 col-lg-3">
                         <div class="card menu-item-card">
                             <div class="card-body">
                                 <h5 class="card-title">Pangsit Goreng</h5>
@@ -845,8 +960,12 @@
                             </div>
                         </div>
                     </div>
-                </div> <h3 class="menu-category">Minuman</h3>
-                <div class="row g-4 mb-5"> <div class="col-sm-6 col-md-4 col-lg-3">
+                </div> <!-- End Row Dimsum -->
+
+                 <h3 class="menu-category">Minuman</h3>
+                <div class="row g-4 mb-5"> <!-- mb-5 untuk margin bawah terakhir -->
+                    <!-- Item Es Teh -->
+                    <div class="col-sm-6 col-md-4 col-lg-3">
                         <div class="card menu-item-card">
                             <div class="card-body">
                                 <h5 class="card-title">Es Teh</h5>
@@ -857,7 +976,8 @@
                             </div>
                         </div>
                     </div>
-                     <div class="col-sm-6 col-md-4 col-lg-3">
+                     <!-- Item Lemon Tea -->
+                    <div class="col-sm-6 col-md-4 col-lg-3">
                         <div class="card menu-item-card">
                             <div class="card-body">
                                 <h5 class="card-title">Lemon Tea</h5>
@@ -868,7 +988,8 @@
                             </div>
                         </div>
                     </div>
-                     <div class="col-sm-6 col-md-4 col-lg-3">
+                     <!-- Item Le Mineral -->
+                    <div class="col-sm-6 col-md-4 col-lg-3">
                         <div class="card menu-item-card">
                             <div class="card-body">
                                 <h5 class="card-title">Le Mineral</h5>
@@ -879,6 +1000,7 @@
                             </div>
                         </div>
                     </div>
+                     <!-- Item Teh Tarik -->
                      <div class="col-sm-6 col-md-4 col-lg-3">
                          <div class="card menu-item-card">
                              <div class="card-body">
@@ -890,6 +1012,7 @@
                              </div>
                          </div>
                      </div>
+                     <!-- Item Tai Tea -->
                      <div class="col-sm-6 col-md-4 col-lg-3">
                          <div class="card menu-item-card">
                              <div class="card-body">
@@ -901,7 +1024,8 @@
                              </div>
                          </div>
                      </div>
-                     <div class="col-sm-6 col-md-4 col-lg-3">
+                     <!-- Item Milo -->
+                    <div class="col-sm-6 col-md-4 col-lg-3">
                         <div class="card menu-item-card">
                             <div class="card-body">
                                 <h5 class="card-title">Milo</h5>
@@ -912,6 +1036,7 @@
                             </div>
                         </div>
                     </div>
+                     <!-- Item Es Coklat -->
                      <div class="col-sm-6 col-md-4 col-lg-3">
                          <div class="card menu-item-card">
                              <div class="card-body">
@@ -923,7 +1048,8 @@
                              </div>
                          </div>
                      </div>
-                     <div class="col-sm-6 col-md-4 col-lg-3">
+                     <!-- Item Orange -->
+                    <div class="col-sm-6 col-md-4 col-lg-3">
                         <div class="card menu-item-card">
                             <div class="card-body">
                                 <h5 class="card-title">Orange</h5>
@@ -934,6 +1060,7 @@
                             </div>
                         </div>
                     </div>
+                     <!-- Item Es Petak Umpet -->
                      <div class="col-sm-6 col-md-4 col-lg-3">
                          <div class="card menu-item-card">
                              <div class="card-body">
@@ -945,6 +1072,7 @@
                              </div>
                          </div>
                      </div>
+                      <!-- Item Es Gobak Sodor -->
                       <div class="col-sm-6 col-md-4 col-lg-3">
                           <div class="card menu-item-card">
                               <div class="card-body">
@@ -956,7 +1084,8 @@
                               </div>
                           </div>
                       </div>
-                     <div class="col-sm-6 col-md-4 col-lg-3">
+                     <!-- Item Es Teklek -->
+                    <div class="col-sm-6 col-md-4 col-lg-3">
                         <div class="card menu-item-card">
                             <div class="card-body">
                                 <h5 class="card-title">Es Teklek</h5>
@@ -967,6 +1096,7 @@
                             </div>
                         </div>
                     </div>
+                      <!-- Item Es Suklu Batok -->
                       <div class="col-sm-6 col-md-4 col-lg-3">
                           <div class="card menu-item-card">
                               <div class="card-body">
@@ -978,6 +1108,7 @@
                               </div>
                           </div>
                       </div>
+                       <!-- Item Tai Green Tea -->
                        <div class="col-sm-6 col-md-4 col-lg-3">
                            <div class="card menu-item-card">
                                <div class="card-body">
@@ -989,7 +1120,13 @@
                                </div>
                            </div>
                        </div>
-                </div> </section> <section class="order-form-section">
+                </div> <!-- End Row Minuman -->
+
+            </section> <!-- End Menu Display Section -->
+
+
+            <!-- Order Form & Summary Section -->
+            <section class="order-form-section">
                  <div class="order-form-container">
                      <h2>Detail Pesanan & Pengiriman</h2>
 
@@ -1000,13 +1137,22 @@
                          </div>
                          <div class="mb-3">
                              <label for="address" class="form-label"><i class="fas fa-map-marker-alt"></i> Alamat Pengiriman</label>
-                             <textarea id="address" class="form-control" rows="3" placeholder="Contoh: Nama Jalan No. Rumah, RT/RW, Kelurahan, Kecamatan, Kota/Kabupaten" required></textarea> </div>
+                             <textarea id="address" class="form-control" rows="3" placeholder="Contoh: Nama Jalan No. Rumah, RT/RW, Kelurahan, Kecamatan, Kota/Kabupaten" required></textarea> <!-- Add placeholder -->
+                         </div>
                          <div class="mb-3">
                              <label for="phone" class="form-label"><i class="fas fa-phone"></i> No. HP (WhatsApp)</label>
-                             <input type="tel" id="phone" class="form-control" placeholder="Contoh: 081234567890" required /> </div>
+                             <input type="tel" id="phone" class="form-control" placeholder="Contoh: 081234567890" required /> <!-- Add placeholder -->
+                         </div>
+
+                         <!-- Catatan Tambahan Field (NEW) -->
+                         <div class="mb-3">
+                              <label for="orderNotes" class="form-label"><i class="fas fa-comment-alt"></i> Catatan Tambahan (Opsional)</label> <!-- Ikon dan label baru -->
+                             <textarea id="orderNotes" class="form-control" rows="3" placeholder="Contoh: Tidak pakai bawang, extra sambal, dll."></textarea> <!-- Textarea untuk catatan -->
+                         </div>
                          <hr class="my-4">
 
-                         <div class="payment-method mb-4"> <label for="paymentMethod" class="form-label"><i class="fas fa-money-check-alt"></i> Metode Pembayaran</label>
+                         <div class="payment-method mb-4"> <!-- Added margin-bottom -->
+                             <label for="paymentMethod" class="form-label"><i class="fas fa-money-check-alt"></i> Metode Pembayaran</label>
                              <select id="paymentMethod" class="form-select">
                                  <optgroup label ="Bank Transfer (atas nama Ar* Fai** W**** L******)">
                                      <option value="Bank BCA (2001166818)">BCA - 2001166818</option>
@@ -1014,16 +1160,19 @@
                                  </optgroup>
                                  <optgroup label="Uang Elektronik">
                                      <option value="QRIS">QRIS</option>
-                                     </optgroup>
+                                     <!-- PERHATIAN: Ganti path/to/qris-image.png dengan lokasi gambar QRIS Anda yang sebenarnya -->
+                                 </optgroup>
                                  <option value="Cash On Delivery">Cash On Delivery</option>
                              </select>
+                              <!-- Placeholder untuk menampilkan gambar QRIS jika dipilih -->
                               <div id="qrisImageContainer" style="display: none; text-align: center; margin-top: 15px;">
                                   <img src="path/to/qris-image.png" alt="QRIS Payment" class="img-fluid rounded qris-image" style="max-width: 200px;">
                                   <p class="text-muted mt-2"><small>Scan kode QRIS di atas untuk pembayaran.</small></p>
                               </div>
                          </div>
 
-                         <div class="order-list-summary"> <h5 class="mb-3"><i class="fas fa-list-alt"></i> Ringkasan Pesanan Anda</h5>
+                         <div class="order-list-summary"> <!-- Using the new class for summary -->
+                             <h5 class="mb-3"><i class="fas fa-list-alt"></i> Ringkasan Pesanan Anda</h5>
                              <div id="orderList">
                                   <p class="text-muted">Belum ada pesanan ditambahkan.</p>
                              </div>
@@ -1031,17 +1180,81 @@
                              <button id="proceedBtn" class="btn btn-success w-100 btn-lg mt-3" disabled>
                                  <i class="fas fa-paper-plane me-1"></i> Kirim Pesanan via WhatsApp
                              </button>
-                             <div class="confirmation-message" id="confirmationMessage"></div>
+                             <!-- The confirmation message div is now positioned fixed in CSS -->
+                             <!-- <div class="confirmation-message" id="confirmationMessage"></div> -->
                          </div>
 
-                     </form> </div>
-            </section> </div> </main>
+                     </form> <!-- Form tag wraps all inputs and summary -->
+                 </div>
+            </section> <!-- End Order Form Section -->
 
+
+        </div> <!-- End container -->
+    </main>
+
+    <!-- FOOTER -->
     <footer>
-        <p>© 2024 Jastip Gacoan. Hak cipta dilindungi.</p> </footer>
+        <div class="container">
+            <div class="row">
+    
+                <div class="col-md-4 mb-4 mb-md-0">
+                    <h5>Jastip Gacoan</h5>
+                    <p>
+                        Layanan jastip terpercaya untuk pesanan Gacoan favorit Anda.
+                        Kami memastikan pesanan Anda sampai dengan cepat dan aman.
+                    </p>
+                    </div>
+    
+                <div class="col-md-4 mb-4 mb-md-0">
+                    <h5>Tautan Cepat</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="text-decoration-none">Beranda</a></li>
+                        <li><a href="#" class="text-decoration-none">Menu & Harga</a></li>
+                        <li><a href="#" class="text-decoration-none">Cara Pesan</a></li>
+                        <li><a href="#" class="text-decoration-none">Area Layanan</a></li>
+                        <li><a href="#" class="text-decoration-none">Hubungi Kami</a></li>
+                    </ul>
+                </div>
+    
+                <div class="col-md-4">
+                    <h5>Hubungi Kami & Ikuti Kami</h5>
+                    <p>
+                        <i class="bi bi-envelope-fill"></i> Email: aryfaidz99@gmail.com<br>
+                        <i class="bi bi-telephone-fill"></i> Telepon: +62-85-156-226-837 (Opsional)
+                    </p>
+                    <div>
+                        <a href="#" class="me-3 text-decoration-none">
+                            <i class="bi bi-instagram"></i> Instagram
+                        </a>
+                        <a href="#" class="me-3 text-decoration-none">
+                            <i class="bi bi-facebook"></i> Facebook
+                        </a>
+                        <a href="#" class="text-decoration-none">
+                            <i class="bi bi-whatsapp"></i> WhatsApp
+                        </a>
+                    </div>
+                </div>
+    
+            </div>
+    
+            <hr class="my-4" style="border-color: var(--accent-color);">
+    
+            <div class="row">
+                <div class="col-12 text-center">
+                    <p class="mb-0">&copy; 2025 Jastip Gacoan. Hak cipta dilindungi.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
 
+     <!-- Fixed Confirmation Message (NEW POSITION) -->
+     <div id="confirmationMessage" class="confirmation-message"></div>
+
+
+    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
+    <!-- Custom Script (JavaScript) -->
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             // --- Theme Toggle Functionality (Sama seperti file lainnya) ---
@@ -1110,8 +1323,11 @@
              const nameInput = document.getElementById('name'); // Customer name input
              const addressInput = document.getElementById('address'); // Customer address input
              const phoneInput = document.getElementById('phone'); // Customer phone input
+             const orderNotesInput = document.getElementById('orderNotes'); // NEW: Order notes input
              const paymentMethodSelect = document.getElementById('paymentMethod'); // Payment method select
              const qrisImageContainer = document.getElementById('qrisImageContainer'); // QRIS image container
+
+             let hideMessageTimeout; // Variable to store the timeout ID
 
 
              // Initial setup: Update order list display and button state
@@ -1127,7 +1343,7 @@
 
                      if (!itemName || isNaN(itemPrice)) {
                          console.error("Error: Invalid item data on button.", this);
-                         showMessage("Gagal menambahkan item. Data menu tidak valid.", "danger");
+                         showMessage("Gagal menambahkan item. Data menu tidak valid.", "danger", 5000); // Show danger longer
                          return;
                      }
 
@@ -1144,7 +1360,7 @@
                      }
 
                      updateOrderListDisplay(); // Update the display in the summary
-                     showMessage(`${itemName} telah ditambahkan ke pesanan.`, "success"); // Show success message
+                     showMessage(`${itemName} telah ditambahkan.`, "success", 4000); // Show success message for 4 seconds
                  });
              });
 
@@ -1162,17 +1378,17 @@
                      if (orderList[itemName] && !isNaN(newQuantity)) {
                          if (newQuantity <= 0) { // Handle 0 or less quantity as removal
                              delete orderList[itemName];
-                             showMessage(`${itemName} dihapus dari pesanan.`, "danger");
+                             showMessage(`${itemName} dihapus dari pesanan.`, "danger", 5000); // Show danger longer
                          } else {
                              // Update quantity
                              orderList[itemName].quantity = newQuantity;
-                             showMessage(`Jumlah ${itemName} diperbarui menjadi ${newQuantity}.`, "info");
+                             showMessage(`Jumlah ${itemName} diperbarui menjadi ${newQuantity}.`, "info", 4000); // Show info for 4 seconds
                          }
                          updateOrderListDisplay(); // Update the entire list display
                      } else if (orderList[itemName]) {
                          // If input is invalid (e.g., not a number), revert to the current quantity and show message
-                          input.value = orderList[itemName].quantity;
-                          showMessage("Jumlah harus angka positif.", "warning");
+                          input.value = orderList[itemName].quantity; // Revert input value
+                          showMessage("Jumlah harus angka positif.", "warning", 5000); // Show warning longer
                      }
                  }
              });
@@ -1189,7 +1405,7 @@
                       if (orderList[itemName]) {
                           delete orderList[itemName];
                           updateOrderListDisplay();
-                          showMessage(`${itemName} dihapus dari pesanan.`, "danger");
+                          showMessage(`${itemName} dihapus dari pesanan.`, "danger", 5000); // Show danger longer
                       }
                   }
              });
@@ -1269,18 +1485,79 @@
              nameInput.addEventListener('input', checkFormValidity);
              addressInput.addEventListener('input', checkFormValidity);
              phoneInput.addEventListener('input', checkFormValidity);
+             // orderNotesInput.addEventListener('input', checkFormValidity); // Note is optional, doesn't affect validity
 
 
              // Listener for Payment Method select to show/hide QRIS image
              paymentMethodSelect.addEventListener('change', function() {
                  if (paymentMethodSelect.value === 'QRIS') {
                      // PERHATIAN: Ganti src dengan path gambar QRIS Anda yang sebenarnya
-                     qrisImageContainer.querySelector('.qris-image').src = 'path/to/qris-image.png'; // Ensure correct path is set
+                     const qrisImgElement = qrisImageContainer.querySelector('.qris-image');
+                      // Check if the src is already set, avoid unnecessary changes
+                     if (qrisImgElement && qrisImgElement.getAttribute('src') !== 'path/to/qris-image.png') {
+                         qrisImgElement.src = 'path/to/qris-image.png'; // Set correct path
+                     }
                      qrisImageContainer.style.display = 'block';
                  } else {
                      qrisImageContainer.style.display = 'none';
                  }
              });
+
+
+             // Function to show temporary messages (using Bootstrap alerts)
+             // Adds auto-hide functionality
+             function showMessage(msg, type, duration = 3000) { // Default duration 3 seconds
+                 // Clear any existing auto-hide timeout
+                 if (hideMessageTimeout) {
+                     clearTimeout(hideMessageTimeout);
+                 }
+
+                 // Always ensure display is block when showing a message
+                 confirmationMessage.style.display = 'block';
+
+                  // Remove existing alert classes and fade/show classes
+                  // Temporarily remove 'show' to allow reflow before adding it back for animation
+                 confirmationMessage.classList.remove('alert-success', 'alert-info', 'alert-warning', 'alert-danger', 'show');
+                 confirmationMessage.classList.add('fade'); // Ensure fade class is present
+
+                 // Add new alert class based on type
+                  let alertClass;
+                  switch(type) {
+                      case 'success': alertClass = 'alert-success'; break;
+                      case 'info': alertClass = 'alert-info'; break;
+                      case 'warning': alertClass = 'alert-warning'; break;
+                      case 'danger': alertClass = 'alert-danger'; break;
+                      default: alertClass = 'alert-secondary';
+                  }
+                 // Add the new alert class
+                 confirmationMessage.classList.add(alertClass);
+
+                 // Set the message content and add close button
+                 confirmationMessage.innerHTML = msg + '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>';
+
+                 // Trigger reflow to restart the fade animation
+                 // This forces the browser to apply the 'fade' state before 'show' is added
+                 void confirmationMessage.offsetWidth;
+
+                 // Add 'show' class to trigger fade-in animation
+                 confirmationMessage.classList.add('show');
+
+
+                 // Automatically hide the message after 'duration', UNLESS it's a warning or danger
+                 // Warning/Danger messages require manual dismissal by clicking the 'x' button
+                 if (type !== 'danger' && type !== 'warning') {
+                     hideMessageTimeout = setTimeout(() => {
+                         // Use Bootstrap's JS method if available, or just hide
+                         // To use Bootstrap's hide method: new bootstrap.Alert(confirmationMessage).hide();
+                         // For simplicity without needing Bootstrap JS Alert component:
+                         confirmationMessage.classList.remove('show'); // Start fade-out animation
+                         // Wait for fade-out animation to finish before setting display: none
+                         setTimeout(() => {
+                             confirmationMessage.style.display = 'none';
+                         }, 300); // Match CSS transition duration
+                     }, duration); // Hide after the specified duration
+                 }
+             }
 
 
              // Listener for Proceed to WhatsApp button
@@ -1292,13 +1569,14 @@
                  const name = nameInput.value.trim();
                  const address = addressInput.value.trim();
                  const phone = phoneInput.value.trim();
+                 const orderNotes = orderNotesInput.value.trim(); // NEW: Get notes value
                  const paymentMethod = paymentMethodSelect.value;
 
                  // Re-validate before proceeding (redundant if checkFormValidity works, but good fail-safe)
                  if (!name || !address || !phone || Object.keys(orderList).length === 0) {
-                     alert('Mohon lengkapi data diri dan tambahkan pesanan.');
+                     // Alert is less intrusive now with the fixed message
+                     showMessage('Mohon lengkapi data diri dan tambahkan pesanan.', 'warning', 5000);
                       checkFormValidity(); // Re-check validity to re-enable if needed
-                     showMessage('Mohon lengkapi data.', 'warning');
                      return;
                  }
 
@@ -1309,10 +1587,14 @@
                      `- Nama: ${name}\n` +
                      `- No. HP: ${phone}\n` +
                      `- Alamat Pengiriman: ${address}\n` +
-                     `- Metode Pembayaran: ${paymentMethod}\n\n`;
+                     `- Metode Pembayaran: ${paymentMethod}\n`;
 
-                  // Detail Pesanan section
-                  message += `*Detail Pesanan:*\n`;
+                 // NEW: Add notes to the message if not empty
+                 if (orderNotes) {
+                     message += `- Catatan Tambahan: ${orderNotes}\n`;
+                 }
+
+                 message += `\n*Detail Pesanan:*\n`; // Section header
                   // Map over orderList items to format them
                   message += Object.values(orderList)
                       .map(item => `- ${item.name} (x${item.quantity}) = Rp ${item.price * item.quantity}`) // Format subtotal
@@ -1323,15 +1605,12 @@
 
                  // Get GPS location and add to message
                  if (navigator.geolocation) {
-                     showMessage('Mendapatkan lokasi GPS...', 'info');
+                     showMessage('Mendapatkan lokasi GPS...', 'info', 4000); // Shorter duration for info
                      navigator.geolocation.getCurrentPosition(position => {
                          const latitude = position.coords.latitude;
                          const longitude = position.coords.longitude;
                           // Correct Google Maps link format (using Google Maps web URL)
-                         // Note: The format might vary slightly between devices/browsers,
-                         // but lat,lon should be understood by Google Maps app/web.
                          const mapsLink = `https://maps.google.com/?q=${latitude},${longitude}`;
-
 
                          const locationMessage = `\n\n*Lokasi Pengiriman:*\n- Latitude: ${latitude}\n- Longitude: ${longitude}\n- [Lihat di Google Maps](${mapsLink})`; // Clearer labels and link text
 
@@ -1340,44 +1619,44 @@
                          const adminUrl = `https://wa.me/${adminNumber}?text=${encodeURIComponent(message + locationMessage)}`;
 
                          // Redirect to WhatsApp (use window.open to keep the current page)
-                          showMessage('Lokasi didapat. Mengarahkan ke WhatsApp...', 'info');
+                          showMessage('Lokasi didapat. Mengarahkan ke WhatsApp...', 'info', 4000);
                          const newWindow = window.open(adminUrl, '_blank');
 
                          // Add a slight delay before potentially clearing the form
                           setTimeout(() => {
-                              // Check if the new window was successfully opened (optional check)
-                              // if (newWindow && !newWindow.closed) {
+                              // Optional check if the new window was opened
+                              // if (newWindow && !newWindow.closed) { // Check if not null and not closed
                                    document.getElementById('orderForm').reset(); // Reset customer info form
                                    orderList = {}; // Clear the orderList object
                                    updateOrderListDisplay(); // Update the display
-                                   showMessage('Pesanan berhasil dikirim (silakan cek jendela WhatsApp).', 'success');
+                                   showMessage('Pesanan berhasil dikirim (silakan cek jendela WhatsApp).', 'success', 6000); // Show success longer
                               // } else {
                                   // Handle cases where popup blocker or browser prevents opening
-                                  // showMessage('Gagal membuka WhatsApp. Pastikan pop-up tidak diblokir.', 'warning');
+                                  // showMessage('Gagal membuka WhatsApp. Pastikan pop-up tidak diblokir.', 'warning', 8000); // Show warning longer
                                   // checkFormValidity(); // Re-enable button if sending failed
                               // }
                                checkFormValidity(); // Ensure button state is correct after process
-                          }, 2000); // Delay increased to 2 seconds
-
+                          }, 2500); // Delay increased
 
                      }, (error) => {
                          console.error('Geolocation error:', error);
                          let errorMessage = 'Gagal mendapatkan lokasi GPS.';
                          switch(error.code) {
                              case error.PERMISSION_DENIED:
-                               errorMessage = "Anda perlu mengizinkan akses lokasi untuk mengirim pesanan dengan lokasi GPS.";
+                               errorMessage = "Anda perlu mengizinkan akses lokasi.";
                                break;
                              case error.POSITION_UNAVAILABLE:
                                errorMessage = "Informasi lokasi tidak tersedia.";
                                break;
                              case error.TIMEOUT:
-                               errorMessage = "Permintaan untuk mendapatkan lokasi GPS timed out.";
+                               errorMessage = "Permintaan lokasi timed out.";
                                break;
                              case error.UNKNOWN_ERROR:
-                               errorMessage = "Terjadi kesalahan yang tidak diketahui saat mendapatkan lokasi GPS.";
+                               errorMessage = "Terjadi kesalahan saat mendapatkan lokasi.";
                                break;
                          }
-                         showMessage(errorMessage + ' Pesanan akan dikirim tanpa lokasi.', 'warning'); // Show warning but proceed
+                         // Show warning but proceed without location
+                         showMessage(errorMessage + ' Pesanan akan dikirim tanpa lokasi.', 'warning', 8000);
 
                          // Proceed to WhatsApp without location
                          const adminNumber = '6285156226837';
@@ -1390,16 +1669,16 @@
                                    document.getElementById('orderForm').reset();
                                    orderList = {};
                                    updateOrderListDisplay();
-                                   showMessage('Pesanan berhasil dikirim (silakan cek jendela WhatsApp), tanpa lokasi GPS.', 'success');
-                              // } else {
-                                   // showMessage('Gagal membuka WhatsApp. Pastikan pop-up tidak diblokir.', 'warning');
-                              // }
+                                   showMessage('Pesanan berhasil dikirim (silakan cek jendela WhatsApp), tanpa lokasi GPS.', 'success', 6000); // Show success longer
+                               // } else {
+                                   // showMessage('Gagal membuka WhatsApp. Pastikan pop-up tidak diblokir.', 'warning', 8000);
+                               // }
                                 checkFormValidity(); // Ensure button state is correct after process
-                           }, 2000); // Delay increased
+                           }, 2500); // Delay increased
                      });
                  } else {
                      // Browser doesn't support Geolocation
-                     showMessage('Perangkat Anda tidak mendukung Geolocation (GPS). Pesanan akan dikirim tanpa lokasi.', 'warning');
+                     showMessage('Perangkat Anda tidak mendukung Geolocation (GPS). Pesanan akan dikirim tanpa lokasi.', 'warning', 8000);
 
                       // Proceed to WhatsApp without location
                       const adminNumber = '6285156226837';
@@ -1412,45 +1691,15 @@
                                document.getElementById('orderForm').reset();
                                orderList = {};
                                updateOrderListDisplay();
-                               showMessage('Pesanan berhasil dikirim (silakan cek jendela WhatsApp), tanpa lokasi GPS.', 'success');
-                          // } else {
-                               // showMessage('Gagal membuka WhatsApp. Pastikan pop-up tidak diblokir.', 'warning');
-                          // }
+                               showMessage('Pesanan berhasil dikirim (silakan cek jendela WhatsApp), tanpa lokasi GPS.', 'success', 6000); // Show success longer
+                           // } else {
+                               // showMessage('Gagal membuka WhatsApp. Pastikan pop-up tidak diblokir.', 'warning', 8000);
+                           // }
                            checkFormValidity(); // Ensure button state is correct after process
-                       }, 2000); // Delay increased
+                       }, 2500); // Delay increased
                  }
              });
 
-             // Function to show temporary messages (using Bootstrap alerts)
-             function showMessage(msg, type) {
-                 // Always ensure display is block when showing a message
-                 confirmationMessage.style.display = 'block';
-
-                  // Remove existing alert classes and fade/show classes
-                 confirmationMessage.classList.remove('alert-success', 'alert-info', 'alert-warning', 'alert-danger', 'fade', 'show');
-
-                 // Add new alert class based on type
-                  let alertClass;
-                  switch(type) {
-                      case 'success': alertClass = 'alert-success'; break;
-                      case 'info': alertClass = 'alert-info'; break;
-                      case 'warning': alertClass = 'alert-warning'; break;
-                      case 'danger': alertClass = 'alert-danger'; break;
-                      default: alertClass = 'alert-secondary';
-                  }
-                 // Set the new classes and innerHTML, add fade and show to trigger Bootstrap transition
-                 confirmationMessage.className = 'confirmation-message alert alert-dismissible fade show ' + alertClass;
-                 confirmationMessage.innerHTML = msg + '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>';
-
-                 // Optional: Automatically hide the message after a few seconds (unless it's a danger message)
-                 // if (type !== 'danger') {
-                 //     setTimeout(() => {
-                 //         // Use Bootstrap's dismiss method or just hide
-                 //         // new bootstrap.Alert(confirmationMessage).hide(); // Requires Bootstrap's JS Alert component
-                 //         confirmationMessage.style.display = 'none';
-                 //     }, 5000); // Hide after 5 seconds
-                 // }
-             }
 
              // Initial check on page load (button should be disabled initially)
              checkFormValidity();

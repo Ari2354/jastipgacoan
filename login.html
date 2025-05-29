@@ -359,10 +359,11 @@
                 if (error) {
                     showMessage('Email atau password salah!', 'danger');
                 } else {
-                    // Simpan status login ke localStorage (opsional)
+                    showMessage('Login berhasil! Mengalihkan ke halaman admin...', 'success');
                     localStorage.setItem('isLoggedIn', 'true');
-                    // Redirect ke admin panel
-                    window.location.href = 'admin.html';
+                    setTimeout(() => {
+                        window.location.href = 'admin.html';
+                    }, 1200); // Tampilkan alert sukses sebentar sebelum redirect
                 }
             });
 

@@ -1,3 +1,9 @@
+import { createClient } from '@supabase/supabase-js'
+
+const supabaseUrl = 'https://aniulxoqzwnrxtdmpbmv.supabase.co'
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFuaXVseG9xenducnh0ZG1wYm12Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg0MDA4MjQsImV4cCI6MjA2Mzk3NjgyNH0.NOi9RVyGAR4jTI_kXh7zk3aI1VIPyah8MdFT4KcZnTQ'
+export const supabase = createClient(supabaseUrl, supabaseKey)
+
 document.addEventListener('DOMContentLoaded', function() {
     const themeToggleButton = document.getElementById('theme-toggle-button');
     const htmlElement = document.documentElement; // Get the <html> element
@@ -49,4 +55,11 @@ document.addEventListener('DOMContentLoaded', function() {
             scrolled = false;
         }
     });
+
+    async function fetchUserData() {
+        const { data, error } = await supabase.from('users').select('*')
+        console.log(data, error)
+    }
+
+    fetchUserData();
 });

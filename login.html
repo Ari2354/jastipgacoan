@@ -210,6 +210,8 @@
 
 
     </style>
+    <!-- Tambahkan CDN Supabase JS di <head> jika belum ada -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 </head>
 <body>
 
@@ -297,6 +299,10 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
+        const SUPABASE_URL = 'https://aniulxoqzwnrxtdmpbmv.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFuaXVseG9xenducnh0ZG1wYm12Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg0MDA4MjQsImV4cCI6MjA2Mzk3NjgyNH0.NOi9RVyGAR4jTI_kXh7zk3aI1VIPyah8MdFT4KcZnTQ';
+        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
         document.addEventListener('DOMContentLoaded', function () {
             // --- Theme Toggle Functionality (Sama seperti script.js di index.html) ---
             const themeToggleButton = document.getElementById('theme-toggle-button');
@@ -343,31 +349,31 @@
             const loginForm = document.getElementById('loginForm');
             const loginMessage = document.getElementById('loginMessage');
 
-            loginForm.addEventListener('submit', function (e) {
+            loginForm.addEventListener('submit', async function (e) {
                 e.preventDefault();
 
-                const username = document.getElementById('username').value.trim();
+                const email = document.getElementById('username').value.trim();
                 const password = document.getElementById('password').value.trim();
 
-                // Replace with your actual username and password
-                const correctUsername = 'Ari2354'; // Contoh username
-                const correctPassword = '031908'; // Contoh password
+                // Login dengan Supabase Auth
+                const { data, error } = await supabase.auth.signInWithPassword({
+                    email,
+                    password
+                });
 
-                if (username === correctUsername && password === correctPassword) {
-                    // Simpan status login ke localStorage
-                    localStorage.setItem('isLoggedIn', 'true');
-                    // Arahkan ke halaman admin (panel pesanan)
-                    window.location.href = 'admin.html'; // Ganti dengan nama file panel Anda
+                if (error) {
+                    showMessage('Email atau password salah!', 'danger');
                 } else {
-                    showMessage('Username atau password salah!', 'danger');
+                    // Simpan status login ke localStorage (opsional)
+                    localStorage.setItem('isLoggedIn', 'true');
+                    // Redirect ke admin panel
+                    window.location.href = 'admin.html';
                 }
             });
 
             function showMessage(message, type) {
                 loginMessage.style.display = 'block';
-                // Remove existing alert classes
                 loginMessage.classList.remove('alert-success', 'alert-info', 'alert-warning', 'alert-danger');
-                // Add new alert class
                 loginMessage.classList.add('alert', 'mt-3', 'alert-' + type);
                 loginMessage.textContent = message;
             }

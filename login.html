@@ -222,6 +222,8 @@
             color: var(--accent-color); /* Highlight color on hover */
         }
     </style>
+    <!-- Tambahkan CDN Supabase JS di <head> jika belum ada -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 </head>
 <body>
     <div id="theme-toggle">
@@ -255,8 +257,15 @@
             <h2><i class="fas fa-lock"></i> Masuk ke Akun Anda</h2>
             <form id="loginForm" autocomplete="on">
                 <div class="mb-3">
+<<<<<<< HEAD
                     <label for="email" class="form-label"><i class="fas fa-envelope"></i> Email</label>
                     <input type="email" class="form-control" id="email" name="email" required autofocus placeholder="Masukkan email Anda" />
+=======
+                    <label for="username" class="form-label"><i class="fas fa-user"></i> Email (Gmail)</label>
+                    <input type="text" class="form-control" id="username" name="username" required autofocus /> </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label"><i class="fas fa-key"></i> Kata Sandi</label> <input type="password" class="form-control" id="password" name="password" required />
+>>>>>>> 077c71724701c04a9bca18677ea6b35115ec701a
                 </div>
                 <div class="mb-3">
                     <label for="password" class="form-label"><i class="fas fa-key"></i> Kata Sandi</label>
@@ -340,9 +349,21 @@
     import { signInWithPopup, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
     import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
 
+<<<<<<< HEAD
     const loginForm = document.getElementById('loginForm');
     const loginBtn = document.getElementById('loginGoogleBtn');
     const loginMessage = document.getElementById('loginMessage');
+=======
+    <script>
+        const SUPABASE_URL = 'https://aniulxoqzwnrxtdmpbmv.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFuaXVseG9xenducnh0ZG1wYm12Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg0MDA4MjQsImV4cCI6MjA2Mzk3NjgyNH0.NOi9RVyGAR4jTI_kXh7zk3aI1VIPyah8MdFT4KcZnTQ';
+        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        document.addEventListener('DOMContentLoaded', function () {
+            // --- Theme Toggle Functionality (Sama seperti script.js di index.html) ---
+            const themeToggleButton = document.getElementById('theme-toggle-button');
+            const htmlElement = document.documentElement; // Get the <html> element
+>>>>>>> 077c71724701c04a9bca18677ea6b35115ec701a
 
     // Ganti dengan email admin Anda
     const adminEmails = ["admin@email.com"];
@@ -407,10 +428,46 @@
         }
     });
 
+<<<<<<< HEAD
     function showMessage(message, type) {
         loginMessage.style.display = 'block';
         loginMessage.className = 'alert alert-' + type + ' mt-3';
         loginMessage.textContent = message;
     }
 </script>
+=======
+
+            // --- Login Form Logic ---
+            const loginForm = document.getElementById('loginForm');
+            const loginMessage = document.getElementById('loginMessage');
+
+            loginForm.addEventListener('submit', async function (e) {
+                e.preventDefault();
+
+                const email = document.getElementById('username').value.trim();
+                const password = document.getElementById('password').value.trim();
+                const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+
+                if (error) {
+                    showMessage('Email atau password salah!', 'danger');
+                } else {
+                    showMessage('Login berhasil! Mengalihkan ke halaman admin...', 'success');
+                    localStorage.setItem('isLoggedIn', 'true');
+                    setTimeout(() => {
+                        window.location.href = 'admin.html';
+                    }, 1200); // Tampilkan alert sukses sebentar sebelum redirect
+                }
+            });
+
+            function showMessage(message, type) {
+                loginMessage.style.display = 'block';
+                loginMessage.classList.remove('alert-success', 'alert-info', 'alert-warning', 'alert-danger');
+                loginMessage.classList.add('alert', 'mt-3', 'alert-' + type);
+                loginMessage.textContent = message;
+            }
+            // --- End Login Form Logic ---
+        });
+    </script>
+</body>
+>>>>>>> 077c71724701c04a9bca18677ea6b35115ec701a
 </html>

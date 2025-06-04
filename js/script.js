@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { db, auth, provider } from '../firebase/firebase-js-app/src/firebase.js';
 import { signInWithPopup, createUserWithEmailAndPassword, signInWithEmailAndPassword as firebaseSignIn, onAuthStateChanged } from "firebase/auth";
 import { collection, addDoc, query, where, getDocs } from "firebase/firestore";
@@ -6,6 +7,13 @@ import { collection, addDoc, query, where, getDocs } from "firebase/firestore";
 onAuthStateChanged(auth, user => {
   if (!user) window.location.href = "login.html";
 });
+=======
+import { createClient } from '@supabase/supabase-js'
+
+const supabaseUrl = 'https://aniulxoqzwnrxtdmpbmv.supabase.co'
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFuaXVseG9xenducnh0ZG1wYm12Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg0MDA4MjQsImV4cCI6MjA2Mzk3NjgyNH0.NOi9RVyGAR4jTI_kXh7zk3aI1VIPyah8MdFT4KcZnTQ'
+export const supabase = createClient(supabaseUrl, supabaseKey)
+>>>>>>> 077c71724701c04a9bca18677ea6b35115ec701a
 
 document.addEventListener('DOMContentLoaded', function() {
     const themeToggleButton = document.getElementById('theme-toggle-button');
@@ -59,6 +67,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
+<<<<<<< HEAD
     // Login Google
     document.getElementById('loginBtn').onclick = async function() {
         try {
@@ -156,3 +165,12 @@ googleButton.addEventListener('click', async () => {
         firebaseError.style.display = 'block';
     }
 });
+=======
+    async function fetchUserData() {
+        const { data, error } = await supabase.from('users').select('*')
+        console.log(data, error)
+    }
+
+    fetchUserData();
+});
+>>>>>>> 077c71724701c04a9bca18677ea6b35115ec701a

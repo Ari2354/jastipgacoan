@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="light">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Admin Dashboard - Jastip Gacoan</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
+    <style>
+        :root {
+            --background-color: #ffffff;
+            --text-color: #333333;
+            --primary-color: #E53935;
+            --primary-color-rgb: 229, 57, 53;
+            --secondary-color: #757575;
+            --accent-color: #FFA000;
+            --card-background: #ffffff;
+            --card-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.1);
+            --section-title-color: #E53935;
+            --navbar-bg-light: rgba(255, 255, 255, 0.9);
+            --table-header-bg-light: #E53935;
+            --table-border-color-light: #dee2e6;
+            --table-border-color: var(--table-border-color-light);
+            --highlight-color-light: #f2f2f2;
+            --highlight-color: var(--highlight-color-light);
+        }
+        html[data-theme="dark"] {
+            --background-color: #1a1a1a;
+            --text-color: #e0e0e0;
+            --primary-color: #EF5350;
+            --primary-color-rgb: 239, 83, 80;
+            --secondary-color: #BDBDBD;
+            --accent-color: #FFB300;
+            --card-background: #2b2b2b;
+            --card-shadow: 0 0.125rem 0.25rem rgba(255, 255, 255, 0.1);
+            --section-title-color: #EF5350;
+            --navbar-bg-dark: rgba(26, 26, 26, 0.9);
+            --table-header-bg-dark: #421212;
+            --table-border-color-dark: #444;
+            --table-border-color: var(--table-border-color-dark);
+            --highlight-color-dark: #3b3b3b;
+            --highlight-color: var(--highlight-color-dark);
+        }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            overflow: hidden;
+        }
+        /* Sidebar */
+        #sidebar {
+            width: 250px;
+            background-color: var(--primary-color);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        #sidebar h2 {
+            font-weight: 700;
+            margin-bottom: 30px;
+            font-size: 1.5rem;
+            user-select: none;
+        }
+        #sidebar nav a {
+            color: white;
+            text-decoration: none;
+            padding: 12px 15px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            transition: background-color 0.3s ease;
+            cursor: pointer;
+        }
+        #sidebar nav a.active, #sidebar nav a:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        #sidebar nav a i {
+            font-size: 1.2rem;
+        }
+        #logoutBtn {
+            margin-top: auto;
+            background-color: #dc3545;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.3s ease;
+        }
+        #logoutBtn:hover {
+            opacity: 0.8;
+        }
+        /* Main content */
+        #main-content {
+            flex-grow: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background-color: var(--background-color);
+        }
+        h2.section-title {
+            color: var(--section-title-color);
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+        /* Theme toggle */
+        #theme-toggle {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1030;
+        }
+        #theme-toggle-button {
+            background-color: var(--card-background);
+            border: 1px solid var(--secondary-color);
+            color: var(--text-color);
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            border-radius: 50%;
+            box-shadow: var(--card-shadow);
+            cursor: pointer;
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, transform 0.2s ease;
+        }
+        #theme-toggle-button:hover {
+            background-color: var(--secondary-color);
+            color: var(--card-background);
+            border-color: var(--secondary-color);
+            transform: scale(1.1);
+        }
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            box-shadow: var(--card-shadow);
+            background-color: var(--card-background);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        th, td {
+            padding: 12px;
+            border: 1px solid var(--table-border-color);
+            text-align: left;
+            color: var(--text-color);
+        }
+        thead th {
+            background-color: var(--table-header-bg-light);
+            color: white;
+            font-weight: 600;
+        }
+        html[data-theme="dark"] thead th {
+            background-color: var(--table-header-bg-dark);
+            color: var(--text-color);
+        }
+        /* Forms */
+        input[type="text"], input[type="number"], textarea {
+            width: 100%;
+            padding: 8px 10px;
+            margin-bottom: 10px;
+            border: 1px solid var(--secondary-color);
+            border-radius: 5px;
+            background-color: var(--card-background);
+            color: var(--text-color);
+            box-sizing: border-box;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        input[type="text"]:focus, input[type="number"]:focus, textarea:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 8px rgba(var(--primary-color-rgb), 0.5);
+            outline: none;
+        }
+        button {
+            background-color: var(--primary-color);
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            font-weight: 600;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #D32F2F;
+        }
+        /* Panel sections */
+        .panel {
+            display: none;
+        }
+        .panel.active {
+            display: block;
+        }
+        /* Responsive */
+        @media (max-width: 768px) {
+            #sidebar {
+                width: 100%;
+                height: auto;
+                flex-direction: row;
+                overflow-x: auto;
+                padding: 10px;
+            }
+            #sidebar nav a {
+                flex: 1 0 auto;
+                margin: 0 5px;
+                text-align: center;
+            }
+            #main-content {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="sidebar">
+        <h2>Admin Panel</h2>
+        <nav>
+            <a href="#" class="active" data-panel="transaksi"><i class="bi bi-receipt"></i> Transaksi</a>
+            <a href="#" data-panel="restoran">Restoran</a>
+            <a href="#" data-panel="driver"><i class="bi bi-truck"></i> Tambah Driver</a>
+            <a href="#" data-panel="penjualan"><i class="bi bi-bar-chart-line"></i> Data Penjualan</a>
+        </nav>
+        <button id="logoutBtn">Logout</button>
+    </div>
+    <div id="main-content">
+        <!-- Panel Transaksi -->
+        <section id="transaksi" class="panel active">
+            <h2 class="section-title">Panel Transaksi</h2>
+            <table id="transaksiTable">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nama</th>
+                        <th>Alamat</th>
+                        <th>No. HP</th>
+                        <th>Pembayaran</th>
+                        <th>Pesanan</th>
+                        <th>Total</th>
+                        <th>Lokasi</th>
+                        <th>Catatan</th>
+                        <th>Tanggal</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+            <button id="addTransaksiBtn">Tambah Transaksi</button>
+        </section>
+        <!-- Panel Restoran -->
+        <section id="restoran" class="panel">
+            <h2 class="section-title">Panel Restoran</h2>
+            <table id="restoranTable">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nama Restoran</th>
+                        <th>Alamat</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+            <button id="addRestoranBtn">Tambah Restoran</button>
+        </section>
+
+        <!-- Panel Produk (khusus per restoran, tampil jika klik "Produk" pada restoran) -->
+        <section id="produkPanel" class="panel">
+            <h2 class="section-title">Panel Produk Restoran</h2>
+            <button id="backToRestoranBtn" class="btn btn-secondary mb-2">Kembali ke Restoran</button>
+            <table id="produkTable">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nama Produk</th>
+                        <th>Deskripsi</th>
+                        <th>Harga</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+            <button id="addProdukBtn">Tambah Produk</button>
+        </section>
+
+        <!-- Panel Driver -->
+        <section id="driver" class="panel">
+            <h2 class="section-title">Panel Tambah Driver</h2>
+            <table id="driverTable">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nama Driver</th>
+                        <th>No. HP</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+            <button id="addDriverBtn">Tambah Driver</button>
+        </section>
+        <!-- Panel Penjualan -->
+        <section id="penjualan" class="panel">
+            <h2 class="section-title">Data Penjualan</h2>
+            <p>Total Transaksi: <span id="totalTransaksi">0</span></p>
+            <p>Total Pendapatan: Rp <span id="totalPendapatan">0</span></p>
+        </section>
+    </div>
+    <div id="theme-toggle">
+        <button type="button" id="theme-toggle-button" title="Toggle Dark/Light Mode">
+            <i class="bi bi-moon-fill"></i>
+        </button>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="module">
+        // filepath: c:\xampp\htdocs\projek bisnis 1\admin-dashboard.html
+        import { db } from './firebase/firebase-js-app/src/firebase.js';
+        import {
+            collection, getDocs, addDoc, updateDoc, deleteDoc, doc, setDoc
+        } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+
+        // --- PANEL RESTORAN ---
+        const restoranTableBody = document.querySelector('#restoranTable tbody');
+        const addRestoranBtn = document.getElementById('addRestoranBtn');
+        let restorans = []; // Array of restoran data
+
+        async function loadRestorans() {
+            restorans = [];
+            restoranTableBody.innerHTML = '<tr><td colspan="5">Memuat data...</td></tr>';
+            const snapshot = await getDocs(collection(db, "restorans"));
+            restorans = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            renderRestoranTable();
+        }
+
+        function renderRestoranTable() {
+            restoranTableBody.innerHTML = '';
+            restorans.forEach(resto => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${resto.id}</td>
+                    <td>${resto.nama}</td>
+                    <td>${resto.alamat || '-'}</td>
+                    <td>
+                        <button class="btn btn-sm btn-primary" data-id="${resto.id}" data-action="produk">Produk</button>
+                        <button class="btn btn-sm btn-warning" data-id="${resto.id}" data-action="edit">Edit</button>
+                        <button class="btn btn-sm btn-danger" data-id="${resto.id}" data-action="delete">Hapus</button>
+                    </td>
+                `;
+                restoranTableBody.appendChild(tr);
+            });
+        }
+
+        // Tambah/Edit/Hapus Restoran
+        addRestoranBtn.addEventListener('click', async () => {
+            const nama = prompt('Nama Restoran:');
+            if (!nama) return;
+            const alamat = prompt('Alamat Restoran:');
+            if (nama) {
+                await addDoc(collection(db, "restorans"), { nama, alamat });
+                loadRestorans();
+            }
+        });
+        restoranTableBody.addEventListener('click', async (e) => {
+            const id = e.target.dataset.id;
+            const action = e.target.dataset.action;
+            if (!id || !action) return;
+            if (action === 'edit') {
+                const resto = restorans.find(r => r.id === id);
+                const nama = prompt('Nama Restoran:', resto.nama);
+                const alamat = prompt('Alamat Restoran:', resto.alamat || '');
+                if (nama) {
+                    await updateDoc(doc(db, "restorans", id), { nama, alamat });
+                    loadRestorans();
+                }
+            } else if (action === 'delete') {
+                if (confirm('Hapus restoran ini beserta semua produk?')) {
+                    await deleteDoc(doc(db, "restorans", id));
+                    // Produk di subcollection akan ikut terhapus jika pakai Firestore recursive delete (atau hapus manual)
+                    loadRestorans();
+                }
+            } else if (action === 'produk') {
+                openProdukPanel(id);
+            }
+        });
+
+        // --- PANEL PRODUK PER RESTORAN ---
+        const produkPanel = document.getElementById('produkPanel');
+        const produkTableBody = document.querySelector('#produkTable tbody');
+        const addProdukBtn = document.getElementById('addProdukBtn');
+        let currentRestoranId = null;
+        let produkList = [];
+
+        async function openProdukPanel(restoranId) {
+            currentRestoranId = restoranId;
+            document.getElementById('restoran').classList.remove('active');
+            produkPanel.classList.add('active');
+            await loadProduk();
+        }
+
+        async function loadProduk() {
+            produkList = [];
+            produkTableBody.innerHTML = '<tr><td colspan="5">Memuat data produk...</td></tr>';
+            const snapshot = await getDocs(collection(db, "restorans", currentRestoranId, "produk"));
+            produkList = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            renderProdukTable();
+        }
+
+        function renderProdukTable() {
+            produkTableBody.innerHTML = '';
+            produkList.forEach(prod => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${prod.id}</td>
+                    <td>${prod.nama}</td>
+                    <td>${prod.deskripsi || '-'}</td>
+                    <td>${prod.harga ? 'Rp ' + prod.harga.toLocaleString('id-ID') : '-'}</td>
+                    <td>
+                        <button class="btn btn-sm btn-warning" data-id="${prod.id}" data-action="edit">Edit</button>
+                        <button class="btn btn-sm btn-danger" data-id="${prod.id}" data-action="delete">Hapus</button>
+                    </td>
+                `;
+                produkTableBody.appendChild(tr);
+            });
+        }
+
+        // Tambah/Edit/Hapus Produk
+        addProdukBtn.addEventListener('click', async () => {
+            const nama = prompt('Nama Produk:');
+            if (!nama) return;
+            const deskripsi = prompt('Deskripsi Produk:');
+            const harga = parseInt(prompt('Harga Produk:'));
+            if (nama && !isNaN(harga)) {
+                await addDoc(collection(db, "restorans", currentRestoranId, "produk"), { nama, deskripsi, harga });
+                loadProduk();
+            }
+        });
+        produkTableBody.addEventListener('click', async (e) => {
+            const id = e.target.dataset.id;
+            const action = e.target.dataset.action;
+            if (!id || !action) return;
+            if (action === 'edit') {
+                const prod = produkList.find(p => p.id === id);
+                const nama = prompt('Nama Produk:', prod.nama);
+                const deskripsi = prompt('Deskripsi Produk:', prod.deskripsi || '');
+                const harga = parseInt(prompt('Harga Produk:', prod.harga));
+                if (nama && !isNaN(harga)) {
+                    await updateDoc(doc(db, "restorans", currentRestoranId, "produk", id), { nama, deskripsi, harga });
+                    loadProduk();
+                }
+            } else if (action === 'delete') {
+                if (confirm('Hapus produk ini?')) {
+                    await deleteDoc(doc(db, "restorans", currentRestoranId, "produk", id));
+                    loadProduk();
+                }
+            }
+        });
+
+        // Tombol kembali ke panel restoran
+        document.getElementById('backToRestoranBtn').addEventListener('click', () => {
+            produkPanel.classList.remove('active');
+            document.getElementById('restoran').classList.add('active');
+            loadRestorans();
+        });
+
+        // --- INIT ---
+        loadRestorans();
+
+        // --- SIDEBAR NAVIGATION ---
+        document.querySelectorAll('#sidebar nav a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                // Hapus class active dari semua link dan panel
+                document.querySelectorAll('#sidebar nav a').forEach(l => l.classList.remove('active'));
+                document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+                // Tambahkan class active ke link dan panel yang dipilih
+                this.classList.add('active');
+                const panelId = this.dataset.panel;
+                if (panelId) {
+                    document.getElementById(panelId).classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Jastip Jember - Beranda</title>
+    <title>Jastip Makanan - Jelajahi Restoran & Makanan</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
@@ -67,30 +67,8 @@
             background-color: var(--background-color) !important;
             box-shadow: var(--card-shadow);
         }
-        .hero {
-            min-height: 60vh;
-            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            padding: 60px 20px;
-            position: relative;
-            overflow: hidden;
-        }
-        .hero .container {
-            z-index: 1;
-        }
-        .hero-icon {
-            width: 120px;
-            margin-bottom: 20px;
-            animation: float 3s ease-in-out infinite;
-        }
-        @keyframes float {
-            0% { transform: translateY(0); }
-            50% { transform: translateY(-15px); }
-            100% { transform: translateY(0); }
+        .container {
+            max-width: 1200px;
         }
         .section-title {
             font-weight: 700;
@@ -110,8 +88,8 @@
             background-color: var(--accent-color);
             border-radius: 2px;
         }
-        .news-section, .services-section {
-            padding: 40px 0;
+        .search-bar {
+            margin-bottom: 20px;
         }
         .card {
             background-color: var(--card-background);
@@ -121,6 +99,7 @@
             border-radius: 10px;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             overflow: hidden;
+            cursor: pointer;
         }
         .card:hover {
             transform: translateY(-10px);
@@ -137,10 +116,11 @@
         .card-body {
             padding: 15px;
         }
-        .service-icon {
-            font-size: 3rem;
-            color: var(--primary-color);
-            margin-bottom: 15px;
+        .no-results {
+            text-align: center;
+            font-size: 1.2rem;
+            color: var(--secondary-color);
+            margin-top: 40px;
         }
         #theme-toggle {
             position: fixed;
@@ -176,7 +156,7 @@
         <div class="container">
             <a class="navbar-brand d-flex align-items-center" href="#">
                 <i class="bi bi-shop me-2"></i>
-                Jastip Jember
+                Jastip Makanan
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" 
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -184,7 +164,7 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link active" href="#">Beranda</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="jastipmakanan.html">Beranda</a></li>
                     <li class="nav-item"><a class="nav-link" href="menu.html">Pesan Sekarang</a></li>
                     <li class="nav-item"><a class="nav-link" href="pesanan.html">Pesanan</a></li>
                     <li class="nav-item"><a class="nav-link" href="kontakkami.html">Kontak</a></li>
@@ -194,42 +174,20 @@
         </div>
     </nav>
 
-    <section class="hero">
-        <div class="container">
-            <i class="bi bi-bag-heart hero-icon"></i>
-            <h1 class="display-4 fw-bold">Jastip Jember</h1>
-            <p class="lead">Nikmati layanan jastip terbaik di Jember dengan berbagai pilihan restoran dan produk favorit.</p>
-            <a href="menu.html" class="btn btn-light btn-lg mt-3">Pesan Sekarang</a>
+    <main class="container mt-4">
+        <h2 class="section-title" id="mainTitle">Jelajahi Restoran & Makanan</h2>
+        <div class="search-bar" id="searchBarContainer">
+            <input type="text" id="searchInput" class="form-control" placeholder="Cari berdasarkan kategori..." />
         </div>
-    </section>
-
-    <section class="news-section container">
-        <h2 class="section-title">Makanan</h2>
-        <div class="news-scroll-container" id="newsContainer" style="display: flex; overflow-x: auto; gap: 1rem; padding-bottom: 1rem;">
-            <!-- News cards will be injected here -->
+        <div class="row" id="restaurantList">
+            <!-- Restaurant cards will be injected here -->
         </div>
-    </section>
-
-    <section class="services-section container">
-        <h2 class="section-title">Layanan Kami</h2>
-        <div class="row g-4 justify-content-center">
-            <div class="col-6 col-md-3 text-center">
-                <i class="bi bi-bicycle service-icon"></i>
-                <h5>Jasa Ojek</h5>
-                <p>Layanan ojek cepat dan terpercaya untuk kebutuhan Anda di Jember.</p>
-            </div>
-            <div class="col-6 col-md-3 text-center">
-                <i class="bi bi-shop service-icon"></i>
-                <h5>Jastip Makanan</h5>
-                <p>Pesan makanan favorit dari berbagai restoran terbaik di Jember.</p>
-            </div>
-            <div class="col-6 col-md-3 text-center">
-                <i class="bi bi-box-seam service-icon"></i>
-                <h5>Jastip Produk</h5>
-                <p>Belanja produk pilihan dengan mudah dan cepat.</p>
-            </div>
+        <div class="row d-none" id="productList">
+            <!-- Product cards will be injected here -->
         </div>
-    </section>
+        <p class="no-results d-none" id="noResults">Tidak ada restoran atau makanan yang sesuai.</p>
+        <button class="btn btn-secondary d-none" id="backToRestaurantsBtn">Kembali ke Daftar Restoran</button>
+    </main>
 
     <div id="theme-toggle">
         <button type="button" id="theme-toggle-button" title="Toggle Dark/Light Mode">
@@ -239,73 +197,108 @@
 
     <script type="module">
         import { db } from './firebase/firebase-js-app/src/firebase.js';
-        import { collection, getDocs } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+        import { collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
 
-        async function fetchNews() {
-            const newsContainer = document.getElementById('newsContainer');
-            newsContainer.innerHTML = '';
+        let allRestaurants = [];
+        let allProducts = [];
+        let currentRestaurantId = null;
 
+        async function fetchRestaurants() {
+            const restaurantList = document.getElementById('restaurantList');
+            restaurantList.innerHTML = '';
             try {
-                // Fetch restaurants from 'restoreans' collection as requested
                 const restaurantsSnapshot = await getDocs(collection(db, 'restorans'));
-                console.log('Restorants fetched:', restaurantsSnapshot.size);
+                allRestaurants = [];
                 restaurantsSnapshot.forEach(doc => {
                     const data = doc.data();
-                    console.log('Restorant data:', data);
-                // Ensure data fields are not empty or undefined
-                // Check for alternative field names if name or description are empty
-                const title = data.nama || data.title || 'Tidak ada judul';
-                const description = data.description || data.desc || 'Deskripsi tidak tersedia';
-                const imageUrl = data.imageUrl || data.image || '';
-
-                // Create a clickable card that links to the restaurant's panel or orders
-                const card = createNewsCard(title, description, imageUrl);
-                card.style.minWidth = '300px';
-
-                // Assuming each restaurant document has an 'id' or 'slug' field to link to its panel
-                const restaurantId = data.id || data.slug || doc.id;
-                card.style.cursor = 'pointer';
-                card.addEventListener('click', () => {
-                    // Redirect to restaurant panel or orders page with restaurantId as query param
-                    // Adjust URL as per your routing setup
-                    window.location.href = `jastipmakanan.html#restoran?restaurant=${restaurantId}`;
+                    data.id = doc.id;
+                    allRestaurants.push(data);
                 });
-
-                newsContainer.appendChild(card);
-                });
-
-                // Fetch products
-                const productsSnapshot = await getDocs(collection(db, 'products'));
-                console.log('Produk fetched:', productsSnapshot.size);
-                productsSnapshot.forEach(doc => {
-                    const data = doc.data();
-                    console.log('Product data:', data);
-                    // Check for alternative field names if name or description are empty
-                    const title = data.name || data.title || 'Tidak ada judul';
-                    const description = data.description || data.desc || 'Deskripsi tidak tersedia';
-                    const imageUrl = data.imageUrl || data.image || '';
-
-                    const card = createNewsCard(title, description, imageUrl);
-                    card.style.minWidth = '300px';
-                    newsContainer.appendChild(card);
-                });
+                showRestaurants();
             } catch (error) {
-                console.error('Error fetching news:', error);
-                newsContainer.innerHTML = '<p class="text-danger">Gagal memuat berita. Silakan coba lagi nanti.</p>';
+                console.error('Error fetching restaurants:', error);
+                restaurantList.innerHTML = '<p class="text-danger">Gagal memuat restoran. Silakan coba lagi nanti.</p>';
             }
         }
 
-        function createNewsCard(title, description, imageUrl) {
+        async function fetchProducts() {
+            try {
+                const productsSnapshot = await getDocs(collection(db, 'products'));
+                allProducts = [];
+                productsSnapshot.forEach(doc => {
+                    const data = doc.data();
+                    data.id = doc.id;
+                    allProducts.push(data);
+                });
+            } catch (error) {
+                console.error('Error fetching products:', error);
+            }
+        }
+
+        function showRestaurants() {
+            currentRestaurantId = null;
+            document.getElementById('mainTitle').textContent = 'Jelajahi Restoran & Makanan';
+            document.getElementById('searchBarContainer').classList.remove('d-none');
+            document.getElementById('restaurantList').classList.remove('d-none');
+            document.getElementById('productList').classList.add('d-none');
+            document.getElementById('backToRestaurantsBtn').classList.add('d-none');
+            renderRestaurants(allRestaurants);
+        }
+
+        function showProducts(restaurantId) {
+            currentRestaurantId = restaurantId;
+            document.getElementById('mainTitle').textContent = 'Produk Makanan';
+            document.getElementById('searchBarContainer').classList.add('d-none');
+            document.getElementById('restaurantList').classList.add('d-none');
+            document.getElementById('productList').classList.remove('d-none');
+            document.getElementById('backToRestaurantsBtn').classList.remove('d-none');
+            const filteredProducts = allProducts.filter(p => p.restaurantId === restaurantId);
+            renderProducts(filteredProducts);
+        }
+
+        function renderRestaurants(restaurants) {
+            const restaurantList = document.getElementById('restaurantList');
+            restaurantList.innerHTML = '';
+            if (restaurants.length === 0) {
+                document.getElementById('noResults').classList.remove('d-none');
+                return;
+            } else {
+                document.getElementById('noResults').classList.add('d-none');
+            }
+            restaurants.forEach(restaurant => {
+                const card = createRestaurantCard(restaurant);
+                restaurantList.appendChild(card);
+            });
+        }
+
+        function renderProducts(products) {
+            const productList = document.getElementById('productList');
+            productList.innerHTML = '';
+            if (products.length === 0) {
+                productList.innerHTML = '<p class="text-center">Tidak ada produk untuk restoran ini.</p>';
+                return;
+            }
+            products.forEach(product => {
+                const card = createProductCard(product);
+                productList.appendChild(card);
+            });
+        }
+
+        function createRestaurantCard(restaurant) {
             const col = document.createElement('div');
             col.className = 'col-12 col-md-6 col-lg-4 mb-4';
 
             const card = document.createElement('div');
             card.className = 'card h-100 shadow-sm';
+            card.style.cursor = 'pointer';
+            card.addEventListener('click', () => {
+                showProducts(restaurant.id);
+            });
 
-            if (imageUrl) {
+            if (restaurant.imageUrl) {
                 const img = document.createElement('img');
-                img.src = imageUrl;
-                img.alt = title;
+                img.src = restaurant.imageUrl;
+                img.alt = restaurant.nama || 'Gambar restoran';
                 img.className = 'card-img-top';
                 card.appendChild(img);
             }
@@ -315,11 +308,11 @@
 
             const cardTitle = document.createElement('h5');
             cardTitle.className = 'card-title';
-            cardTitle.textContent = title;
+            cardTitle.textContent = restaurant.nama || 'Nama restoran tidak tersedia';
 
             const cardText = document.createElement('p');
             cardText.className = 'card-text';
-            cardText.textContent = description;
+            cardText.textContent = restaurant.kategori || 'Kategori tidak tersedia';
 
             cardBody.appendChild(cardTitle);
             cardBody.appendChild(cardText);
@@ -330,7 +323,8 @@
         }
 
         document.addEventListener('DOMContentLoaded', () => {
-            fetchNews();
+            fetchRestaurants();
+            fetchProducts();
 
             // Theme toggle logic
             const themeToggleButton = document.getElementById('theme-toggle-button');
@@ -371,6 +365,23 @@
                     navbar.classList.remove('scrolled');
                     scrolled = false;
                 }
+            });
+
+            // Search filter
+            const searchInput = document.getElementById('searchInput');
+            searchInput.addEventListener('input', () => {
+                const query = searchInput.value.toLowerCase();
+                const filtered = allRestaurants.filter(r => {
+                    return (r.nama && r.nama.toLowerCase().includes(query)) ||
+                           (r.kategori && r.kategori.toLowerCase().includes(query));
+                });
+                renderRestaurants(filtered);
+            });
+
+            // Back to restaurants button
+            const backBtn = document.getElementById('backToRestaurantsBtn');
+            backBtn.addEventListener('click', () => {
+                showRestaurants();
             });
         });
     </script>

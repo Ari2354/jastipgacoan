@@ -208,34 +208,73 @@
              transform: scale(1.1);
         }
 
-
+        /* --- Navbar --- */
+        #main-navbar {
+            background-color: var(--header-background); /* Background based on theme */
+            transition: background-color 0.3s ease;
+        }
+        #main-navbar .nav-link {
+            color: var(--header-text-color); /* Text color based on theme */
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+        #main-navbar .nav-link:hover {
+            color: var(--accent-color); /* Highlight color on hover */
+        }
     </style>
 </head>
 <body>
-
     <div id="theme-toggle">
         <button type="button" class="btn btn-secondary" id="theme-toggle-button" aria-label="Toggle theme">
             <i class="bi bi-moon-fill"></i>
         </button>
     </div>
 
+<nav class="navbar navbar-expand-lg navbar-dark bg-transparent fixed-top" id="main-navbar">
+    <div class="container">
+        <!-- ...logo dan menu lain... -->
+        <ul class="navbar-nav ms-auto">
+            <!-- ...menu lain... -->
+            <li class="nav-item">
+                <a class="nav-link" href="loginadmin.html">
+                    <i class="fas fa-user-shield"></i> Login Admin
+                </a>
+            </li>
+        </ul>
+    </div>
+</nav>
 
-    <header>
+<header>
         <div class="container text-center">
-            <h1 class="h4 mb-0"><i class="fas fa-users me-2"></i>Login Area Admin</h1> </div>
+            <h1 class="h4 mb-0"><i class="fas fa-users me-2"></i> Login Area</h1>
+        </div>
     </header>
 
     <main>
         <div class="login-container">
-            <h2><i class="fas fa-lock"></i> Akses Admin</h2> <form id="loginForm">
+            <h2><i class="fas fa-lock"></i> Masuk ke Akun Anda</h2>
+            <form id="loginForm" autocomplete="on">
                 <div class="mb-3">
-                    <label for="username" class="form-label"><i class="fas fa-user"></i> Nama Pengguna</label>
-                    <input type="text" class="form-control" id="username" name="username" required autofocus /> </div>
-                <div class="mb-3">
-                    <label for="password" class="form-label"><i class="fas fa-key"></i> Kata Sandi</label> <input type="password" class="form-control" id="password" name="password" required />
+                    <label for="email" class="form-label"><i class="fas fa-envelope"></i> Email</label>
+                    <input type="email" class="form-control" id="email" name="email" required autofocus placeholder="Masukkan email Anda" />
                 </div>
-
-                <button type="submit" class="btn btn-primary w-100 mt-3 btn-login"><i class="fas fa-sign-in-alt"></i> Masuk</button> </form>
+                <div class="mb-3">
+                    <label for="password" class="form-label"><i class="fas fa-key"></i> Kata Sandi</label>
+                    <input type="password" class="form-control" id="password" name="password" required placeholder="Masukkan kata sandi" />
+                </div>
+                <button type="submit" class="btn btn-primary w-100 mt-3 btn-login">
+                    <i class="fas fa-sign-in-alt"></i> Masuk
+                </button>
+            </form>
+            <div class="d-grid gap-2 mb-3">
+                <button type="button" id="loginGoogleBtn" class="btn btn-google w-100" style="display:flex;align-items:center;justify-content:center;gap:8px;">
+                    <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google Logo" style="width:22px;height:22px;">
+                    Login dengan Google
+                </button>
+            </div>
+            <div class="text-center mb-2">
+                <span>Belum punya akun? <a href="register.html">Daftar di sini</a></span>
+            </div>
             <div id="loginMessage" class="alert mt-3" role="alert" style="display:none;"></div>
         </div>
     </main>
@@ -295,84 +334,83 @@
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="module" src="./firebase/firebase-js-app/src/firebase.js"></script>
+    <script type="module">
+    import { auth, provider, db } from './firebase/firebase-js-app/src/firebase.js';
+    import { signInWithPopup, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
+    import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            // --- Theme Toggle Functionality (Sama seperti script.js di index.html) ---
-            const themeToggleButton = document.getElementById('theme-toggle-button');
-            const htmlElement = document.documentElement; // Get the <html> element
+    const loginForm = document.getElementById('loginForm');
+    const loginBtn = document.getElementById('loginGoogleBtn');
+    const loginMessage = document.getElementById('loginMessage');
 
-            // Check for saved theme preference in localStorage
-            const savedTheme = localStorage.getItem('theme');
-            if (savedTheme) {
-                htmlElement.setAttribute('data-theme', savedTheme);
-                updateThemeButtonIcon(savedTheme);
+    // Ganti dengan email admin Anda
+    const adminEmails = ["admin@email.com"];
+    const adminUIDs = ["BwShuABqr8NzLTrGYdHXp923jY12"];
+
+    // Login Email/Password
+    loginForm.addEventListener('submit', async function (e) {
+        e.preventDefault();
+        const email = document.getElementById('email').value.trim();
+        const password = document.getElementById('password').value.trim();
+        try {
+            const result = await signInWithEmailAndPassword(auth, email, password);
+            const user = result.user;
+            // Ambil data user dari Firestore
+            const userDoc = await getDoc(doc(db, "users", user.uid));
+            if (userDoc.exists() && userDoc.data().role === "admin") {
+                showMessage('Akun admin tidak dapat login di halaman ini.', 'danger');
+                // Logout otomatis
+                setTimeout(() => auth.signOut(), 1000);
+                return;
+            }
+            showMessage('Login berhasil! Mengalihkan ke menu pelanggan...', 'success');
+            setTimeout(() => window.location.href = 'menu.html', 1200);
+        } catch (error) {
+            // Penanganan error spesifik Firebase Auth
+            let msg = 'Login gagal: ';
+            if (error.code === 'auth/user-not-found') {
+                msg += 'Email tidak ditemukan.';
+            } else if (error.code === 'auth/wrong-password') {
+                msg += 'Kata sandi salah.';
+            } else if (error.code === 'auth/invalid-email') {
+                msg += 'Format email tidak valid.';
             } else {
-                // Default to light theme if no preference saved
-                htmlElement.setAttribute('data-theme', 'light');
-                 localStorage.setItem('theme', 'light'); // Save default preference
-                updateThemeButtonIcon('light');
+                msg += error.message;
             }
+            showMessage(msg, 'danger');
+        }
+    });
 
-            // Add click listener to the toggle button
-            themeToggleButton.addEventListener('click', toggleTheme);
-
-            function toggleTheme() {
-                const currentTheme = htmlElement.getAttribute('data-theme');
-                const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-
-                htmlElement.setAttribute('data-theme', newTheme);
-                localStorage.setItem('theme', newTheme); // Save preference
-                updateThemeButtonIcon(newTheme);
+    // Login Google
+    loginBtn.addEventListener('click', async function () {
+        try {
+            const result = await signInWithPopup(auth, provider);
+            const user = result.user;
+            // Ambil data user dari Firestore
+            const userDoc = await getDoc(doc(db, "users", user.uid));
+            if (userDoc.exists() && userDoc.data().role === "admin") {
+                showMessage('Akun admin tidak dapat login di halaman ini.', 'danger');
+                setTimeout(() => auth.signOut(), 1000);
+                return;
             }
-
-            function updateThemeButtonIcon(theme) {
-                const icon = themeToggleButton.querySelector('i.bi');
-                if (theme === 'dark') {
-                    icon.classList.remove('bi-moon-fill');
-                    icon.classList.add('bi-brightness-high-fill'); // Icon for light mode
-                } else {
-                    icon.classList.remove('bi-brightness-high-fill');
-                    icon.classList.add('bi-moon-fill'); // Icon for dark mode
-                }
+            showMessage('Login berhasil! Mengalihkan ke menu pelanggan...', 'success');
+            setTimeout(() => window.location.href = 'menu.html', 1200);
+        } catch (error) {
+            let msg = 'Login gagal: ';
+            if (error.code === 'auth/popup-closed-by-user') {
+                msg += 'Popup login Google ditutup sebelum selesai.';
+            } else {
+                msg += error.message;
             }
-            // --- End Theme Toggle Functionality ---
+            showMessage(msg, 'danger');
+        }
+    });
 
-
-            // --- Login Form Logic ---
-            const loginForm = document.getElementById('loginForm');
-            const loginMessage = document.getElementById('loginMessage');
-
-            loginForm.addEventListener('submit', function (e) {
-                e.preventDefault();
-
-                const username = document.getElementById('username').value.trim();
-                const password = document.getElementById('password').value.trim();
-
-                // Replace with your actual username and password
-                const correctUsername = 'Ari2354'; // Contoh username
-                const correctPassword = '031908'; // Contoh password
-
-                if (username === correctUsername && password === correctPassword) {
-                    // Simpan status login ke localStorage
-                    localStorage.setItem('isLoggedIn', 'true');
-                    // Arahkan ke halaman admin (panel pesanan)
-                    window.location.href = 'admin.html'; // Ganti dengan nama file panel Anda
-                } else {
-                    showMessage('Username atau password salah!', 'danger');
-                }
-            });
-
-            function showMessage(message, type) {
-                loginMessage.style.display = 'block';
-                // Remove existing alert classes
-                loginMessage.classList.remove('alert-success', 'alert-info', 'alert-warning', 'alert-danger');
-                // Add new alert class
-                loginMessage.classList.add('alert', 'mt-3', 'alert-' + type);
-                loginMessage.textContent = message;
-            }
-            // --- End Login Form Logic ---
-        });
-    </script>
-</body>
+    function showMessage(message, type) {
+        loginMessage.style.display = 'block';
+        loginMessage.className = 'alert alert-' + type + ' mt-3';
+        loginMessage.textContent = message;
+    }
+</script>
 </html>

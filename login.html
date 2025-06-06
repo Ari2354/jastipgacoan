@@ -1,187 +1,159 @@
 <!DOCTYPE html>
-<html lang="id" data-theme="light"> <head>
+<html lang="id" data-theme="light">
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Login Admin - Jastip Gacoan</title> <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <title>Login - Jastip Jember</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" /> <style>
-        /* CSS Variables for Themes (Sama seperti file CSS lainnya) */
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
+    <style>
         :root {
-            /* Light Theme Colors (Based on Gacoan Logo Red) */
-            --background-color: #f8f9fa; /* Light grey background */
-            --text-color: #333333; /* Dark grey for text */
-            --primary-color: #E53935; /* Gacoan-like Red */
-            --secondary-color: #757575; /* Medium grey */
-            --accent-color: #FFA000; /* Orange/Yellow from logo */
-            --card-background: #ffffff; /* White card background */
-            --card-shadow: 0 8px 25px rgba(0, 0, 0, 0.1); /* Shadow for container */
-            --section-title-color: #E53935; /* Red title */
-            --header-background: #E53935; /* Red header */
-            --header-text-color: white;
-            --footer-background: #E53935; /* Red footer */
-            --footer-text-color: white;
+            --background-color: #f8f9fa;
+            --text-color: #333333;
+            --primary-color: #E53935;
+            --secondary-color: #757575;
+            --accent-color: #FFA000;
+            --card-background: #ffffff;
+            --card-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            --section-title-color: #E53935;
         }
 
-        /* Dark Theme Colors */
         html[data-theme="dark"] {
-            --background-color: #212529; /* Dark background */
-            --text-color: #e0e0e0; /* Light grey text */
-            --primary-color: #EF5350; /* Slightly brighter red for dark mode contrast */
-            --secondary-color: #BDBDBD; /* Lighter grey */
-            --accent-color: #FFB300; /* Slightly brighter orange/yellow */
-            --card-background: #343a40; /* Dark card background */
-            --card-shadow: 0 8px 25px rgba(0, 0, 0, 0.3); /* Darker shadow */
-            --section-title-color: #EF5350; /* Red title */
-            --header-background: #0d0d0d; /* Almost black header */
-            --header-text-color: #e0e0e0; /* Light text */
-            --footer-background: #0d0d0d; /* Almost black footer */
-            --footer-text-color: #BDBDBD; /* Secondary grey text */
+            --background-color: #212529;
+            --text-color: #e0e0e0;
+            --primary-color: #EF5350;
+            --secondary-color: #BDBDBD;
+            --accent-color: #FFB300;
+            --card-background: #343a40;
+            --card-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            --section-title-color: #EF5350;
         }
 
-        /* --- Global Styles --- */
         body {
             font-family: 'Poppins', sans-serif;
             background-color: var(--background-color);
             color: var(--text-color);
-            transition: background-color 0.3s ease, color 0.3s ease;
-            display: flex; /* Use flexbox to push footer to bottom */
+            min-height: 100vh;
+            display: flex;
             flex-direction: column;
-            min-height: 100vh; /* Minimum height of viewport */
         }
 
-        main {
-             flex-grow: 1; /* Allow main content to grow */
-        }
-
-        /* --- Login Container --- */
         .login-container {
-            max-width: 450px;
-            margin: 80px auto; /* Increased top margin */
-            padding: 40px; /* Increased padding */
-            background-color: var(--card-background); /* Background based on theme */
-            border-radius: 15px; /* Slightly smaller border-radius */
-            box-shadow: var(--card-shadow); /* Shadow based on theme */
-            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 40px;
         }
 
-        .login-container h2 {
+        .login-header {
             text-align: center;
-            margin-bottom: 30px;
-            font-weight: 700; /* Use weight 700 */
-            color: var(--section-title-color); /* Color based on theme */
-            position: relative;
-            padding-bottom: 10px;
+            margin-bottom: 40px;
         }
 
-         .login-container h2::after { /* Underline effect */
-            content: '';
-            position: absolute;
-            left: 50%;
-            bottom: 0;
-            transform: translateX(-50%);
-            height: 4px;
-            width: 60px;
-            background-color: var(--accent-color); /* Accent color underline */
-            border-radius: 2px;
-         }
-
-
-        /* --- Form Elements --- */
-        .form-label {
-             color: var(--text-color); /* Label color based on theme */
-             font-weight: 600;
-             margin-bottom: 8px;
+        .login-header img {
+            width: 120px;
+            height: auto;
+            margin-bottom: 20px;
         }
 
-        .form-label i {
-             margin-right: 8px;
-             color: var(--primary-color); /* Icon color based on theme */
+        .login-header h2 {
+            color: var(--section-title-color);
+            font-weight: 700;
+            margin-bottom: 10px;
         }
 
-        .form-control {
-            border-radius: 10px; /* Slightly smaller border-radius */
-            padding: 12px 15px; /* Adjust padding */
-            border: 1px solid #ced4da; /* Default light border */
-            background-color: var(--background-color); /* Input background based on body background */
-            color: var(--text-color); /* Input text color */
-            transition: border-color 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease, color 0.3s ease;
+        .login-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
         }
-         html[data-theme="dark"] .form-control {
-              border-color: #555; /* Darker border in dark mode */
-              background-color: #444; /* Darker background in dark mode */
-         }
 
-
-        .form-control:focus {
-            border-color: var(--primary-color); /* Highlight color */
-            box-shadow: 0 0 8px rgba(var(--primary-color-rgb), 0.5); /* Glow effect (requires RGB variable) */
-            outline: none; /* Remove default outline */
-             background-color: var(--background-color); /* Keep background consistent on focus */
+        .login-card {
+            background-color: var(--card-background);
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: var(--card-shadow);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
         }
-         /* Define RGB variables for glow effect (approximate) */
-        :root { --primary-color-rgb: 229, 57, 53; } /* E53935 */
-        html[data-theme="dark"] { --primary-color-rgb: 239, 83, 80; } /* EF5350 */
 
+        .login-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+        }
 
-        /* --- Buttons --- */
+        .login-card i {
+            font-size: 3rem;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+
+        .login-card h3 {
+            color: var(--text-color);
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .login-card p {
+            color: var(--secondary-color);
+            margin-bottom: 20px;
+            font-size: 0.95rem;
+        }
+
+        .login-card .btn {
+            width: 100%;
+            padding: 12px;
+            font-weight: 600;
+            border-radius: 10px;
+        }
+
         .btn-primary {
             background-color: var(--primary-color);
             border-color: var(--primary-color);
-            color: white;
-            padding: 12px 20px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            border-radius: 10px; /* Match form control border-radius */
-            transition: background-color 0.3s ease, border-color 0.3s ease, opacity 0.3s ease;
         }
 
         .btn-primary:hover {
-            background-color: #D32F2F; /* Slightly darker red */
-            border-color: #D32F2F; /* Slightly darker red */
-            color: white;
-            opacity: 0.95;
+            background-color: #D32F2F;
+            border-color: #D32F2F;
         }
 
+        .btn-outline-primary {
+            color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
 
-        /* --- Header --- */
-         header {
-            background-color: var(--header-background); /* Background based on theme */
-            color: var(--header-text-color); /* Text color based on theme */
-            padding: 20px 0; /* Adjust padding */
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            transition: background-color 0.3s ease, color 0.3s ease;
-         }
-         header h1 {
-             color: var(--header-text-color); /* Ensure h1 color is correct */
-             font-weight: 600;
-         }
+        .btn-outline-primary:hover {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
 
-
-        /* --- Footer --- */
-        footer {
-            margin-top: auto; /* Push footer to the bottom */
-            padding: 20px 0; /* Adjust padding */
-            background-color: var(--footer-background); /* Background based on theme */
-            color: var(--footer-text-color); /* Text color based on theme */
+        .back-to-home {
             text-align: center;
-            /* Removed rounded corners to match index.html footer */
-            border-top-left-radius: 0;
-            border-top-right-radius: 0;
-            transition: background-color 0.3s ease, color 0.3s ease;
+            margin-top: 30px;
         }
 
-        /* --- Alert Message --- */
-         #loginMessage {
-             border-radius: 8px; /* Match other elements */
-             font-weight: 600;
-         }
+        .back-to-home a {
+            color: var(--text-color);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: color 0.3s ease;
+        }
 
+        .back-to-home a:hover {
+            color: var(--primary-color);
+        }
 
-        /* --- Theme Toggle Button (Sama seperti file lainnya) --- */
+        /* Theme Toggle Button */
         #theme-toggle {
             position: fixed;
-            bottom: 20px; /* Jarak dari bawah */
-            right: 20px; /* Jarak dari kanan */
+            bottom: 20px;
+            right: 20px;
             z-index: 1030;
         }
 
@@ -195,279 +167,119 @@
             align-items: center;
             justify-content: center;
             font-size: 1.5rem;
-            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, transform 0.2s ease;
-            border-radius: 50%; /* Make it round */
-            box-shadow: var(--card-shadow); /* Add shadow */
-            cursor: pointer; /* Indicate it's clickable */
+            transition: all 0.3s ease;
+            border-radius: 50%;
+            box-shadow: var(--card-shadow);
+            cursor: pointer;
         }
 
         #theme-toggle-button:hover {
-             background-color: var(--secondary-color);
-             color: var(--card-background);
-             border-color: var(--secondary-color);
-             transform: scale(1.1);
+            background-color: var(--secondary-color);
+            color: var(--card-background);
+            transform: scale(1.1);
         }
 
-        /* --- Navbar --- */
-        #main-navbar {
-            background-color: var(--header-background); /* Background based on theme */
-            transition: background-color 0.3s ease;
-        }
-        #main-navbar .nav-link {
-            color: var(--header-text-color); /* Text color based on theme */
-            font-weight: 500;
-            transition: color 0.3s ease;
-        }
-        #main-navbar .nav-link:hover {
-            color: var(--accent-color); /* Highlight color on hover */
+        @media (max-width: 768px) {
+            .login-container {
+                margin: 20px;
+                padding: 20px;
+            }
         }
     </style>
-    <!-- Tambahkan CDN Supabase JS di <head> jika belum ada -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 </head>
 <body>
+    <!-- Theme Toggle Button -->
     <div id="theme-toggle">
         <button type="button" class="btn btn-secondary" id="theme-toggle-button" aria-label="Toggle theme">
             <i class="bi bi-moon-fill"></i>
         </button>
     </div>
 
-<nav class="navbar navbar-expand-lg navbar-dark bg-transparent fixed-top" id="main-navbar">
-    <div class="container">
-        <!-- ...logo dan menu lain... -->
-        <ul class="navbar-nav ms-auto">
-            <!-- ...menu lain... -->
-            <li class="nav-item">
-                <a class="nav-link" href="loginadmin.html">
-                    <i class="fas fa-user-shield"></i> Login Admin
-                </a>
-            </li>
-        </ul>
-    </div>
-</nav>
-
-<header>
-        <div class="container text-center">
-            <h1 class="h4 mb-0"><i class="fas fa-users me-2"></i> Login Area</h1>
-        </div>
-    </header>
-
     <main>
         <div class="login-container">
-            <h2><i class="fas fa-lock"></i> Masuk ke Akun Anda</h2>
-            <form id="loginForm" autocomplete="on">
-                <div class="mb-3">
-<<<<<<< HEAD
-                    <label for="email" class="form-label"><i class="fas fa-envelope"></i> Email</label>
-                    <input type="email" class="form-control" id="email" name="email" required autofocus placeholder="Masukkan email Anda" />
-=======
-                    <label for="username" class="form-label"><i class="fas fa-user"></i> Email (Gmail)</label>
-                    <input type="text" class="form-control" id="username" name="username" required autofocus /> </div>
-                <div class="mb-3">
-                    <label for="password" class="form-label"><i class="fas fa-key"></i> Kata Sandi</label> <input type="password" class="form-control" id="password" name="password" required />
->>>>>>> 077c71724701c04a9bca18677ea6b35115ec701a
-                </div>
-                <div class="mb-3">
-                    <label for="password" class="form-label"><i class="fas fa-key"></i> Kata Sandi</label>
-                    <input type="password" class="form-control" id="password" name="password" required placeholder="Masukkan kata sandi" />
-                </div>
-                <button type="submit" class="btn btn-primary w-100 mt-3 btn-login">
-                    <i class="fas fa-sign-in-alt"></i> Masuk
-                </button>
-            </form>
-            <div class="d-grid gap-2 mb-3">
-                <button type="button" id="loginGoogleBtn" class="btn btn-google w-100" style="display:flex;align-items:center;justify-content:center;gap:8px;">
-                    <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google Logo" style="width:22px;height:22px;">
-                    Login dengan Google
-                </button>
+            <div class="login-header">
+                <img src="logojastipgacoan.jpg" alt="Jastip Jember Logo">
+                <h2>Selamat Datang di Jastip Jember</h2>
+                <p>Silakan pilih jenis akun untuk melanjutkan</p>
             </div>
-            <div class="text-center mb-2">
-                <span>Belum punya akun? <a href="register.html">Daftar di sini</a></span>
+
+            <div class="login-options">
+                <div class="login-card" onclick="window.location.href='loginuser.html'">
+                    <i class="fas fa-user"></i>
+                    <h3>Pengguna</h3>
+                    <p>Pesan makanan, jasa antar, dan layanan lainnya dengan mudah</p>
+                    <button class="btn btn-primary">Login sebagai Pengguna</button>
+                    <hr>
+                    <p class="mb-0">Belum punya akun?</p>
+                    <a href="registeruser.html" class="btn btn-outline-primary mt-2">Daftar Sekarang</a>
+                </div>
+
+                <div class="login-card" onclick="window.location.href='loginresto.html'">
+                    <i class="fas fa-store"></i>
+                    <h3>Restoran</h3>
+                    <p>Kelola menu, pesanan, dan kembangkan bisnis Anda bersama kami</p>
+                    <button class="btn btn-primary">Login sebagai Restoran</button>
+                    <hr>
+                    <p class="mb-0">Ingin bergabung?</p>
+                    <a href="registerresto.html" class="btn btn-outline-primary mt-2">Daftar Restoran</a>
+                </div>
+
+                <div class="login-card" onclick="window.location.href='logindriver.html'">
+                    <i class="fas fa-motorcycle"></i>
+                    <h3>Driver/Helper</h3>
+                    <p>Dapatkan penghasilan tambahan sebagai mitra pengantar kami</p>
+                    <button class="btn btn-primary">Login sebagai Driver</button>
+                    <hr>
+                    <p class="mb-0">Ingin menjadi mitra?</p>
+                    <a href="registerdriver.html" class="btn btn-outline-primary mt-2">Daftar Driver</a>
+                </div>
             </div>
-            <div id="loginMessage" class="alert mt-3" role="alert" style="display:none;"></div>
+
+            <div class="back-to-home">
+                <a href="index.html">
+                    <i class="fas fa-arrow-left"></i>
+                    Kembali ke Beranda
+                </a>
+            </div>
         </div>
     </main>
 
-    <footer>
-        <div class="container">
-            <div class="row">
-    
-                <div class="col-md-4 mb-4 mb-md-0">
-                    <h5>Jastip Gacoan</h5>
-                    <p>
-                        Layanan jastip terpercaya untuk pesanan Gacoan favorit Anda.
-                        Kami memastikan pesanan Anda sampai dengan cepat dan aman.
-                    </p>
-                    </div>
-    
-                <div class="col-md-4 mb-4 mb-md-0">
-                    <h5>Tautan Cepat</h5>
-                    <ul class="list-unstyled">
-                        <li><a href="#" class="text-decoration-none">Beranda</a></li>
-                        <li><a href="#" class="text-decoration-none">Menu & Harga</a></li>
-                        <li><a href="#" class="text-decoration-none">Cara Pesan</a></li>
-                        <li><a href="#" class="text-decoration-none">Area Layanan</a></li>
-                        <li><a href="#" class="text-decoration-none">Hubungi Kami</a></li>
-                    </ul>
-                </div>
-    
-                <div class="col-md-4">
-                    <h5>Hubungi Kami & Ikuti Kami</h5>
-                    <p>
-                        <i class="bi bi-envelope-fill"></i> Email: aryfaidz99@gmail.com<br>
-                        <i class="bi bi-telephone-fill"></i> Telepon: +62-85-156-226-837 (Opsional)
-                    </p>
-                    <div>
-                        <a href="#" class="me-3 text-decoration-none">
-                            <i class="bi bi-instagram"></i> Instagram
-                        </a>
-                        <a href="#" class="me-3 text-decoration-none">
-                            <i class="bi bi-facebook"></i> Facebook
-                        </a>
-                        <a href="#" class="text-decoration-none">
-                            <i class="bi bi-whatsapp"></i> WhatsApp
-                        </a>
-                    </div>
-                </div>
-    
-            </div>
-    
-            <hr class="my-4" style="border-color: var(--accent-color);">
-    
-            <div class="row">
-                <div class="col-12 text-center">
-                    <p class="mb-0">&copy; 2025 Jastip Gacoan. Hak cipta dilindungi.</p>
-                </div>
-            </div>
-        </div>
-    </footer>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script type="module" src="./firebase/firebase-js-app/src/firebase.js"></script>
-    <script type="module">
-    import { auth, provider, db } from './firebase/firebase-js-app/src/firebase.js';
-    import { signInWithPopup, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
-    import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
-
-<<<<<<< HEAD
-    const loginForm = document.getElementById('loginForm');
-    const loginBtn = document.getElementById('loginGoogleBtn');
-    const loginMessage = document.getElementById('loginMessage');
-=======
     <script>
-        const SUPABASE_URL = 'https://aniulxoqzwnrxtdmpbmv.supabase.co';
-        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFuaXVseG9xenducnh0ZG1wYm12Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg0MDA4MjQsImV4cCI6MjA2Mzk3NjgyNH0.NOi9RVyGAR4jTI_kXh7zk3aI1VIPyah8MdFT4KcZnTQ';
-        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        // Theme Toggle Functionality
+        const themeToggleButton = document.getElementById('theme-toggle-button');
+        const htmlElement = document.documentElement;
 
-        document.addEventListener('DOMContentLoaded', function () {
-            // --- Theme Toggle Functionality (Sama seperti script.js di index.html) ---
-            const themeToggleButton = document.getElementById('theme-toggle-button');
-            const htmlElement = document.documentElement; // Get the <html> element
->>>>>>> 077c71724701c04a9bca18677ea6b35115ec701a
-
-    // Ganti dengan email admin Anda
-    const adminEmails = ["admin@email.com"];
-    const adminUIDs = ["BwShuABqr8NzLTrGYdHXp923jY12"];
-
-    // Login Email/Password
-    loginForm.addEventListener('submit', async function (e) {
-        e.preventDefault();
-        const email = document.getElementById('email').value.trim();
-        const password = document.getElementById('password').value.trim();
-        try {
-            const result = await signInWithEmailAndPassword(auth, email, password);
-            const user = result.user;
-            // Ambil data user dari Firestore
-            const userDoc = await getDoc(doc(db, "users", user.uid));
-            if (userDoc.exists() && userDoc.data().role === "admin") {
-                showMessage('Akun admin tidak dapat login di halaman ini.', 'danger');
-                // Logout otomatis
-                setTimeout(() => auth.signOut(), 1000);
-                return;
-            }
-            showMessage('Login berhasil! Mengalihkan ke menu pelanggan...', 'success');
-            setTimeout(() => window.location.href = 'menu.html', 1200);
-        } catch (error) {
-            // Penanganan error spesifik Firebase Auth
-            let msg = 'Login gagal: ';
-            if (error.code === 'auth/user-not-found') {
-                msg += 'Email tidak ditemukan.';
-            } else if (error.code === 'auth/wrong-password') {
-                msg += 'Kata sandi salah.';
-            } else if (error.code === 'auth/invalid-email') {
-                msg += 'Format email tidak valid.';
-            } else {
-                msg += error.message;
-            }
-            showMessage(msg, 'danger');
+        // Check saved theme preference
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme) {
+            htmlElement.setAttribute('data-theme', savedTheme);
+            updateThemeButtonIcon(savedTheme);
         }
-    });
 
-    // Login Google
-    loginBtn.addEventListener('click', async function () {
-        try {
-            const result = await signInWithPopup(auth, provider);
-            const user = result.user;
-            // Ambil data user dari Firestore
-            const userDoc = await getDoc(doc(db, "users", user.uid));
-            if (userDoc.exists() && userDoc.data().role === "admin") {
-                showMessage('Akun admin tidak dapat login di halaman ini.', 'danger');
-                setTimeout(() => auth.signOut(), 1000);
-                return;
-            }
-            showMessage('Login berhasil! Mengalihkan ke menu pelanggan...', 'success');
-            setTimeout(() => window.location.href = 'menu.html', 1200);
-        } catch (error) {
-            let msg = 'Login gagal: ';
-            if (error.code === 'auth/popup-closed-by-user') {
-                msg += 'Popup login Google ditutup sebelum selesai.';
-            } else {
-                msg += error.message;
-            }
-            showMessage(msg, 'danger');
+        themeToggleButton.addEventListener('click', () => {
+            const currentTheme = htmlElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            
+            htmlElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            updateThemeButtonIcon(newTheme);
+        });
+
+        function updateThemeButtonIcon(theme) {
+            const icon = themeToggleButton.querySelector('i');
+            icon.className = theme === 'dark' ? 'bi bi-brightness-high-fill' : 'bi bi-moon-fill';
         }
-    });
 
-<<<<<<< HEAD
-    function showMessage(message, type) {
-        loginMessage.style.display = 'block';
-        loginMessage.className = 'alert alert-' + type + ' mt-3';
-        loginMessage.textContent = message;
-    }
-</script>
-=======
-
-            // --- Login Form Logic ---
-            const loginForm = document.getElementById('loginForm');
-            const loginMessage = document.getElementById('loginMessage');
-
-            loginForm.addEventListener('submit', async function (e) {
-                e.preventDefault();
-
-                const email = document.getElementById('username').value.trim();
-                const password = document.getElementById('password').value.trim();
-                const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-
-                if (error) {
-                    showMessage('Email atau password salah!', 'danger');
-                } else {
-                    showMessage('Login berhasil! Mengalihkan ke halaman admin...', 'success');
-                    localStorage.setItem('isLoggedIn', 'true');
-                    setTimeout(() => {
-                        window.location.href = 'admin.html';
-                    }, 1200); // Tampilkan alert sukses sebentar sebelum redirect
-                }
+        // Card hover effects
+        document.querySelectorAll('.login-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-5px)';
             });
-
-            function showMessage(message, type) {
-                loginMessage.style.display = 'block';
-                loginMessage.classList.remove('alert-success', 'alert-info', 'alert-warning', 'alert-danger');
-                loginMessage.classList.add('alert', 'mt-3', 'alert-' + type);
-                loginMessage.textContent = message;
-            }
-            // --- End Login Form Logic ---
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
+            });
         });
     </script>
 </body>
->>>>>>> 077c71724701c04a9bca18677ea6b35115ec701a
 </html>

@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Layanan Jastip Jember - Jasa Titip Makanan, Barang, dan Transportasi di Jember" />
+  <title>Layanan - Jastip Jember | Jasa Titip & Transportasi Terpercaya</title>
+  <link href="https://cdn.tailwindcss.com" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+  <style>
+    /* Global */
+    body, html {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background-color: #f3f4f6;
+      color: #1f2937;
+      scroll-behavior: smooth;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    body.dark {
+      background-color: #111827;
+      color: #f3f4f6;
+    }
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+    a:focus-visible {
+      outline: 3px solid #3b82f6;
+      outline-offset: 2px;
+      border-radius: 6px;
+    }
+
+    /* Container */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 1.5rem 1rem;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    /* Header/Nav */
+    header {
+      background: rgba(255 255 255 / 0.8);
+      backdrop-filter: saturate(180%) blur(12px);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 2px 12px rgb(0 0 0 / 0.1);
+      padding: 0.75rem 1rem;
+    }
+    header.dark {
+      background: rgba(17 24 39 / 0.85);
+      box-shadow: 0 2px 12px rgb(0 0 0 / 0.4);
+    }
+    .nav-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.5rem;
+    }
+    .logo {
+      font-weight: 700;
+      font-size: 1.5rem;
+      color: #3b82f6;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .logo .material-icons {
+      font-size: 2.2rem;
+    }
+    nav {
+      display: flex;
+      gap: 1.5rem;
+    }
+    nav a {
+      font-weight: 600;
+      padding: 0.5rem 0.75rem;
+      color: #374151;
+      border-radius: 8px;
+      transition: background-color 0.3s, color 0.3s;
+    }
+    nav a:hover, nav a:focus-visible {
+      background-color: #3b82f6;
+      color: white;
+      outline: none;
+    }
+    nav a.active {
+      background-color: #2563eb;
+      color: white;
+    }
+    /* Hamburger & mobile menu */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+    }
+    .hamburger span {
+      height: 3px;
+      width: 24px;
+      background-color: #3b82f6;
+      border-radius: 9999px;
+      transition: all 0.3s ease;
+    }
+    .hamburger.open span:nth-child(1) {
+      transform: rotate(45deg) translate(5px, 5px);
+    }
+    .hamburger.open span:nth-child(2) {
+      opacity: 0;
+    }
+    .hamburger.open span:nth-child(3) {
+      transform: rotate(-45deg) translate(6px, -6px);
+    }
+    .mobile-nav {
+      display: none;
+      flex-direction: column;
+      gap: 1rem;
+      padding: 1rem;
+      background-color: white;
+      box-shadow: 0 4px 12px rgb(0 0 0 / 0.1);
+      border-radius: 0 0 12px 12px;
+      position: absolute;
+      top: 64px;
+      left: 0;
+      right: 0;
+      z-index: 999;
+    }
+    .mobile-nav.open {
+      display: flex;
+    }
+
+    /* Main content */
+    main {
+      flex-grow: 1;
+    }
+    .back-home {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: 600;
+      font-size: 1rem;
+      color: #3b82f6;
+      margin-bottom: 1.5rem;
+      cursor: pointer;
+      user-select: none;
+      border-radius: 8px;
+      padding: 0.4rem 0.8rem;
+      transition: background-color 0.3s ease;
+    }
+    .back-home:hover,
+    .back-home:focus-visible {
+      background-color: #bfdbfe;
+      outline: none;
+    }
+    .back-home .material-icons {
+      font-size: 1.3rem;
+      transition: transform 0.3s ease;
+    }
+    .back-home:hover .material-icons {
+      transform: translateX(-5px);
+    }
+    h1 {
+      font-size: 2.75rem;
+      font-weight: 700;
+      color: #111827;
+      margin-bottom: 1rem;
+    }
+    p.lead {
+      max-width: 720px;
+      margin: 0 auto 3rem auto;
+      font-weight: 500;
+      color: #6b7280;
+      text-align: center;
+      font-size: 1.125rem;
+    }
+
+    /* Service Cards Grid */
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 2.5rem;
+    }
+    .service-card {
+      background: white;
+      border-radius: 1.25rem;
+      box-shadow: 0 15px 35px rgb(59 130 246 / 0.12);
+      padding: 2.5rem 2rem 3rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      transition: box-shadow 0.4s ease, transform 0.4s ease;
+      position: relative;
+      cursor: pointer;
+      user-select: none;
+    }
+    body.dark .service-card {
+      background: #1e293b;
+      box-shadow: 0 15px 30px rgb(59 130 246 / 0.3);
+      color: #e0e7ff;
+    }
+    .service-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 5px;
+      border-top-left-radius: 20px;
+      border-top-right-radius: 20px;
+      background: linear-gradient(90deg, #3b82f6, #10b981);
+      opacity: 0;
+      transition: opacity 0.3s;
+      z-index: 1;
+    }
+    .service-card:hover::before,
+    .service-card:focus-visible::before {
+      opacity: 1;
+    }
+    .service-card:hover,
+    .service-card:focus-visible {
+      transform: translateY(-12px);
+      box-shadow: 0 25px 70px rgb(59 130 246 / 0.4);
+      outline: none;
+      z-index: 5;
+    }
+
+    .service-icon {
+      font-size: 5rem;
+      margin-bottom: 1.5rem;
+      color: #3b82f6;
+      filter: drop-shadow(0 0 6px rgb(59 130 246 / 0.5));
+      transition: transform 0.4s ease, filter 0.4s ease;
+      z-index: 2;
+    }
+    body.dark .service-icon {
+      filter: drop-shadow(0 0 10px rgb(16 185 129 / 0.7));
+      color: #10b981;
+    }
+    .service-card:hover .service-icon,
+    .service-card:focus-visible .service-icon {
+      transform: scale(1.15);
+      filter: drop-shadow(0 0 12px rgb(16 185 129 / 0.7));
+      color: #10b981;
+    }
+
+    .service-title {
+      font-size: 1.7rem;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+      color: #111827;
+      z-index: 2;
+    }
+    body.dark .service-title {
+      color: #d1d5db;
+    }
+    .service-desc {
+      font-weight: 500;
+      color: #6b7280;
+      margin-bottom: 0.75rem;
+      max-width: 320px;
+      z-index: 2;
+    }
+    body.dark .service-desc {
+      color: #94a3b8;
+    }
+    .service-features {
+      text-align: left;
+      font-size: 0.9rem;
+      color: #4b5563;
+      margin-bottom: 1rem;
+      max-width: 320px;
+      z-index: 2;
+    }
+    body.dark .service-features {
+      color: #9ca3af;
+    }
+    .service-features li {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.4rem;
+    }
+    .service-features li .material-icons {
+      color: #10b981;
+      font-size: 1.15rem;
+    }
+    .service-cta {
+      background-color: #3b82f6;
+      color: white;
+      padding: 0.75rem 1.8rem;
+      font-weight: 700;
+      border-radius: 9999px;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 1rem;
+      margin-top: auto;
+      box-shadow: 0 8px 15px rgb(59 130 246 / 0.3);
+      transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+      user-select: none;
+      text-decoration: none;
+      z-index: 2;
+    }
+    .service-cta .material-icons {
+      font-size: 1.2rem;
+    }
+    .service-cta:hover,
+    .service-cta:focus-visible {
+      background-color: #2563eb;
+      box-shadow: 0 10px 25px rgb(59 130 246 / 0.6);
+      transform: translateY(-3px);
+      outline: none;
+      text-decoration: none;
+    }
+
+    /* Info section */
+    .info-box {
+      background: linear-gradient(135deg, #3b82f6, #10b981);
+      padding: 3rem 2rem;
+      border-radius: 1.5rem;
+      color: white;
+      box-shadow: 0 25px 50px rgb(59 130 246 / 0.3);
+      max-width: 900px;
+      margin: 3rem auto 4rem;
+    }
+    .info-box h2 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 2rem;
+      text-align: center;
+      text-shadow: 0 2px 6px rgb(16 185 129 / 0.7);
+    }
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit,minmax(260px,1fr));
+      gap: 2rem;
+    }
+    .info-item {
+      display: flex;
+      gap: 1rem;
+      align-items: start;
+      text-shadow: 0 1px 1px rgb(0 0 0 / 0.2);
+    }
+    .info-icon {
+      background-color: rgba(255 255 255 / 0.3);
+      border-radius: 9999px;
+      padding: 0.7rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 10px 30px rgba(255 255 255 / 0.3);
+      flex-shrink: 0;
+      font-size: 2.7rem;
+      color: white;
+    }
+    .info-text h3 {
+      font-weight: 700;
+      font-size: 1.25rem;
+      margin-bottom: 0.3rem;
+    }
+    .info-text p {
+      font-weight: 500;
+      opacity: 0.85;
+      font-size: 1rem;
+      line-height: 1.3;
+    }
+
+    /* FAQ */
+    details {
+      background: white;
+      border-radius: 1rem;
+      box-shadow: 0 8px 25px rgb(0 0 0 / 0.08);
+      overflow: hidden;
+      margin-bottom: 1rem;
+      transition: box-shadow 0.3s ease;
+    }
+    body.dark details {
+      background: #1e293b;
+      box-shadow: 0 8px 25px rgb(0 0 0 / 0.3);
+    }
+    details[open] {
+      box-shadow: 0 12px 35px rgb(59 130 246 / 0.5);
+    }
+    summary {
+      padding: 1.25rem 1.5rem;
+      font-size: 1.125rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      user-select: none;
+      list-style: none;
+      color: #111827;
+      transition: background-color 0.3s ease;
+    }
+    body.dark summary {
+      color: #f1f5f9;
+    }
+    summary:hover,
+    summary:focus-visible {
+      background-color: #dbeafe;
+      outline-offset: 3px;
+      outline-color: #3b82f6;
+      outline-style: solid;
+      outline-width: 3px;
+    }
+    body.dark summary:hover,
+    body.dark summary:focus-visible {
+      background-color: #2563eb;
+    }
+    summary::-webkit-details-marker {
+      display: none;
+    }
+    .material-icons.expand-icon {
+      transition: transform 0.4s ease;
+      font-size: 1.8rem;
+      color: #3b82f6;
+      user-select: none;
+    }
+    details[open] > summary > .material-icons.expand-icon {
+      transform: rotate(180deg);
+    }
+    details > div {
+      padding: 0 1.5rem 1.5rem;
+      font-weight: 500;
+      font-size: 1rem;
+      color: #4b5563;
+      line-height: 1.4;
+      user-select: text;
+    }
+    body.dark details > div {
+      color: #cbd5e1;
+    }
+    details ul {
+      list-style: disc;
+      padding-left: 1.5rem;
+      margin-top: 0.5rem;
+    }
+    details ul li {
+      margin-bottom: 0.3rem;
+    }
+
+    /* Footer */
+    footer {
+      background: linear-gradient(90deg, #3b82f6 0%, #10b981 100%);
+      color: white;
+      padding: 1rem 2rem;
+      font-size: 0.9rem;
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 1rem;
+      border-radius: 12px 12px 0 0;
+      box-shadow: 0 -3px 12px rgb(0 0 0 / 0.2);
+      user-select: none;
+      position: relative;
+      z-index: 500;
+      margin-top: auto;
+    }
+    footer .footer-left {
+      flex: 1 1 150px;
+      font-weight: 600;
+    }
+    footer nav {
+      flex: 3 1 400px;
+      display: flex;
+      gap: 1.75rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+    }
+    footer nav a {
+      color: white;
+      padding: 0.3rem 0.45rem;
+      border-radius: 0.4rem;
+      transition: background-color 0.3s ease;
+    }
+    footer nav a:hover,
+    footer nav a:focus-visible {
+      background-color: rgba(255 255 255 / 0.25);
+      outline: none;
+      font-weight: 700;
+      box-shadow: 0 0 10px #10b981aa;
+      text-decoration: underline;
+    }
+    .social-icons {
+      flex: 1 1 120px;
+      display: flex;
+      justify-content: flex-end;
+      gap: 1rem;
+    }
+    .social-icons a {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background-color: rgba(255 255 255 / 0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+      filter: drop-shadow(0 0 3px rgba(255 255 255 / 0.4));
+    }
+    .social-icons a:hover,
+    .social-icons a:focus-visible {
+      background-color: rgba(255 255 255 / 0.35);
+      transform: translateY(-3px) scale(1.1);
+      box-shadow: 0 6px 14px rgba(255 255 255 / 0.65);
+      outline: none;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      header .nav-inner {
+        flex-wrap: wrap;
+        gap: 1rem;
+      }
+      nav {
+        order: 2;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      footer {
+        flex-direction: column;
+        text-align: center;
+        gap: 1rem;
+      }
+      footer .social-icons {
+        justify-content: center;
+      }
+      main.container {
+        padding-left: 1rem;
+        padding-right: 1rem;
+      }
+      h1 {
+        font-size: 2rem;
+      }
+    }
+  </style>
+</head>
+<body class="antialiased">
+
+  <!-- Header / Navigation -->
+  <header id="main-navbar" role="banner" aria-label="Utama navigasi">
+      <div class="nav-inner">
+        <a href="index.html" class="logo" aria-label="Beranda Jastip Jember">
+          <span class="material-icons" aria-hidden="true">delivery_dining</span>
+          Jastip Jember
+        </a>
+      <nav role="navigation" aria-label="Menu utama" class="nav-links">
+        <a href="index.html" tabindex="0">Beranda</a>
+        <a href="layanan.html" tabindex="0" class="active" aria-current="page">Layanan</a>
+        <a href="menu.html" tabindex="0">Pesan Sekarang</a>
+        <a href="kontakkami.html" tabindex="0">Kontak</a>
+        <a href="jadwal.html" tabindex="0">Status Layanan</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="container" role="main">
+    <a href="index.html" class="back-home" aria-label="Kembali ke halaman beranda utama">
+      <span class="material-icons" aria-hidden="true">delivery_dining</span> Kembali ke Beranda
+    </a>
+
+    <h1>Layanan Kami</h1>
+    <p class="lead">Solusi lengkap untuk kebutuhan transportasi dan pengiriman Anda di Jember dan sekitarnya.</p>
+
+    <section aria-label="Layanan jasa kami" class="services-grid" role="list">
+      <article tabindex="0" role="listitem" aria-labelledby="title-ojek" aria-describedby="desc-ojek" class="service-card">
+        <div class="service-icon" aria-hidden="true">
+          <span class="material-icons">electric_moped</span>
+        </div>
+        <h2 id="title-ojek" class="service-title">Jasa Ojek</h2>
+        <p id="desc-ojek" class="service-desc">Layanan transportasi cepat dan aman dengan pengemudi terpercaya di Jember.</p>
+        <ul class="service-features" aria-label="Fitur layanan ojek">
+          <li><span class="material-icons">check_circle</span> Pengemudi profesional dan terverifikasi</li>
+          <li><span class="material-icons">check_circle</span> Tarif transparan tanpa biaya tersembunyi</li>
+          <li><span class="material-icons">check_circle</span> Pemantauan perjalanan secara real-time</li>
+        </ul>
+        <a href="menu.html?service=ojek" class="service-cta" aria-label="Pesan Jasa Ojek sekarang">
+          Pesan Sekarang <span class="material-icons">arrow_forward</span>
+        </a>
+      </article>
+
+      <article tabindex="0" role="listitem" aria-labelledby="title-jastip-makanan" aria-describedby="desc-jastip-makanan" class="service-card">
+        <div class="service-icon text-red-600" aria-hidden="true">
+          <span class="material-icons">lunch_dining</span>
+        </div>
+        <h2 id="title-jastip-makanan" class="service-title">Jastip Makanan</h2>
+        <p id="desc-jastip-makanan" class="service-desc">Layanan pengantaran makanan dari berbagai restoran favorit di Jember.</p>
+        <ul class="service-features" aria-label="Fitur layanan jastip makanan">
+          <li><span class="material-icons">check_circle</span> Mitra 100+ restoran dan kafe</li>
+          <li><span class="material-icons">check_circle</span> Makanan sampai dalam keadaan hangat</li>
+          <li><span class="material-icons">check_circle</span> Pembayaran fleksibel dan mudah</li>
+        </ul>
+        <a href="menu.html?service=makanan" class="service-cta" aria-label="Pesan Jastip Makanan sekarang">
+          Pesan Sekarang <span class="material-icons">arrow_forward</span>
+        </a>
+      </article>
+
+      <article tabindex="0" role="listitem" aria-labelledby="title-jastip-barang" aria-describedby="desc-jastip-barang" class="service-card">
+        <div class="service-icon text-green-600" aria-hidden="true">
+          <span class="material-icons">package_2</span>
+        </div>
+        <h2 id="title-jastip-barang" class="service-title">Jastip Barang</h2>
+        <p id="desc-jastip-barang" class="service-desc">Jasa titip dan pengiriman barang dengan kecepatan dan keamanan terbaik.</p>
+        <ul class="service-features" aria-label="Fitur layanan jastip barang">
+          <li><span class="material-icons">check_circle</span> Berbagai ukuran paket tersedia</li>
+          <li><span class="material-icons">check_circle</span> Opsi asuransi pengiriman tersedia</li>
+          <li><span class="material-icons">check_circle</span> Pelacakan paket real-time</li>
+        </ul>
+        <a href="menu.html?service=barang" class="service-cta" aria-label="Pesan Jastip Barang sekarang">
+          Pesan Sekarang <span class="material-icons">arrow_forward</span>
+        </a>
+      </article>
+    </section>
+
+    <section aria-labelledby="why-choose-title" class="info-box">
+      <h2 id="why-choose-title">Mengapa Memilih Jastip Jember?</h2>
+      <div class="info-grid" role="list">
+        <div class="info-item" role="listitem">
+          <div class="info-icon"><span class="material-icons" aria-hidden="true">bolt</span></div>
+          <div class="info-text">
+            <h3>Pengantaran Super Cepat</h3>
+            <p>Rata-rata waktu antar 30-45 menit setelah pemesanan dengan layanan real-time tracking.</p>
+          </div>
+        </div>
+        <div class="info-item" role="listitem">
+          <div class="info-icon"><span class="material-icons" aria-hidden="true">verified_user</span></div>
+          <div class="info-text">
+            <h3>Kurir Terverifikasi</h3>
+            <p>Pilih kurir profesional dan sudah melalui proses seleksi ketat demi keamanan Anda.</p>
+          </div>
+        </div>
+        <div class="info-item" role="listitem">
+          <div class="info-icon"><span class="material-icons" aria-hidden="true">payments</span></div>
+          <div class="info-text">
+            <h3>Pembayaran Fleksibel</h3>
+            <p>Dukungan berbagai metode pembayaran, dari transfer bank hingga e-wallet seperti OVO dan GoPay.</p>
+          </div>
+        </div>
+        <div class="info-item" role="listitem">
+          <div class="info-icon"><span class="material-icons" aria-hidden="true">support_agent</span></div>
+          <div class="info-text">
+            <h3>Dukungan 24/7</h3>
+            <p>Tim customer service siap membantumu kapan saja melalui chat dan telepon.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section aria-label="FAQ - pertanyaan umum" class="faq-section">
+      <h2 class="text-center text-3xl font-bold mb-8">Pertanyaan Umum</h2>
+      <details open>
+        <summary>
+          Bagaimana cara memesan layanan?
+          <span class="material-icons expand-icon" aria-hidden="true">expand_less</span>
+        </summary>
+        <div>
+          Anda dapat memesan melalui website halaman "Pesan Sekarang", aplikasi mobile, atau WhatsApp. Pilih layanan, isi detail, dan lakukan pembayaran.
+        </div>
+      </details>
+      <details>
+        <summary>
+          Berapa lama waktu pengantaran?
+          <span class="material-icons expand-icon" aria-hidden="true">expand_more</span>
+        </summary>
+        <div>
+          Waktu pengantaran bervariasi:
+          <ul>
+            <li>Ojek: 10-30 menit</li>
+            <li>Makanan: 30-45 menit</li>
+            <li>Barang: 1-3 jam, tergantung lokasi dan paket</li>
+          </ul>
+        </div>
+      </details>
+      <details>
+        <summary>
+          Apakah ada jaminan keamanan barang?
+          <span class="material-icons expand-icon" aria-hidden="true">expand_more</span>
+        </summary>
+        <div>
+          Ya. Asuransi opsional tersedia untuk barang berharga dengan premi 1% dari nilai barang.
+        </div>
+      </details>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer role="contentinfo" aria-label="Footer situs">
+    <div class="footer-left">&copy; 2025 Jastip Jember. All rights reserved.</div>
+    
+    <div class="social-icons" aria-label="Ikon media sosial">
+      <a href="https://wa.me/6281234567890" aria-label="WhatsApp" target="_blank" rel="noopener noreferrer" tabindex="0">
+        <span class="material-icons">whatsapp</span>
+      </a>
+      <a href="https://instagram.com/jastipjember" aria-label="Instagram" target="_blank" rel="noopener noreferrer" tabindex="0">
+        <span class="material-icons">instagram</span>
+      </a>
+      <a href="https://facebook.com/jastipjember" aria-label="Facebook" target="_blank" rel="noopener noreferrer" tabindex="0">
+        <span class="material-icons">facebook</span>
+      </a>
+    </div>
+  </footer>
+
+  <script>
+    // Mobile menu toggle
+    const mobileMenuButton = document.getElementById('mobile-menu-button');
+    const mobileMenu = document.getElementById('mobile-menu');
+    if (mobileMenuButton) {
+      mobileMenuButton.addEventListener('click', () => {
+        const isOpen = mobileMenu.classList.toggle('open');
+        mobileMenuButton.setAttribute('aria-expanded', isOpen);
+        if (isOpen) {
+          mobileMenu.querySelector('a')?.focus();
+        }
+      });
+    }
+
+    // FAQ toggle icons
+    document.querySelectorAll('details').forEach((detail) => {
+      detail.addEventListener('toggle', () => {
+        const icon = detail.querySelector('.expand-icon');
+        if (!icon) return;
+        icon.textContent = detail.open ? 'expand_less' : 'expand_more';
+      });
+    });
+  </script>
+</body>
+</html>
+

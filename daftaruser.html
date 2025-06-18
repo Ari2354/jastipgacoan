@@ -3,25 +3,25 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Login Restoran - Jastip Jember</title>
-  <meta name="description" content="Halaman login untuk restoran di Jastip Jember" />
+  <title>Daftar Pengguna - Jastip Jember</title>
+  <meta name="description" content="Halaman pendaftaran pengguna baru Jastip Jember untuk akses layanan pemesanan" />
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
   <style>
     :root {
-      --background-color: #e0f7fa;
-      --text-color: #004d40;
-      --primary-color: #009688;
+      --background-color: #e0f2fe;
+      --text-color: #1e293b;
+      --primary-color: #0ea5e9;
       --card-bg: #ffffff;
-      --card-shadow: 0 10px 30px rgba(0, 150, 136, 0.3);
+      --card-shadow: 0 10px 30px rgba(14, 165, 233, 0.3);
     }
     html[data-theme="dark"] {
-      --background-color: #004d40;
-      --text-color: #b2dfdb;
-      --primary-color: #4db6ac;
-      --card-bg: #004d40;
-      --card-shadow: 0 10px 30px rgba(77, 182, 172, 0.6);
+      --background-color: #0f172a;
+      --text-color: #f1f5f9;
+      --primary-color: #3b82f6;
+      --card-bg: #1e293b;
+      --card-shadow: 0 10px 30px rgba(59, 130, 246, 0.6);
     }
     body {
       background-color: var(--background-color);
@@ -34,13 +34,13 @@
       align-items: center;
       padding: 1rem;
     }
-    .login-container {
+    .register-container {
       background: var(--card-bg);
       padding: 2.5rem 2rem;
       border-radius: 1.25rem;
       box-shadow: var(--card-shadow);
       width: 100%;
-      max-width: 400px;
+      max-width: 450px;
       box-sizing: border-box;
       text-align: center;
     }
@@ -57,18 +57,18 @@
       user-select: none;
     }
     input[type="text"],
+    input[type="email"],
     input[type="password"] {
       width: 100%;
       padding: 0.75rem 1rem;
       border-radius: 0.75rem;
-      border: 2px solid #a7ffeb;
+      border: 2px solid #d1d5db;
       font-size: 1rem;
       transition: border-color 0.3s ease;
       box-sizing: border-box;
-      color: var(--text-color);
-      background-color: var(--card-bg);
     }
     input[type="text"]:focus,
+    input[type="email"]:focus,
     input[type="password"]:focus {
       outline: none;
       border-color: var(--primary-color);
@@ -76,7 +76,7 @@
     }
     .error-message {
       font-size: 0.875rem;
-      color: #d32f2f;
+      color: #ef4444;
       min-height: 1.2em;
       margin-top: 0.3rem;
       user-select: text;
@@ -101,15 +101,15 @@
     }
     button.btn-primary:hover,
     button.btn-primary:focus-visible {
-      background-color: #00796b;
-      box-shadow: 0 10px 25px rgba(0, 121, 107, 0.5);
+      background-color: #0284c7;
+      box-shadow: 0 10px 25px rgba(14, 165, 233, 0.5);
       outline-offset: 4px;
       outline-style: solid;
       outline-color: var(--primary-color);
       outline-width: 3px;
     }
     button.btn-primary:disabled {
-      background-color: #80cbc4;
+      background-color: #93c5fd;
       cursor: not-allowed;
       box-shadow: none;
       outline: none;
@@ -128,24 +128,6 @@
       color: var(--primary-color);
       outline: none;
     }
-    .action-links {
-      display: flex;
-      justify-content: space-between;
-      margin-top: 0.75rem;
-      font-size: 0.9rem;
-      user-select: none;
-    }
-    .action-links a {
-      color: var(--primary-color);
-      text-decoration: underline;
-      cursor: pointer;
-      transition: color 0.3s ease;
-    }
-    .action-links a:hover,
-    .action-links a:focus {
-      color: #00796b;
-      outline: none;
-    }
     .password-container {
       position: relative;
     }
@@ -155,7 +137,7 @@
       top: 41px;
       cursor: pointer;
       user-select: none;
-      color: #4db6ac;
+      color: #64748b;
       transition: color 0.3s ease;
     }
     .icon-eye:hover,
@@ -166,45 +148,44 @@
   </style>
 </head>
 <body>
-  <section class="login-container" aria-label="Form login restoran Jastip Jember">
-    <h1>Login Restoran</h1>
-    <form id="loginForm" novalidate>
+  <section class="register-container" aria-label="Form pendaftaran pengguna baru">
+    <h1>Daftar Pengguna Baru</h1>
+    <form id="registerForm" novalidate>
       <div>
-        <label for="username">Nama Restoran / Username</label>
-        <input type="text" id="username" name="username" placeholder="Masukkan nama restoran atau username" required aria-describedby="usernameError" />
-        <p id="usernameError" class="error-message" aria-live="polite"></p>
+        <label for="fullname">Nama Lengkap</label>
+        <input type="text" id="fullname" name="fullname" placeholder="Masukkan nama lengkap" required aria-describedby="fullnameError" />
+        <p id="fullnameError" class="error-message" aria-live="polite"></p>
       </div>
-
-      <div class="password-container mt-4">
+      <div class="mt-3">
+        <label for="email">Alamat Email</label>
+        <input type="email" id="email" name="email" placeholder="Masukkan alamat email" required aria-describedby="emailError" />
+        <p id="emailError" class="error-message" aria-live="polite"></p>
+      </div>
+      <div class="mt-3 password-container">
         <label for="password">Kata Sandi</label>
-        <input type="password" id="password" name="password" placeholder="Masukkan kata sandi" required aria-describedby="passwordError" />
+        <input type="password" id="password" name="password" placeholder="Kata sandi minimal 8 karakter" required aria-describedby="passwordError" />
         <i class="fas fa-eye icon-eye" id="togglePassword" tabindex="0" role="button" aria-label="Tampilkan atau sembunyikan kata sandi"></i>
         <p id="passwordError" class="error-message" aria-live="polite"></p>
       </div>
-
-      <div class="action-links">
-        <a href="lupapasswordresto.html" tabindex="0" aria-label="Lupa password restoran">Lupa Password?</a>
-        <a href="registerresto.html" tabindex="0" aria-label="Daftar restoran baru">Daftar Restoran</a>
-      </div>
-
-      <button type="submit" class="btn-primary" id="loginButton" aria-label="Masuk ke akun restoran">
-        Masuk <i class="fas fa-sign-in-alt"></i>
-      </button>
+      <button type="submit" class="btn-primary" id="registerButton" aria-label="Daftar akun baru">Daftar <i class="fas fa-user-plus"></i></button>
     </form>
-    <a href="index.html" class="back-link" aria-label="Kembali ke beranda utama">
-      <i class="fas fa-arrow-left"></i> Kembali ke Beranda
-    </a>
+    <a href="loginuser.html" class="back-link" aria-label="Kembali ke halaman login pengguna"><i class="fas fa-arrow-left"></i> Kembali ke Login</a>
   </section>
 
-  <script>
-    const loginForm = document.getElementById('loginForm');
-    const usernameField = document.getElementById('username');
+  <script type="module">
+    import { registerUser } from './firebase-auth.js';
+
+    const registerForm = document.getElementById('registerForm');
+    const fullnameField = document.getElementById('fullname');
+    const emailField = document.getElementById('email');
     const passwordField = document.getElementById('password');
-    const usernameError = document.getElementById('usernameError');
+    const fullnameError = document.getElementById('fullnameError');
+    const emailError = document.getElementById('emailError');
     const passwordError = document.getElementById('passwordError');
-    const loginButton = document.getElementById('loginButton');
+    const registerButton = document.getElementById('registerButton');
     const togglePassword = document.getElementById('togglePassword');
 
+    // Toggle password visibility
     togglePassword.addEventListener('click', () => {
       if (passwordField.type === 'password') {
         passwordField.type = 'text';
@@ -216,6 +197,7 @@
         togglePassword.classList.add('fa-eye');
       }
     });
+
     togglePassword.addEventListener('keypress', e => {
       if(e.key === 'Enter' || e.key === ' ') {
         e.preventDefault();
@@ -223,36 +205,63 @@
       }
     });
 
-    loginForm.addEventListener('submit', function(e) {
+    registerForm.addEventListener('submit', async function(e) {
       e.preventDefault();
 
-      usernameError.textContent = '';
+      // Reset errors
+      fullnameError.textContent = '';
+      emailError.textContent = '';
       passwordError.textContent = '';
 
       let valid = true;
 
-      if (!usernameField.value.trim()) {
-        usernameError.textContent = 'Nama restoran atau username wajib diisi.';
+      // Validation
+      if (!fullnameField.value.trim()) {
+        fullnameError.textContent = 'Nama lengkap wajib diisi.';
         valid = false;
       }
+
+      if (!emailField.value.trim()) {
+        emailError.textContent = 'Email wajib diisi.';
+        valid = false;
+      } else if (!validateEmail(emailField.value.trim())) {
+        emailError.textContent = 'Email tidak valid.';
+        valid = false;
+      }
+
       if (!passwordField.value.trim()) {
         passwordError.textContent = 'Kata sandi wajib diisi.';
+        valid = false;
+      } else if (passwordField.value.trim().length < 8) {
+        passwordError.textContent = 'Kata sandi minimal 8 karakter.';
         valid = false;
       }
 
       if (!valid) return;
 
-      loginButton.disabled = true;
-      loginButton.textContent = 'Memproses...';
+      registerButton.disabled = true;
+      registerButton.textContent = 'Memproses...';
 
-      // Simulasi login
-      setTimeout(() => {
-        alert(`Berhasil login sebagai restoran: ${usernameField.value.trim()}`);
-        loginButton.disabled = false;
-        loginButton.innerHTML = `Masuk <i class="fas fa-sign-in-alt"></i>`;
-        loginForm.reset();
-      }, 2000);
+      try {
+        await registerUser(emailField.value.trim(), passwordField.value);
+        alert(`Pendaftaran berhasil. Selamat datang, ${fullnameField.value.trim()}!`);
+        registerForm.reset();
+      } catch (error) {
+        if (error.code === 'auth/email-already-in-use') {
+          emailError.textContent = 'Email sudah terdaftar.';
+        } else {
+          emailError.textContent = 'Terjadi kesalahan saat pendaftaran.';
+        }
+      } finally {
+        registerButton.disabled = false;
+        registerButton.innerHTML = `Daftar <i class="fas fa-user-plus"></i>`;
+      }
     });
+
+    function validateEmail(email) {
+      // Simple regex for email validation
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    }
   </script>
 </body>
 </html>

@@ -8,278 +8,274 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
     <style>
-        :root {
-            --background-color: #f8f9fa;
-            --text-color: #333333;
-            --primary-color: #E53935;
-            --secondary-color: #757575;
-            --accent-color: #FFA000;
-            --card-background: #ffffff;
-            --card-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-            --section-title-color: #E53935;
-        }
+      :root {
+        --background-color: #87ceeb; /* Biru langit */
+        --text-color: #1e293b;
+        --primary-color: #0ea5e9; /* Biru cerah */
+        --secondary-color: #64748b;
+        --accent-color: #85ff4d;
+        --card-background: rgba(255 255 255 / 0.85);
+        --card-shadow: 0 8px 30px rgba(14, 165, 233, 0.3);
+        --section-title-color: #0369a1;
+      }
 
-        html[data-theme="dark"] {
-            --background-color: #212529;
-            --text-color: #e0e0e0;
-            --primary-color: #EF5350;
-            --secondary-color: #BDBDBD;
-            --accent-color: #FFB300;
-            --card-background: #343a40;
-            --card-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-            --section-title-color: #EF5350;
-        }
+      html[data-theme="dark"] {
+        --background-color: #1e3a8a;
+        --text-color: #d1d5db;
+        --primary-color: #60a5fa;
+        --secondary-color: #9ca3af;
+        --accent-color: #85ff4d;
+        --card-background: rgba(15, 23, 42, 0.9);
+        --card-shadow: 0 8px 30px rgba(59, 130, 246, 0.6);
+        --section-title-color: #3b82f6;
+      }
 
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: var(--background-color);
-            color: var(--text-color);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
+      body {
+        font-family: 'Poppins', sans-serif;
+        background-color: var(--background-color);
+        color: var(--text-color);
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 2rem 1rem;
+      }
 
-        .login-container {
-            max-width: 1000px;
-            margin: 40px auto;
-            padding: 40px;
-        }
+      body.dark {
+        background-color: var(--background-color);
+        color: var(--text-color);
+      }
 
-        .login-header {
-            text-align: center;
-            margin-bottom: 40px;
-        }
+      .login-container {
+        max-width: 960px;
+        width: 100%;
+        padding: 40px 30px;
+        background-color: var(--card-background);
+        border-radius: 25px;
+        box-shadow: var(--card-shadow);
+        backdrop-filter: blur(25px);
+        -webkit-backdrop-filter: blur(25px);
+        text-align: center;
+      }
 
-        .login-header img {
-            width: 120px;
-            height: auto;
-            margin-bottom: 20px;
-        }
+      body.dark .login-container {
+        color: var(--text-color);
+      }
 
-        .login-header h2 {
-            color: var(--section-title-color);
-            font-weight: 700;
-            margin-bottom: 10px;
-        }
+      .login-header img {
+        width: 110px;
+        margin-bottom: 20px;
+      }
 
+      .login-header h2 {
+        font-weight: 800;
+        font-size: 2.5rem;
+        color: var(--section-title-color);
+        margin-bottom: 0.5rem;
+      }
+
+      .login-header p {
+        font-size: 1.1rem;
+        color: var(--secondary-color);
+        margin-bottom: 30px;
+      }
+
+      .login-options {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 30px;
+      }
+
+      @media (max-width: 768px) {
         .login-options {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 30px;
-            margin-top: 30px;
+          grid-template-columns: 1fr;
         }
+      }
 
-        .login-card {
-            background-color: var(--card-background);
-            border-radius: 15px;
-            padding: 30px;
-            text-align: center;
-            box-shadow: var(--card-shadow);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            cursor: pointer;
-        }
+      .login-card {
+        background-color: white;
+        border-radius: 20px;
+        padding: 30px 25px 35px;
+        box-shadow: 0 15px 40px rgba(14, 165, 233, 0.15);
+        cursor: pointer;
+        transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+        height: 100%;
+        box-sizing: border-box;
+      }
 
-        .login-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
-        }
+      body.dark .login-card {
+        background-color: rgba(15, 23, 42, 0.9);
+        box-shadow: 0 15px 40px rgba(59, 130, 246, 0.6);
+        color: var(--text-color);
+      }
 
-        .login-card i {
-            font-size: 3rem;
-            color: var(--primary-color);
-            margin-bottom: 20px;
-        }
+      .login-card:hover,
+      .login-card:focus-visible {
+        transform: translateY(-12px);
+        box-shadow: 0 20px 60px rgba(14, 165, 233, 0.4);
+        outline: none;
+        z-index: 5;
+      }
 
-        .login-card h3 {
-            color: var(--text-color);
-            font-size: 1.5rem;
-            margin-bottom: 15px;
-            font-weight: 600;
-        }
+      .login-card i {
+        font-size: 4.2rem;
+        color: var(--primary-color);
+        margin-bottom: 20px;
+        filter: drop-shadow(0 0 6px rgba(14, 165, 233, 0.6));
+        transition: filter 0.3s;
+      }
 
-        .login-card p {
-            color: var(--secondary-color);
-            margin-bottom: 20px;
-            font-size: 0.95rem;
-        }
+      .login-card:hover i,
+      .login-card:focus-visible i {
+        filter: drop-shadow(0 0 12px rgba(5, 150, 105, 0.8));
+        color: var(--accent-color);
+      }
 
-        .login-card .btn {
-            width: 100%;
-            padding: 12px;
-            font-weight: 600;
-            border-radius: 10px;
-        }
+      .login-card h3 {
+        font-size: 1.7rem;
+        color: var(--text-color);
+        margin-bottom: 15px;
+        font-weight: 700;
+      }
 
-        .btn-primary {
-            background-color: var(--primary-color);
-            border-color: var(--primary-color);
-        }
+      body.dark .login-card h3 {
+        color: var(--text-color);
+      }
 
-        .btn-primary:hover {
-            background-color: #D32F2F;
-            border-color: #D32F2F;
-        }
+      .login-card p {
+        color: var(--secondary-color);
+        font-size: 1rem;
+        flex-grow: 1;
+        margin-bottom: 15px;
+      }
 
-        .btn-outline-primary {
-            color: var(--primary-color);
-            border-color: var(--primary-color);
-        }
+      .btn-primary, .btn-outline-primary {
+        border-radius: 15px;
+        font-weight: 700;
+        font-size: 1rem;
+        padding: 0.7rem 0;
+        user-select: none;
+      }
 
-        .btn-outline-primary:hover {
-            background-color: var(--primary-color);
-            border-color: var(--primary-color);
-        }
+      .btn-primary {
+        background-color: var(--primary-color);
+        border-color: var(--primary-color);
+        color: white;
+        box-shadow: 0 8px 20px rgb(14 165 233 / 0.3);
+        transition: background-color 0.3s ease, box-shadow 0.3s ease;
+      }
 
-        .back-to-home {
-            text-align: center;
-            margin-top: 30px;
-        }
+      .btn-primary:hover,
+      .btn-primary:focus-visible {
+        background-color: #0891b2;
+        border-color: #0891b2;
+        box-shadow: 0 12px 28px rgb(7 150 135 / 0.6);
+        outline: none;
+      }
 
-        .back-to-home a {
-            color: var(--text-color);
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            transition: color 0.3s ease;
-        }
+      .btn-outline-primary {
+        color: var(--primary-color);
+        border-color: var(--primary-color);
+        background: transparent;
+        transition: background-color 0.3s ease, color 0.3s ease;
+      }
 
-        .back-to-home a:hover {
-            color: var(--primary-color);
-        }
+      .btn-outline-primary:hover,
+      .btn-outline-primary:focus-visible {
+        background-color: var(--primary-color);
+        color: white;
+        outline: none;
+      }
 
-        /* Theme Toggle Button */
-        #theme-toggle {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            z-index: 1030;
-        }
+      hr {
+        border-color: var(--primary-color);
+        margin: 0 0 15px;
+        opacity: 0.3;
+      }
 
-        #theme-toggle-button {
-            background-color: var(--card-background);
-            border-color: var(--secondary-color);
-            color: var(--text-color);
-            width: 50px;
-            height: 50px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            transition: all 0.3s ease;
-            border-radius: 50%;
-            box-shadow: var(--card-shadow);
-            cursor: pointer;
-        }
+      .back-to-home {
+        margin-top: 40px;
+        text-align: center;
+        user-select: none;
+      }
 
-        #theme-toggle-button:hover {
-            background-color: var(--secondary-color);
-            color: var(--card-background);
-            transform: scale(1.1);
-        }
+      .back-to-home a {
+        color: var(--text-color);
+        font-weight: 600;
+        font-size: 1rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        transition: color 0.3s ease;
+        text-decoration: none;
+      }
 
-        @media (max-width: 768px) {
-            .login-container {
-                margin: 20px;
-                padding: 20px;
-            }
-        }
+      .back-to-home a:hover,
+      .back-to-home a:focus-visible {
+        color: var(--accent-color);
+        outline: none;
+      }
+
+      .back-to-home i {
+        font-size: 1.3rem;
+      }
     </style>
 </head>
 <body>
-    <!-- Theme Toggle Button -->
-    <div id="theme-toggle">
-        <button type="button" class="btn btn-secondary" id="theme-toggle-button" aria-label="Toggle theme">
-            <i class="bi bi-moon-fill"></i>
-        </button>
-    </div>
-
     <main>
-        <div class="login-container">
+        <div class="login-container" role="main">
             <div class="login-header">
-                <img src="logojastipgacoan.jpg" alt="Jastip Jember Logo">
+              <span class="material-icons" aria-hidden="true">delivery_dining</span>
                 <h2>Selamat Datang di Jastip Jember</h2>
-                <p>Silakan pilih jenis akun untuk melanjutkan</p>
+                <p>Pilih jenis akun untuk mulai menggunakan layanan kami</p>
             </div>
 
-            <div class="login-options">
-                <div class="login-card" onclick="window.location.href='loginuser.html'">
-                    <i class="fas fa-user"></i>
+            <div class="login-options" role="list">
+                <div tabindex="0" role="listitem" class="login-card" onclick="location.href='loginuser.html'" onkeypress="if(event.key==='Enter'){location.href='loginuser.html'}" aria-label="Login sebagai pengguna">
+                    <i class="fas fa-user" aria-hidden="true"></i>
                     <h3>Pengguna</h3>
-                    <p>Pesan makanan, jasa antar, dan layanan lainnya dengan mudah</p>
-                    <button class="btn btn-primary">Login sebagai Pengguna</button>
-                    <hr>
+                    <p>Pesan makanan dan layanan antar dengan mudah melalui aplikasi kami.</p>
+                    <button class="btn btn-primary" type="button" tabindex="-1">Login sebagai Pengguna</button>
+                    <hr />
                     <p class="mb-0">Belum punya akun?</p>
-                    <a href="registeruser.html" class="btn btn-outline-primary mt-2">Daftar Sekarang</a>
+                    <a href="daftaruser.html" class="btn btn-outline-primary mt-2" tabindex="-1">Daftar Sekarang</a>
                 </div>
 
-                <div class="login-card" onclick="window.location.href='loginresto.html'">
-                    <i class="fas fa-store"></i>
+                <div tabindex="0" role="listitem" class="login-card" onclick="location.href='loginresto.html'" onkeypress="if(event.key==='Enter'){location.href='loginresto.html'}" aria-label="Login sebagai restoran">
+                    <i class="fas fa-store" aria-hidden="true"></i>
                     <h3>Restoran</h3>
-                    <p>Kelola menu, pesanan, dan kembangkan bisnis Anda bersama kami</p>
-                    <button class="btn btn-primary">Login sebagai Restoran</button>
-                    <hr>
+                    <p>Kelola pesanan dan kembangkan bisnis resto Anda dengan kemudahan.</p>
+                    <button class="btn btn-primary" type="button" tabindex="-1">Login sebagai Restoran</button>
+                    <hr />
                     <p class="mb-0">Ingin bergabung?</p>
-                    <a href="registerresto.html" class="btn btn-outline-primary mt-2">Daftar Restoran</a>
+                    <a href="daftarresto.html" class="btn btn-outline-primary mt-2" tabindex="-1">Daftar Restoran</a>
                 </div>
 
-                <div class="login-card" onclick="window.location.href='logindriver.html'">
-                    <i class="fas fa-motorcycle"></i>
+                <div tabindex="0" role="listitem" class="login-card" onclick="location.href='logindriver.html'" onkeypress="if(event.key==='Enter'){location.href='logindriver.html'}" aria-label="Login sebagai driver">
+                    <i class="fas fa-motorcycle" aria-hidden="true"></i>
                     <h3>Driver/Helper</h3>
-                    <p>Dapatkan penghasilan tambahan sebagai mitra pengantar kami</p>
-                    <button class="btn btn-primary">Login sebagai Driver</button>
-                    <hr>
+                    <p>Dapatkan penghasilan tambahan sebagai mitra pengantar kami.</p>
+                    <button class="btn btn-primary" type="button" tabindex="-1">Login sebagai Driver</button>
+                    <hr />
                     <p class="mb-0">Ingin menjadi mitra?</p>
-                    <a href="registerdriver.html" class="btn btn-outline-primary mt-2">Daftar Driver</a>
+                    <a href="daftardriver.html" class="btn btn-outline-primary mt-2" tabindex="-1">Daftar Driver</a>
                 </div>
             </div>
 
             <div class="back-to-home">
                 <a href="index.html">
-                    <i class="fas fa-arrow-left"></i>
+                    <i class="fas fa-arrow-left" aria-hidden="true"></i>
                     Kembali ke Beranda
                 </a>
             </div>
         </div>
     </main>
-
-    <script>
-        // Theme Toggle Functionality
-        const themeToggleButton = document.getElementById('theme-toggle-button');
-        const htmlElement = document.documentElement;
-
-        // Check saved theme preference
-        const savedTheme = localStorage.getItem('theme');
-        if (savedTheme) {
-            htmlElement.setAttribute('data-theme', savedTheme);
-            updateThemeButtonIcon(savedTheme);
-        }
-
-        themeToggleButton.addEventListener('click', () => {
-            const currentTheme = htmlElement.getAttribute('data-theme');
-            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-            
-            htmlElement.setAttribute('data-theme', newTheme);
-            localStorage.setItem('theme', newTheme);
-            updateThemeButtonIcon(newTheme);
-        });
-
-        function updateThemeButtonIcon(theme) {
-            const icon = themeToggleButton.querySelector('i');
-            icon.className = theme === 'dark' ? 'bi bi-brightness-high-fill' : 'bi bi-moon-fill';
-        }
-
-        // Card hover effects
-        document.querySelectorAll('.login-card').forEach(card => {
-            card.addEventListener('mouseenter', function() {
-                this.style.transform = 'translateY(-5px)';
-            });
-            
-            card.addEventListener('mouseleave', function() {
-                this.style.transform = 'translateY(0)';
-            });
-        });
-    </script>
 </body>
 </html>

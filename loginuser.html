@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Login Pengguna - Jastip Jember</title>
+  <meta name="description" content="Halaman login pengguna Jastip Jember untuk akses layanan pemesanan" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
+  <style>
+    :root {
+      --background-color: #f0f9ff;
+      --text-color: #1e293b;
+      --primary-color: #0ea5e9;
+      --card-bg: #ffffff;
+      --card-shadow: 0 10px 30px rgba(14, 165, 233, 0.3);
+    }
+    html[data-theme="dark"] {
+      --background-color: #0f172a;
+      --text-color: #f1f5f9;
+      --primary-color: #3b82f6;
+      --card-bg: #1e293b;
+      --card-shadow: 0 10px 30px rgba(59, 130, 246, 0.6);
+    }
+    body {
+      background-color: var(--background-color);
+      color: var(--text-color);
+      font-family: 'Poppins', sans-serif;
+      min-height: 100vh;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 1rem;
+    }
+    .login-container {
+      background: var(--card-bg);
+      padding: 2.5rem 2rem;
+      border-radius: 1.25rem;
+      box-shadow: var(--card-shadow);
+      width: 100%;
+      max-width: 400px;
+      box-sizing: border-box;
+      text-align: center;
+    }
+    h1 {
+      font-weight: 700;
+      font-size: 2rem;
+      margin-bottom: 1.5rem;
+      color: var(--primary-color);
+    }
+    label {
+      font-weight: 600;
+      display: block;
+      margin-bottom: 0.4rem;
+      user-select: none;
+    }
+    input[type="text"],
+    input[type="password"] {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border-radius: 0.75rem;
+      border: 2px solid #d1d5db;
+      font-size: 1rem;
+      transition: border-color 0.3s ease;
+      box-sizing: border-box;
+    }
+    input[type="text"]:focus,
+    input[type="password"]:focus {
+      outline: none;
+      border-color: var(--primary-color);
+      box-shadow: 0 0 8px var(--primary-color);
+    }
+    .error-message {
+      font-size: 0.875rem;
+      color: #ef4444;
+      min-height: 1.2em;
+      margin-top: 0.3rem;
+      user-select: text;
+    }
+    button.btn-primary {
+      margin-top: 1.8rem;
+      width: 100%;
+      padding: 0.85rem;
+      background-color: var(--primary-color);
+      border: none;
+      color: white;
+      font-weight: 700;
+      font-size: 1.125rem;
+      border-radius: 9999px;
+      cursor: pointer;
+      transition: background-color 0.3s ease, box-shadow 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      user-select: none;
+    }
+    button.btn-primary:hover,
+    button.btn-primary:focus-visible {
+      background-color: #0284c7;
+      box-shadow: 0 10px 25px rgba(14, 165, 233, 0.5);
+      outline-offset: 4px;
+      outline-style: solid;
+      outline-color: var(--primary-color);
+      outline-width: 3px;
+    }
+    button.btn-primary:disabled {
+      background-color: #93c5fd;
+      cursor: not-allowed;
+      box-shadow: none;
+      outline: none;
+    }
+    .back-link {
+      display: block;
+      margin-top: 1.5rem;
+      color: var(--text-color);
+      font-weight: 600;
+      text-decoration: none;
+      user-select: none;
+      transition: color 0.3s ease;
+    }
+    .back-link:hover,
+    .back-link:focus-visible {
+      color: var(--primary-color);
+      outline: none;
+    }
+    .icon-eye {
+      position: absolute;
+      right: 14px;
+      top: 41px;
+      cursor: pointer;
+      user-select: none;
+      color: #64748b;
+      transition: color 0.3s ease;
+    }
+    .icon-eye:hover,
+    .icon-eye:focus {
+      color: var(--primary-color);
+      outline: none;
+    }
+    .password-container {
+      position: relative;
+    }
+    .extra-links {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 1rem;
+      font-size: 0.9rem;
+    }
+    .extra-links a {
+      color: var(--primary-color);
+      cursor: pointer;
+      text-decoration: underline;
+      user-select: none;
+      transition: color 0.3s ease;
+    }
+    .extra-links a:hover,
+    .extra-links a:focus {
+      color: #0284c7;
+      outline: none;
+    }
+  </style>
+</head>
+<body>
+  <section class="login-container" aria-label="Form login pengguna Jastip Jember">
+    <h1>Login Pengguna</h1>
+    <form id="loginForm" novalidate>
+      <div>
+        <label for="username">Nama Pengguna</label>
+        <input type="text" id="username" name="username" placeholder="Masukkan nama pengguna" autocomplete="username" required aria-describedby="usernameError" />
+        <p id="usernameError" class="error-message" aria-live="polite"></p>
+      </div>
+
+      <div class="password-container mt-4">
+        <label for="password">Kata Sandi</label>
+        <input type="password" id="password" name="password" placeholder="Masukkan kata sandi" autocomplete="current-password" required aria-describedby="passwordError" />
+        <i class="fas fa-eye icon-eye" id="togglePassword" tabindex="0" role="button" aria-label="Tampilkan atau sembunyikan kata sandi"></i>
+        <p id="passwordError" class="error-message" aria-live="polite"></p>
+      </div>
+
+      <div class="extra-links">
+        <a href="lupapassword.html" tabindex="0" aria-label="Lupa password">Lupa Password?</a>
+        <a href="daftaruser.html" tabindex="0" aria-label="Daftar akun baru">Daftar</a>
+      </div>
+
+      <button type="submit" class="btn-primary" id="loginButton" aria-label="Masuk ke akun">Masuk <i class="fas fa-sign-in-alt"></i></button>
+    </form>
+    <a href="index.html" class="back-link" aria-label="Kembali ke beranda utama"><i class="fas fa-arrow-left"></i> Kembali ke Beranda</a>
+  </section>
+
+<script type="module">
+  import { loginUser, onAuthStateChange } from './firebase-auth.js';
+
+  const loginForm = document.getElementById('loginForm');
+  const usernameField = document.getElementById('username');
+  const passwordField = document.getElementById('password');
+  const usernameError = document.getElementById('usernameError');
+  const passwordError = document.getElementById('passwordError');
+  const loginButton = document.getElementById('loginButton');
+  const togglePassword = document.getElementById('togglePassword');
+
+  togglePassword.addEventListener('click', () => {
+    if (passwordField.type === 'password') {
+      passwordField.type = 'text';
+      togglePassword.classList.remove('fa-eye');
+      togglePassword.classList.add('fa-eye-slash');
+    } else {
+      passwordField.type = 'password';
+      togglePassword.classList.remove('fa-eye-slash');
+      togglePassword.classList.add('fa-eye');
+    }
+  });
+  togglePassword.addEventListener('keypress', e => {
+    if(e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      togglePassword.click();
+    }
+  });
+
+  loginForm.addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    usernameError.textContent = '';
+    passwordError.textContent = '';
+
+    let valid = true;
+
+    if (!usernameField.value.trim()) {
+      usernameError.textContent = 'Nama pengguna wajib diisi.';
+      valid = false;
+    }
+    if (!passwordField.value.trim()) {
+      passwordError.textContent = 'Kata sandi wajib diisi.';
+      valid = false;
+    }
+
+    if (!valid) return;
+
+    loginButton.disabled = true;
+    loginButton.textContent = 'Memproses...';
+
+    try {
+      await loginUser(usernameField.value.trim(), passwordField.value);
+      localStorage.setItem('isLoggedIn', 'true');
+      const redirectUrl = localStorage.getItem('redirectAfterLogin') || 'dashboard.html';
+      localStorage.removeItem('redirectAfterLogin');
+      window.location.href = redirectUrl;
+    } catch (error) {
+      passwordError.textContent = 'Email atau password salah. Silakan coba lagi.';
+      passwordError.classList.remove('hidden');
+      passwordField.focus();
+    } finally {
+      loginButton.textContent = 'Masuk <i class="fas fa-sign-in-alt"></i>';
+      loginButton.disabled = false;
+    }
+  });
+
+  // Firebase auth state listener (optional)
+  onAuthStateChange(user => {
+    if (user) {
+      localStorage.setItem('isLoggedIn', 'true');
+    } else {
+      localStorage.removeItem('isLoggedIn');
+    }
+  });
+</script>
+</body>
+</html>
+

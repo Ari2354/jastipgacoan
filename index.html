@@ -27,9 +27,23 @@
                     <li class="nav-item"><a class="nav-link" href="pesanan.html">Pesanan</a></li>
                     <li class="nav-item"><a class="nav-link" href="kontakkami.html">Kontak</a></li>
                     <li class="nav-item"><a class="nav-link" href="jadwal.html">Status Layanan</a></li>
-                    <li class="nav-item"><a class="nav-link btn btn-outline-primary btn-sm ms-2" href="login.html">
-                        <i class="bi bi-person-circle me-1"></i>Login
-                    </a></li>
+            <li class="nav-item" id="nav-login">
+                <a class="nav-link btn btn-outline-primary btn-sm ms-2" href="login.html">
+                    <i class="bi bi-person-circle me-1"></i>Login
+                </a>
+            </li>
+            <li class="nav-item dropdown d-none" id="nav-account">
+                <a class="nav-link dropdown-toggle btn btn-outline-primary btn-sm ms-2" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="bi bi-person-circle me-1"></i>Akun
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <li><a class="dropdown-item" href="profile.html">Profil</a></li>
+                    <li><a class="dropdown-item" href="help.html">Bantuan Permasalahan Akun</a></li>
+                    <li><a class="dropdown-item" href="settings.html">Pengaturan Saldo Ewallet (Dana)</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item" href="#" id="logout-btn">Logout</a></li>
+                </ul>
+            </li>
                 </ul>
             </div>
         </div>
@@ -44,9 +58,7 @@
                 <a href="layanan.html" class="btn btn-light btn-lg" id="pesan-sekarang">
                     <i class="bi bi-cart-plus me-2"></i>PESAN SEKARANG
                 </a>
-                <a href="login.html" class="btn btn-outline-light btn-lg" id="login-btn">
-                    <i class="bi bi-person-circle me-2"></i>LOGIN
-                </a>
+               
             </div>
         </div>
     </section>
@@ -205,6 +217,7 @@
     <script type="module">
         import { db } from './firebase/firebase-js-app/src/firebase.js';
         import { collection, getDocs } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
 
         async function fetchNews() {
             const newsContainer = document.getElementById('newsContainer');
@@ -296,6 +309,47 @@
 
         document.addEventListener('DOMContentLoaded', () => {
             fetchNews();
+
+            // Firebase Auth state listener for navbar update
+            const auth = getAuth();
+            const navLogin = document.getElementById('nav-login');
+            const navAccount = document.getElementById('nav-account');
+            const logoutBtn = document.getElementById('logout-btn');
+
+            onAuthStateChanged(auth, (user) => {
+                if (user) {
+                    // User is signed in
+                    navLogin.classList.add('d-none');
+                    navAccount.classList.remove('d-none');
+                } else {
+                    // User is signed out
+                    navLogin.classList.remove('d-none');
+                    navAccount.classList.add('d-none');
+                }
+            });
+
+            logoutBtn.addEventListener('click', async (e) => {
+                e.preventDefault();
+                try {
+                    await signOut(auth);
+                    localStorage.removeItem('isLoggedIn');
+                    alert('Anda telah logout.');
+                    // Redirect to login page or homepage after logout
+                    window.location.href = 'loginuser.html';
+                } catch (error) {
+                    console.error('Logout error:', error);
+                    alert('Gagal logout. Silakan coba lagi.');
+                }
+            });
+
+            // Listen to Firebase auth state changes to keep localStorage in sync
+            onAuthStateChanged(auth, (user) => {
+                if (user) {
+                    localStorage.setItem('isLoggedIn', 'true');
+                } else {
+                    localStorage.removeItem('isLoggedIn');
+                }
+            });
 
             // Theme toggle logic
             const themeToggleButton = document.getElementById('theme-toggle-button');

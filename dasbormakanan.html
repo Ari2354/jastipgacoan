@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JastipEats - Pesan Makanan dari Berbagai Resto</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8fafc;
+        }
+        
+        .primary-gradient {
+            background: linear-gradient(135deg, #f59e0b 0%, #f97316 100%);
+        }
+        
+        .resto-card {
+            transition: all 0.3s ease;
+        }
+        
+        .resto-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .menu-item {
+            transition: all 0.2s ease;
+        }
+        
+        .menu-item:hover {
+            transform: scale(1.02);
+        }
+        
+        .category-chip {
+            transition: all 0.2s ease;
+        }
+        
+        .category-chip.active {
+            background-color: #f59e0b;
+            color: white;
+        }
+        
+        .cart-item {
+            animation: slideIn 0.3s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateX(20px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        .pulse-animation {
+            animation: pulse 1.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body class="min-h-screen text-gray-800">
+    <!-- Header -->
+    <header class="primary-gradient text-white p-4 shadow-md">
+        <div class="container mx-auto flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <div class="bg-white rounded-full p-2">
+                    <i class="fas fa-utensils text-amber-600 text-xl"></i>
+                </div>
+                <h1 class="text-xl font-bold">JastipEats</h1>
+            </div>
+            <div class="flex items-center space-x-4">
+                <button id="cartButton" class="relative p-2 rounded-full bg-white bg-opacity-20">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span id="cartBadge" class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center hidden">0</span>
+                </button>
+                <div class="w-8 h-8 bg-white rounded-full"></div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 pb-20">
+        <!-- Search Section -->
+        <div class="py-4 sticky top-0 bg-white z-10">
+            <div class="relative">
+                <input type="text" placeholder="Cari restoran atau menu..." 
+                       class="w-full p-3 pl-10 border border-gray-200 rounded-full shadow-sm focus:ring-2 focus:ring-amber-500 focus:border-amber-500">
+                <div class="absolute left-3 top-3 text-gray-400">
+                    <i class="fas fa-search"></i>
+                </div>
+            </div>
+            
+            <!-- Food Categories -->
+            <div class="flex space-x-2 mt-3 overflow-x-auto pb-2">
+                <button class="category-chip active px-3 py-1 bg-amber-100 text-amber-800 rounded-full text-sm whitespace-nowrap">
+                    Semua
+                </button>
+                <button class="category-chip px-3 py-1 bg-gray-100 text-gray-800 rounded-full text-sm whitespace-nowrap">
+                    <i class="fas fa-hamburger mr-1"></i> Fast Food
+                </button>
+                <button class="category-chip px-3 py-1 bg-gray-100 text-gray-800 rounded-full text-sm whitespace-nowrap">
+                    <i class="fas fa-ice-cream mr-1"></i> Dessert
+                </button>
+                <button class="category-chip px-3 py-1 bg-gray-100 text-gray-800 rounded-full text-sm whitespace-nowrap">
+                    <i class="fas fa-mug-hot mr-1"></i> Minuman
+                </button>
+                <button class="category-chip px-3 py-1 bg-gray-100 text-gray-800 rounded-full text-sm whitespace-nowrap">
+                    <i class="fas fa-drumstick-bite mr-1"></i> Ayam
+                </button>
+                <button class="category-chip px-3 py-1 bg-gray-100 text-gray-800 rounded-full text-sm whitespace-nowrap">
+                    <i class="fas fa-fish mr-1"></i> Seafood
+                </button>
+            </div>
+        </div>
+        
+        <!-- Restaurants List -->
+        <div class="grid grid-cols-1 gap-5">
+            <!-- Resto 1 -->
+            <div class="resto-card bg-white rounded-xl shadow-md overflow-hidden">
+                <div class="relative">
+                    <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" 
+                         alt="Resto" class="w-full h-40 object-cover">
+                    <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-3">
+                        <h2 class="text-white font-bold text-lg">Burgers & Fries</h2>
+                        <div class="flex items-center text-white text-sm">
+                            <i class="fas fa-star text-yellow-400 mr-1"></i>
+                            <span>4.7 (1.2k)</span>
+                            <span class="mx-2">•</span>
+                            <span><i class="fas fa-motorcycle mr-1"></i> Rp 10.000</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="p-4">
+                    <div class="flex justify-between items-center mb-3">
+                        <h3 class="font-medium">Menu Populer</h3>
+                        <button class="text-amber-600 text-sm font-medium">Lihat Semua</button>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-3">
+                        <!-- Menu Item 1 -->
+                        <div class="menu-item border border-gray-100 rounded-lg p-2">
+                            <img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=999&q=80" 
+                                 alt="Menu" class="w-full h-20 object-cover rounded-md mb-1">
+                            <h4 class="font-medium text-sm">Cheeseburger</h4>
+                            <p class="text-amber-600 font-bold text-sm">Rp 35.000</p>
+                            <button class="add-to-cart mt-1 w-full py-1 bg-amber-100 text-amber-800 rounded text-xs font-medium"
+                                    data-name="Cheeseburger" data-price="35000" data-resto="Burgers & Fries">
+                                + Tambah
+                            </button>
+                        </div>
+                        
+                        <!-- Menu Item 2 -->
+                        <div class="menu-item border border-gray-100 rounded-lg p-2">
+                            <img src="https://images.unsplash.com/photo-1547584370-2cc978b4b1c5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" 
+                                 alt="Menu" class="w-full h-20 object-cover rounded-md mb-1">
+                            <h4 class="font-medium text-sm">French Fries</h4>
+                            <p class="text-amber-600 font-bold text-sm">Rp 25.000</p>
+                            <button class="add-to-cart mt-1 w-full py-1 bg-amber-100 text-amber-800 rounded text-xs font-medium"
+                                    data-name="French Fries" data-price="25000" data-resto="Burgers & Fries">
+                                + Tambah
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Resto 2 -->
+            <div class="resto-card bg-white rounded-xl shadow-md overflow-hidden">
+                <div class="relative">
+                    <img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1374&q=80" 
+                         alt="Resto" class="w-full h-40 object-cover">
+                    <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-3">
+                        <h2 class="text-white font-bold text-lg">Sushi Palace</h2>
+                        <div class="flex items-center text-white text-sm">
+                            <i class="fas fa-star text-yellow-400 mr-1"></i>
+                            <span>4.9 (850)</span>
+                            <span class="mx-2">•</span>
+                            <span><i class="fas fa-motorcycle mr-1"></i> Rp 15.000</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="p-4">
+                    <div class="flex justify-between items-center mb-3">
+                        <h3 class="font-medium">Menu Populer</h3>
+                        <button class="text-amber-600 text-sm font-medium">Lihat Semua</button>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-3">
+                        <!-- Menu Item 1 -->
+                        <div class="menu-item border border-gray-100 rounded-lg p-2">
+                            <img src="https://images.unsplash.com/photo-1579871494447-9811cf80d66c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" 
+                                 alt="Menu" class="w-full h-20 object-cover rounded-md mb-1">
+                            <h4 class="font-medium text-sm">Sushi Roll</h4>
+                            <p class="text-amber-600 font-bold text-sm">Rp 75.000</p>
+                            <button class="add-to-cart mt-1 w-full py-1 bg-amber-100 text-amber-800 rounded text-xs font-medium"
+                                    data-name="Sushi Roll" data-price="75000" data-resto="Sushi Palace">
+                                + Tambah
+                            </button>
+                        </div>
+                        
+                        <!-- Menu Item 2 -->
+                        <div class="menu-item border border-gray-100 rounded-lg p-2">
+                            <img src="https://images.unsplash.com/photo-1579584425555-c3ce17fd1871?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1527&q=80" 
+                                 alt="Menu" class="w-full h-20 object-cover rounded-md mb-1">
+                            <h4 class="font-medium text-sm">Ramen</h4>
+                            <p class="text-amber-600 font-bold text-sm">Rp 65.000</p>
+                            <button class="add-to-cart mt-1 w-full py-1 bg-amber-100 text-amber-800 rounded text-xs font-medium"
+                                    data-name="Ramen" data-price="65000" data-resto="Sushi Palace">
+                                + Tambah
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Resto 3 -->
+            <div class="resto-card bg-white rounded-xl shadow-md overflow-hidden">
+                <div class="relative">
+                    <img src="https://images.unsplash.com/photo-1559847844-5315695dadae?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1498&q=80" 
+                         alt="Resto" class="w-full h-40 object-cover">
+                    <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-3">
+                        <h2 class="text-white font-bold text-lg">Pizza Heaven</h2>
+                        <div class="flex items-center text-white text-sm">
+                            <i class="fas fa-star text-yellow-400 mr-1"></i>
+                            <span>4.5 (1.5k)</span>
+                            <span class="mx-2">•</span>
+                            <span><i class="fas fa-motorcycle mr-1"></i> Rp 12.000</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="p-4">
+                    <div class="flex justify-between items-center mb-3">
+                        <h3 class="font-medium">Menu Populer</h3>
+                        <button class="text-amber-600 text-sm font-medium">Lihat Semua</button>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-3">
+                        <!-- Menu Item 1 -->
+                        <div class="menu-item border border-gray-100 rounded-lg p-2">
+                            <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1381&q=80" 
+                                 alt="Menu" class="w-full h-20 object-cover rounded-md mb-1">
+                            <h4 class="font-medium text-sm">Pepperoni Pizza</h4>
+                            <p class="text-amber-600 font-bold text-sm">Rp 95.000</p>
+                            <button class="add-to-cart mt-1 w-full py-1 bg-amber-100 text-amber-800 rounded text-xs font-medium"
+                                    data-name="Pepperoni Pizza" data-price="95000" data-resto="Pizza Heaven">
+                                + Tambah
+                            </button>
+                        </div>
+                        
+                        <!-- Menu Item 2 -->
+                        <div class="menu-item border border-gray-100 rounded-lg p-2">
+                            <img src="https://images.unsplash.com/photo-1604382354936-07c5d9983bd3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" 
+                                 alt="Menu" class="w-full h-20 object-cover rounded-md mb-1">
+                            <h4 class="font-medium text-sm">Margherita Pizza</h4>
+                            <p class="text-amber-600 font-bold text-sm">Rp 85.000</p>
+                            <button class="add-to-cart mt-1 w-full py-1 bg-amber-100 text-amber-800 rounded text-xs font-medium"
+                                    data-name="Margherita Pizza" data-price="85000" data-resto="Pizza Heaven">
+                                + Tambah
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Shopping Cart Sidebar -->
+    <div id="cartSidebar" class="fixed top-0 right-0 h-full w-full md:w-96 bg-white shadow-lg transform translate-x-full transition-transform duration-300 z-20">
+        <div class="p-4 h-full flex flex-col">
+            <div class="flex justify-between items-center border-b pb-3">
+                <h2 class="text-lg font-bold">Keranjang Pesanan</h2>
+                <button id="closeCart" class="text-gray-500">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="flex-grow overflow-y-auto py-3" id="cartItems">
+                <!-- Cart items will be added here -->
+                <div class="text-center text-gray-500 py-10">
+                    <i class="fas fa-shopping-cart text-4xl mb-2"></i>
+                    <p>Keranjangmu masih kosong</p>
+                </div>
+            </div>
+            
+            <div class="border-t pt-3">
+                <div class="flex justify-between mb-2">
+                    <span>Subtotal</span>
+                    <span id="subtotal">Rp 0</span>
+                </div>
+                <div class="flex justify-between mb-2">
+                    <span>Biaya Antar</span>
+                    <span id="deliveryFee">Rp 0</span>
+                </div>
+                <div class="flex justify-between font-bold text-lg">
+                    <span>Total</span>
+                    <span id="total">Rp 0</span>
+                </div>
+                <button id="checkoutBtn" class="w-full py-3 primary-gradient hover:opacity-90 text-white font-medium rounded-lg mt-3 shadow-md">
+                    Pesan Sekarang
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Overlay -->
+    <div id="overlay" class="fixed inset-0 bg-black bg-opacity-50 z-10 hidden"></div>
+
+    <!-- Bottom Navigation -->
+    <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 flex justify-around py-2 px-4 shadow-lg">
+        <a href="#" class="flex flex-col items-center text-amber-600 p-2">
+            <i class="fas fa-home text-lg"></i>
+            <span class="text-xs mt-1">Beranda</span>
+        </a>
+        <a href="#" class="flex flex-col items-center text-gray-500 p-2">
+            <i class="fas fa-search text-lg"></i>
+            <span class="text-xs mt-1">Cari</span>
+        </a>
+        <a href="#" class="flex flex-col items-center text-gray-500 p-2">
+            <i class="fas fa-receipt text-lg"></i>
+            <span class="text-xs mt-1">Pesanan</span>
+        </a>
+        <a href="#" class="flex flex-col items-center text-gray-500 p-2">
+            <i class="fas fa-user text-lg"></i>
+            <span class="text-xs mt-1">Profil</span>
+        </a>
+    </nav>
+
+    <script>
+        // Cart functionality
+        let cart = [];
+        
+        // DOM elements
+        const cartButton = document.getElementById('cartButton');
+        const cartSidebar = document.getElementById('cartSidebar');
+        const closeCart = document.getElementById('closeCart');
+        const cartItems = document.getElementById('cartItems');
+        const cartBadge = document.getElementById('cartBadge');
+        const overlay = document.getElementById('overlay');
+        const subtotalEl = document.getElementById('subtotal');
+        const deliveryFeeEl = document.getElementById('deliveryFee');
+        const totalEl = document.getElementById('total');
+        const checkoutBtn = document.getElementById('checkoutBtn');
+        
+        // Add to cart buttons
+        const addToCartButtons = document.querySelectorAll('.add-to-cart');
+        
+        // Category chips
+        const categoryChips = document.querySelectorAll('.category-chip');
+        
+        // Toggle cart sidebar
+        cartButton.addEventListener('click', () => {
+            cartSidebar.classList.remove('translate-x-full');
+            overlay.classList.remove('hidden');
+        });
+        
+        closeCart.addEventListener('click', () => {
+            cartSidebar.classList.add('translate-x-full');
+            overlay.classList.add('hidden');
+        });
+        
+        overlay.addEventListener('click', () => {
+            cartSidebar.classList.add('translate-x-full');
+            overlay.classList.add('hidden');
+        });
+        
+        // Add to cart functionality
+        addToCartButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const name = button.dataset.name;
+                const price = parseInt(button.dataset.price);
+                const resto = button.dataset.resto;
+                
+                // Check if item already in cart
+                const existingItem = cart.find(item => item.name === name && item.resto === resto);
+                
+                if (existingItem) {
+                    existingItem.quantity += 1;
+                } else {
+                    cart.push({
+                        name,
+                        price,
+                        resto,
+                        quantity: 1
+                    });
+                }
+                
+                updateCart();
+                
+                // Show success animation
+                button.innerHTML = '<i class="fas fa-check"></i> Ditambahkan';
+                button.classList.add('bg-emerald-100', 'text-emerald-800');
+                setTimeout(() => {
+                    button.innerHTML = '+ Tambah';
+                    button.classList.remove('bg-emerald-100', 'text-emerald-800');
+                    button.classList.add('bg-amber-100', 'text-amber-800');
+                }, 1000);
+            });
+        });
+        
+        // Update cart UI
+        function updateCart() {
+            // Update badge
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            cartBadge.textContent = totalItems;
+            
+            if (totalItems > 0) {
+                cartBadge.classList.remove('hidden');
+            } else {
+                cartBadge.classList.add('hidden');
+            }
+            
+            // Update cart items
+            if (cart.length === 0) {
+                cartItems.innerHTML = `
+                    <div class="text-center text-gray-500 py-10">
+                        <i class="fas fa-shopping-cart text-4xl mb-2"></i>
+                        <p>Keranjangmu masih kosong</p>
+                    </div>
+                `;
+            } else {
+                cartItems.innerHTML = '';
+                
+                // Group items by restaurant
+                const restaurants = {};
+                cart.forEach(item => {
+                    if (!restaurants[item.resto]) {
+                        restaurants[item.resto] = [];
+                    }
+                    restaurants[item.resto].push(item);
+                });
+                
+                // Render items by restaurant
+                for (const [restoName, items] of Object.entries(restaurants)) {
+                    const restoHeader = document.createElement('div');
+                    restoHeader.className = 'font-bold text-sm mb-2 flex justify-between items-center';
+                    restoHeader.innerHTML = `
+                        <span>${restoName}</span>
+                        <span class="text-xs font-normal text-gray-500">${items.reduce((sum, item) => sum + item.quantity, 0)} items</span>
+                    `;
+                    cartItems.appendChild(restoHeader);
+                    
+                    items.forEach(item => {
+                        const cartItem = document.createElement('div');
+                        cartItem.className = 'cart-item flex justify-between items-center py-2 border-b';
+                        cartItem.innerHTML = `
+                            <div>
+                                <h4 class="font-medium">${item.name}</h4>
+                                <p class="text-sm text-gray-500">Rp ${item.price.toLocaleString('id-ID')}</p>
+                            </div>
+                            <div class="flex items-center">
+                                <button class="decrease-quantity px-2 py-1 bg-gray-100 rounded-l" data-name="${item.name}" data-resto="${item.resto}">
+                                    <i class="fas fa-minus text-xs"></i>
+                                </button>
+                                <span class="px-2">${item.quantity}</span>
+                                <button class="increase-quantity px-2 py-1 bg-gray-100 rounded-r" data-name="${item.name}" data-resto="${item.resto}">
+                                    <i class="fas fa-plus text-xs"></i>
+                                </button>
+                            </div>
+                        `;
+                        cartItems.appendChild(cartItem);
+                    });
+                }
+                
+                // Add event listeners to quantity buttons
+                document.querySelectorAll('.increase-quantity').forEach(button => {
+                    button.addEventListener('click', (e) => {
+                        const name = button.dataset.name;
+                        const resto = button.dataset.resto;
+                        const item = cart.find(item => item.name === name && item.resto === resto);
+                        if (item) {
+                            item.quantity += 1;
+                            updateCart();
+                        }
+                    });
+                });
+                
+                document.querySelectorAll('.decrease-quantity').forEach(button => {
+                    button.addEventListener('click', (e) => {
+                        const name = button.dataset.name;
+                        const resto = button.dataset.resto;
+                        const itemIndex = cart.findIndex(item => item.name === name && item.resto === resto);
+                        
+                        if (itemIndex !== -1) {
+                            if (cart[itemIndex].quantity > 1) {
+                                cart[itemIndex].quantity -= 1;
+                            } else {
+                                cart.splice(itemIndex, 1);
+                            }
+                            updateCart();
+                        }
+                    });
+                });
+            }
+            
+            // Update totals
+            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const deliveryFee = cart.length > 0 ? 10000 : 0; // Flat delivery fee
+            const total = subtotal + deliveryFee;
+            
+            subtotalEl.textContent = `Rp ${subtotal.toLocaleString('id-ID')}`;
+            deliveryFeeEl.textContent = `Rp ${deliveryFee.toLocaleString('id-ID')}`;
+            totalEl.textContent = `Rp ${total.toLocaleString('id-ID')}`;
+        }
+        
+        // Checkout button
+        checkoutBtn.addEventListener('click', () => {
+            if (cart.length === 0) {
+                alert('Keranjang Anda kosong. Silahkan tambahkan item terlebih dahulu.');
+                return;
+            }
+            
+            // In a real app, this would redirect to checkout page or show a form
+            alert('Pesanan Anda telah diterima! Driver akan segera menuju ke restoran.');
+            cart = [];
+            updateCart();
+            cartSidebar.classList.add('translate-x-full');
+            overlay.classList.add('hidden');
+        });
+        
+        // Category filter
+        categoryChips.forEach(chip => {
+            chip.addEventListener('click', () => {
+                categoryChips.forEach(c => c.classList.remove('active'));
+                chip.classList.add('active');
+                
+                // In a real app, this would filter the restaurants/menu items
+                // For demo, we'll just scroll to top
+                window.scrollTo(0, 0);
+            });
+        });
+    </script>
+</body>
+</html>

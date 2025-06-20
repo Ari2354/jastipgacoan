@@ -244,7 +244,7 @@
     try {
       await loginUser(usernameField.value.trim(), passwordField.value);
       localStorage.setItem('isLoggedIn', 'true');
-      const redirectUrl = localStorage.getItem('redirectAfterLogin') || 'dashboard.html';
+      const redirectUrl = localStorage.getItem('redirectAfterLogin') || 'index.html';
       localStorage.removeItem('redirectAfterLogin');
       window.location.href = redirectUrl;
     } catch (error) {

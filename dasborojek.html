@@ -3,573 +3,926 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TipRide - Pesan Ojek Penumpang</title>
+    <title>TipRide - Proses Pemesanan</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
         
         body {
             font-family: 'Poppins', sans-serif;
-            background-color: #f7fafc;
+            background-color: #f8fafc;
         }
         
-        .primary-gradient {
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-        }
-        
-        .secondary-gradient {
-            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-        }
-        
-        #map {
-            height: 250px;
+        .map-container {
+            height: 300px;
             width: 100%;
-            border-radius: 12px;
+            border-radius: 16px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
         }
         
-        .pac-container {
-            z-index: 9999 !important;
+        #pickupMap, #destinationMap, #trackingMap {
+            height: 100%;
+            width: 100%;
         }
         
-        .driver-avatar {
-            width: 50px;
-            height: 50px;
+        .btn-primary {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(16, 185, 129, 0.25);
+        }
+        
+        .page {
+            display: none;
+        }
+        
+        .page.active {
+            display: block;
+        }
+        
+        .driver-marker {
+            background-color: #3b82f6;
+            width: 24px;
+            height: 24px;
             border-radius: 50%;
-            border: 3px solid white;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border: 2px solid white;
+            box-shadow: 0 0 10px rgba(0,0,0,0.2);
         }
         
-        .ride-type-card {
-            transition: all 0.2s ease;
+        .leaflet-control-geosearch * {
+            font-family: 'Poppins', sans-serif !important;
         }
         
-        .ride-type-card:hover {
-            transform: translateY(-3px);
+        .location-search {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            right: 10px;
+            z-index: 1000;
         }
         
-        .ride-type-card.selected {
-            border-color: #10b981;
-            box-shadow: 0 4px 6px rgba(16, 185, 129, 0.1);
+        .location-search input {
+            width: 100%;
+            padding: 10px 15px;
+            border-radius: 20px;
+            border: 1px solid #ddd;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            font-size: 14px;
         }
         
-        .pulse-animation {
-            animation: pulse 2s infinite;
+        .location-search button {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #10b981;
+            cursor: pointer;
         }
         
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
-        }
-        
-        .slide-up {
-            animation: slideUp 0.5s ease-out;
-        }
-        
-        @keyframes slideUp {
-            from { transform: translateY(100px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-        
-        .loading-spinner {
-            animation: spin 1s linear infinite;
-        }
-        
-        @keyframes spin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
+        .current-location-btn {
+            position: absolute;
+            bottom: 20px;
+            right: 10px;
+            z-index: 1000;
+            background: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            cursor: pointer;
+            border: none;
+            color: #10b981;
         }
     </style>
 </head>
 <body class="min-h-screen text-gray-800">
     <!-- Header -->
-    <header class="primary-gradient text-white p-4 shadow-md">
-        <div class="container mx-auto flex justify-between items-center">
-            <div class="flex items-center space-x-3">
-                <div class="bg-white rounded-full p-2">
-                    <i class="fas fa-motorcycle text-emerald-600 text-xl"></i>
+    <header class="bg-gradient-to-r from-emerald-600 to-emerald-500 text-white shadow-lg">
+        <div class="container mx-auto px-4 py-3">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <div class="bg-white rounded-full p-2 shadow-md">
+                        <i class="fas fa-motorcycle text-emerald-600 text-xl"></i>
+                    </div>
+                    <h1 class="text-xl font-bold">TipRide</h1>
                 </div>
-                <h1 class="text-xl font-bold">TipRide</h1>
-            </div>
-            <div class="flex items-center space-x-4">
-                <button class="p-2 rounded-full bg-white bg-opacity-20">
-                    <i class="fas fa-bell"></i>
-                </button>
-                <div class="w-8 h-8 bg-white rounded-full"></div>
+                <div id="timer" class="bg-white bg-opacity-20 px-3 py-1 rounded-full text-sm">
+                    <i class="fas fa-clock mr-1"></i>
+                    <span>00:00</span>
+                </div>
             </div>
         </div>
     </header>
 
-    <!-- Main Content -->
-    <main class="container mx-auto px-4 py-6 max-w-md">
-        <div class="bg-white rounded-xl shadow-lg overflow-hidden mb-6 slide-up">
-            <!-- Order Form -->
-            <div class="p-5">
-                <h2 class="text-xl font-bold mb-5 text-gray-800 flex items-center">
-                    <i class="fas fa-route text-emerald-500 mr-2"></i>
-                    Pesan Ojek Penumpang
-                </h2>
-                
-                <!-- Map Container -->
-                <div class="mb-4 relative">
-                    <div id="map"></div>
-                    <div class="absolute top-2 right-2 bg-white p-2 rounded-full shadow-md cursor-pointer" id="locateMe">
-                        <i class="fas fa-location-arrow text-emerald-600"></i>
+    <!-- Halaman 1: Konfirmasi Lokasi Penjemputan -->
+    <div id="page1" class="page active container mx-auto px-4 py-6 max-w-md">
+        <div class="bg-white rounded-2xl shadow-md p-6 mb-6">
+            <h2 class="text-2xl font-bold mb-4 text-gray-800 flex items-center">
+                <i class="fas fa-map-marker-alt text-emerald-500 mr-2"></i>
+                Konfirmasi Lokasi Penjemputan
+            </h2>
+            
+            <div class="relative mb-6">
+                <div class="map-container">
+                    <div id="pickupMap"></div>
+                    <div class="location-search">
+                        <input type="text" id="pickupSearch" placeholder="Cari lokasi penjemputan...">
+                        <button id="pickupSearchBtn"><i class="fas fa-search"></i></button>
                     </div>
+                    <button id="pickupCurrentLocation" class="current-location-btn" title="Gunakan lokasi saat ini">
+                        <i class="fas fa-location-arrow"></i>
+                    </button>
                 </div>
-                
-                <!-- Pickup Location -->
-                <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Lokasi Penjemputan</label>
+            </div>
+            
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Alamat Penjemputan</label>
                     <div class="relative">
-                        <input type="text" id="pickup" placeholder="Masukkan alamat penjemputan" 
-                               class="w-full p-3 pl-10 border border-gray-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition">
+                        <input type="text" id="pickupLocation" 
+                               class="w-full p-3 pl-10 border border-gray-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500">
                         <div class="absolute left-3 top-3 text-gray-400">
                             <i class="fas fa-map-marker-alt"></i>
                         </div>
                     </div>
                 </div>
                 
-                <!-- Destination -->
-                <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Tujuan Anda</label>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Latitude</label>
+                        <input id="pickupLat" type="text" readonly 
+                               class="w-full p-3 border border-gray-200 rounded-lg bg-gray-50">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Longitude</label>
+                        <input id="pickupLng" type="text" readonly 
+                               class="w-full p-3 border border-gray-200 rounded-lg bg-gray-50">
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <button id="confirmPickupBtn" class="w-full py-4 btn-primary text-white font-bold rounded-xl shadow-lg flex items-center justify-center">
+            <span>Konfirmasi & Lanjutkan</span>
+            <i class="fas fa-arrow-right ml-2"></i>
+        </button>
+    </div>
+
+    <!-- Halaman 2: Pilih Tujuan -->
+    <div id="page2" class="page container mx-auto px-4 py-6 max-w-md">
+        <div class="bg-white rounded-2xl shadow-md p-6 mb-6">
+            <h2 class="text-2xl font-bold mb-4 text-gray-800 flex items-center">
+                <i class="fas fa-flag-checkered text-emerald-500 mr-2"></i>
+                Pilih Lokasi Tujuan
+            </h2>
+            
+            <div class="relative mb-6">
+                <div class="map-container">
+                    <div id="destinationMap"></div>
+                    <div class="location-search">
+                        <input type="text" id="destinationSearch" placeholder="Cari lokasi tujuan...">
+                        <button id="destinationSearchBtn"><i class="fas fa-search"></i></button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Alamat Tujuan</label>
                     <div class="relative">
-                        <input type="text" id="destination" placeholder="Masukkan alamat tujuan" 
-                               class="w-full p-3 pl-10 border border-gray-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition">
+                        <input type="text" id="destinationLocation" 
+                               class="w-full p-3 pl-10 border border-gray-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500">
                         <div class="absolute left-3 top-3 text-gray-400">
                             <i class="fas fa-flag-checkered"></i>
                         </div>
                     </div>
                 </div>
                 
-                <!-- Ride Type Selection -->
-                <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Jenis Layanan</label>
-                    <div class="grid grid-cols-3 gap-2">
-                        <div class="ride-type-card border rounded-lg p-2 text-center cursor-pointer" data-type="regular">
-                            <div class="bg-emerald-100 text-emerald-600 p-2 rounded-lg mb-1">
-                                <i class="fas fa-motorcycle"></i>
-                            </div>
-                            <p class="text-xs font-medium">Regular</p>
-                            <p class="text-xs text-gray-500">1 orang</p>
-                        </div>
-                        <div class="ride-type-card border rounded-lg p-2 text-center cursor-pointer" data-type="double">
-                            <div class="bg-blue-100 text-blue-600 p-2 rounded-lg mb-1">
-                                <i class="fas fa-motorcycle"></i>
-                                <i class="fas fa-motorcycle ml-1"></i>
-                            </div>
-                            <p class="text-xs font-medium">Double</p>
-                            <p class="text-xs text-gray-500">2 orang</p>
-                        </div>
-                        <div class="ride-type-card border rounded-lg p-2 text-center cursor-pointer" data-type="premium">
-                            <div class="bg-purple-100 text-purple-600 p-2 rounded-lg mb-1">
-                                <i class="fas fa-crown"></i>
-                            </div>
-                            <p class="text-xs font-medium">Premium</p>
-                            <p class="text-xs text-gray-500">VIP</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Payment Method -->
-                <div class="mb-5">
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Metode Pembayaran</label>
-                    <div class="grid grid-cols-3 gap-2">
-                        <button class="payment-method py-2 px-2 border rounded-lg flex flex-col items-center bg-emerald-50 border-emerald-100 text-emerald-600">
-                            <i class="fas fa-money-bill-wave mb-1"></i>
-                            <span class="text-xs">Tunai</span>
-                        </button>
-                        <button class="payment-method py-2 px-2 border rounded-lg flex flex-col items-center border-gray-200 hover:bg-gray-50">
-                            <i class="fab fa-cc-visa mb-1 text-blue-600"></i>
-                            <span class="text-xs">Kartu</span>
-                        </button>
-                        <button class="payment-method py-2 px-2 border rounded-lg flex flex-col items-center border-gray-200 hover:bg-gray-50">
-                            <i class="fas fa-wallet mb-1 text-purple-500"></i>
-                            <span class="text-xs">E-Wallet</span>
-                        </button>
-                    </div>
-                </div>
-                
-                <!-- Price Estimate -->
-                <div class="bg-emerald-50 border border-emerald-100 rounded-lg p-4 mb-5 flex justify-between items-center pulse-animation">
+                <div class="grid grid-cols-2 gap-4">
                     <div>
-                        <p class="text-sm text-gray-600">Estimasi Harga</p>
-                        <p class="text-2xl font-bold text-emerald-600" id="priceEstimate">Rp 0</p>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Latitude</label>
+                        <input id="destinationLat" type="text" readonly 
+                               class="w-full p-3 border border-gray-200 rounded-lg bg-gray-50">
                     </div>
-                    <div class="bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full text-xs font-medium">
-                        <i class="fas fa-bolt mr-1"></i> HITUNG
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Longitude</label>
+                        <input id="destinationLng" type="text" readonly 
+                               class="w-full p-3 border border-gray-200 rounded-lg bg-gray-50">
                     </div>
                 </div>
                 
-                <!-- Order Button -->
-                <button id="orderBtn" class="w-full py-3 primary-gradient hover:opacity-90 text-white font-medium rounded-lg transition duration-200 flex items-center justify-center shadow-md">
-                    <span id="orderText">Pesan Sekarang</span>
-                    <span id="orderSpinner" class="ml-2 hidden">
-                        <i class="fas fa-circle-notch loading-spinner"></i>
-                    </span>
-                </button>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Jenis Pembayaran</label>
+                    <select id="paymentMethod" class="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500">
+                        <option value="cash">Tunai</option>
+                        <option value="ewallet">E-Wallet</option>
+                        <option value="credit">Kartu Kredit</option>
+                    </select>
+                </div>
+                
+                <div class="bg-emerald-50 border border-emerald-100 rounded-lg p-4">
+                    <div class="flex justify-between items-center">
+                        <span class="font-medium">Estimasi Harga</span>
+                        <span id="estimatedPrice" class="font-bold text-emerald-600">Rp 25.000</span>
+                    </div>
+                </div>
             </div>
         </div>
         
-        <!-- Nearby Drivers -->
-        <div class="bg-white rounded-xl shadow-lg overflow-hidden slide-up" style="animation-delay: 0.2s;">
-            <div class="p-5">
-                <h2 class="text-lg font-bold mb-4 text-gray-800 flex items-center">
-                    <i class="fas fa-users text-emerald-500 mr-2"></i>
-                    Driver Terdekat
-                </h2>
+        <button id="confirmDestinationBtn" class="w-full py-4 btn-primary text-white font-bold rounded-xl shadow-lg flex items-center justify-center">
+            <span>Lanjutkan Pembayaran</span>
+            <i class="fas fa-credit-card ml-2"></i>
+        </button>
+    </div>
+
+    <!-- Halaman 3: Pembayaran -->
+    <div id="page3" class="page container mx-auto px-4 py-6 max-w-md">
+        <div class="bg-white rounded-2xl shadow-md p-6 mb-6">
+            <h2 class="text-2xl font-bold mb-4 text-gray-800 flex items-center">
+                <i class="fas fa-credit-card text-emerald-500 mr-2"></i>
+                Pembayaran
+            </h2>
+            
+            <div class="space-y-4 mb-6">
+                <div class="flex justify-between">
+                    <span>Penjemputan:</span>
+                    <span id="paymentPickupLocation" class="font-medium"></span>
+                </div>
                 
-                <div class="space-y-3" id="driversList">
-                    <!-- Driver items will be loaded here -->
+                <div class="flex justify-between">
+                    <span>Tujuan:</span>
+                    <span id="paymentDestinationLocation" class="font-medium"></span>
+                </div>
+                
+                <div class="border-t border-gray-200 my-3"></div>
+                
+                <div class="flex justify-between">
+                    <span>Metode Pembayaran:</span>
+                    <span id="paymentMethodDisplay" class="font-medium"></span>
+                </div>
+                
+                <div class="border-t border-gray-200 my-3"></div>
+                
+                <div class="flex justify-between text-lg font-bold">
+                    <span>Total:</span>
+                    <span id="paymentTotal" class="text-emerald-600"></span>
+                </div>
+                
+                <div id="ewalletSection" class="hidden">
+                    <div class="mt-4 p-4 bg-gray-50 rounded-lg">
+                        <p class="text-sm text-gray-600 mb-2">Scan QR Code berikut untuk pembayaran:</p>
+                        <div class="bg-white p-3 rounded border border-gray-200 inline-block">
+                            <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=TipRidePayment12345" 
+                                 alt="QR Code Pembayaran" class="w-32 h-32 mx-auto">
+                        </div>
+                        <p class="text-xs text-gray-500 mt-2">Pembayaran akan diverifikasi otomatis</p>
+                    </div>
+                </div>
+                
+                <div id="creditCardSection" class="hidden">
+                    <div class="mt-4 space-y-3">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Nomor Kartu</label>
+                            <input type="text" placeholder="1234 5678 9012 3456" 
+                                   class="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500">
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Masa Berlaku</label>
+                                <input type="text" placeholder="MM/YY" 
+                                       class="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">CVV</label>
+                                <input type="text" placeholder="123" 
+                                       class="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flex items-center mb-4">
+                <input id="termsCheckbox" type="checkbox" class="h-4 w-4 text-emerald-600 focus:ring-emerald-500 border-gray-300 rounded">
+                <label for="termsCheckbox" class="ml-2 block text-sm text-gray-700">
+                    Saya menyetujui <a href="#" class="text-emerald-600 hover:underline">Syarat & Ketentuan</a>
+                </label>
+            </div>
+            
+            <button id="processPaymentBtn" class="w-full py-4 btn-primary text-white font-bold rounded-xl shadow-lg flex items-center justify-center">
+                <span>Proses Pembayaran</span>
+                <i class="fas fa-lock ml-2"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Halaman 4: Menunggu Driver -->
+    <div id="page4" class="page container mx-auto px-4 py-6 max-w-md">
+        <div class="bg-white rounded-2xl shadow-md p-6 mb-6">
+            <div class="text-center mb-6">
+                <div class="w-20 h-20 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-motorcycle text-emerald-600 text-3xl"></i>
+                </div>
+                <h2 class="text-2xl font-bold mb-2">Mencari Driver Terdekat</h2>
+                <p class="text-gray-600">Harap tunggu sebentar...</p>
+            </div>
+            
+            <div class="relative mb-6">
+                <div class="map-container">
+                    <div id="trackingMap"></div>
+                </div>
+                <div class="absolute bottom-4 left-0 right-0 flex justify-center">
+                    <div class="bg-white px-4 py-2 rounded-full shadow-md flex items-center">
+                        <div class="h-3 w-3 bg-emerald-500 rounded-full mr-2 animate-pulse"></div>
+                        <span class="text-sm font-medium">Mencari driver</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="space-y-4">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <span class="block text-sm text-gray-500">Estimasi Waktu</span>
+                        <span class="font-bold">5-10 menit</span>
+                    </div>
+                    <div>
+                        <span class="block text-sm text-gray-500">Jarak</span>
+                        <span class="font-bold">2.5 km</span>
+                    </div>
+                </div>
+                
+                <div class="border-t border-gray-200 my-3"></div>
+                
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <img src="https://randomuser.me/api/portraits/men/42.jpg" alt="Driver" class="h-12 w-12 rounded-full">
+                    </div>
+                    <div class="ml-3">
+                        <h4 class="font-bold" id="driverName">-</h4>
+                        <div class="flex items-center">
+                            <div class="flex items-center text-yellow-400">
+                                <i class="fas fa-star"></i>
+                                <span class="ml-1 text-gray-600" id="driverRating">4.9</span>
+                            </div>
+                            <span class="mx-2 text-gray-300">•</span>
+                            <span class="text-gray-600" id="driverVehicle">Honda Beat</span>
+                        </div>
+                    </div>
+                    <div class="ml-auto">
+                        <button id="callDriverBtn" class="p-2 bg-emerald-100 text-emerald-600 rounded-full hover:bg-emerald-200">
+                            <i class="fas fa-phone"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="bg-blue-50 border border-blue-100 rounded-lg p-4 mt-4">
+                    <div class="flex items-start">
+                        <div class="flex-shrink-0 pt-1">
+                            <i class="fas fa-info-circle text-blue-500"></i>
+                        </div>
+                        <div class="ml-3">
+                            <h4 class="text-sm font-medium text-blue-800">Driver dalam perjalanan</h4>
+                            <p class="text-sm text-blue-600 mt-1">Driver akan segera tiba di lokasi penjemputan Anda</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-    </main>
+        
+        <button id="cancelOrderBtn" class="w-full py-4 border-2 border-red-500 text-red-500 font-bold rounded-xl hover:bg-red-50 flex items-center justify-center">
+            <span>Batalkan Pesanan</span>
+        </button>
+    </div>
 
-    <!-- Bottom Navigation -->
-    <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 flex justify-around py-2 px-4 shadow-lg">
-        <a href="#" class="flex flex-col items-center text-emerald-600 p-2">
-            <i class="fas fa-home text-lg"></i>
-            <span class="text-xs mt-1">Beranda</span>
-        </a>
-        <a href="#" class="flex flex-col items-center text-gray-500 p-2">
-            <i class="fas fa-history text-lg"></i>
-            <span class="text-xs mt-1">Riwayat</span>
-        </a>
-        <a href="#" class="flex flex-col items-center text-gray-500 p-2">
-            <i class="fas fa-wallet text-lg"></i>
-            <span class="text-xs mt-1">Dompet</span>
-        </a>
-        <a href="#" class="flex flex-col items-center text-gray-500 p-2">
-            <i class="fas fa-user text-lg"></i>
-            <span class="text-xs mt-1">Profil</span>
-        </a>
-    </nav>
-
-    <!-- Google Maps API -->
-    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places&callback=initMap" async defer></script>
-    
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
     <script>
-        // Global variables
-        let map;
-        let directionsService;
-        let directionsRenderer;
-        let pickupMarker;
-        let destinationMarker;
-        let autocompletePickup;
-        let autocompleteDestination;
-        let userLocation;
-        let selectedRideType = 'regular';
+        // Variabel global
+        let pickupMap, destinationMap, trackingMap;
+        let pickupMarker, destinationMarker, userMarker, driverMarker;
+        let driverInterval;
+        let seconds = 0;
         
-        // Initialize the map
-        function initMap() {
-            // Create map
-            map = new google.maps.Map(document.getElementById("map"), {
-                center: { lat: -6.2088, lng: 106.8456 }, // Default to Jakarta
-                zoom: 13,
-                mapTypeControl: false,
-                streetViewControl: false,
-                fullscreenControl: false
-            });
+        // Inisialisasi halaman
+        document.addEventListener('DOMContentLoaded', function() {
+            initPickupPage();
+            setupEventListeners();
+            startTimer();
+        });
+        
+        // Inisialisasi peta penjemputan
+        function initPickupPage() {
+            pickupMap = L.map('pickupMap').setView([-6.2088, 106.8456], 13);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(pickupMap);
             
-            // Initialize services
-            directionsService = new google.maps.DirectionsService();
-            directionsRenderer = new google.maps.DirectionsRenderer({
-                map: map,
-                suppressMarkers: true
-            });
+            // Tambahkan geocoder untuk pencarian lokasi
+            const geocoder = L.Control.Geocoder.nominatim();
             
-            // Initialize autocomplete for pickup and destination
-            autocompletePickup = new google.maps.places.Autocomplete(
-                document.getElementById('pickup'),
-                { types: ['geocode'] }
-            );
-            
-            autocompleteDestination = new google.maps.places.Autocomplete(
-                document.getElementById('destination'),
-                { types: ['geocode'] }
-            );
-            
-            // Add listeners for place changes
-            autocompletePickup.addListener('place_changed', () => {
-                const place = autocompletePickup.getPlace();
-                if (!place.geometry) return;
-                
-                // Update pickup marker
-                if (pickupMarker) pickupMarker.setMap(null);
-                pickupMarker = new google.maps.Marker({
-                    position: place.geometry.location,
-                    map: map,
-                    icon: {
-                        url: "https://maps.google.com/mapfiles/ms/icons/red-dot.png"
-                    },
-                    title: "Lokasi Penjemputan"
-                });
-                
-                // Center map to show both markers if destination is set
-                if (destinationMarker) {
-                    const bounds = new google.maps.LatLngBounds();
-                    bounds.extend(pickupMarker.getPosition());
-                    bounds.extend(destinationMarker.getPosition());
-                    map.fitBounds(bounds);
-                    
-                    // Calculate route and price
-                    calculateRoute();
-                } else {
-                    map.setCenter(place.geometry.location);
-                }
-            });
-            
-            autocompleteDestination.addListener('place_changed', () => {
-                const place = autocompleteDestination.getPlace();
-                if (!place.geometry) return;
-                
-                // Update destination marker
-                if (destinationMarker) destinationMarker.setMap(null);
-                destinationMarker = new google.maps.Marker({
-                    position: place.geometry.location,
-                    map: map,
-                    icon: {
-                        url: "https://maps.google.com/mapfiles/ms/icons/green-dot.png"
-                    },
-                    title: "Lokasi Tujuan"
-                });
-                
-                // Center map to show both markers if pickup is set
-                if (pickupMarker) {
-                    const bounds = new google.maps.LatLngBounds();
-                    bounds.extend(pickupMarker.getPosition());
-                    bounds.extend(destinationMarker.getPosition());
-                    map.fitBounds(bounds);
-                    
-                    // Calculate route and price
-                    calculateRoute();
-                } else {
-                    map.setCenter(place.geometry.location);
-                }
-            });
-            
-            // Locate me button
-            document.getElementById('locateMe').addEventListener('click', locateUser);
-            
-            // Ride type selection
-            document.querySelectorAll('.ride-type-card').forEach(card => {
-                card.addEventListener('click', function() {
-                    document.querySelectorAll('.ride-type-card').forEach(c => {
-                        c.classList.remove('selected', 'border-emerald-300');
+            // Handle pencarian lokasi
+            document.getElementById('pickupSearchBtn').addEventListener('click', function() {
+                const query = document.getElementById('pickupSearch').value;
+                if (query) {
+                    geocoder.geocode(query, function(results) {
+                        if (results.length > 0) {
+                            const latlng = results[0].center;
+                            updatePickupLocation(latlng.lat, latlng.lng, results[0].name);
+                        } else {
+                            alert("Lokasi tidak ditemukan");
+                        }
                     });
-                    this.classList.add('selected', 'border-emerald-300');
-                    selectedRideType = this.dataset.type;
-                    if (pickupMarker && destinationMarker) calculateRoute();
-                });
+                }
             });
-        }
-        
-        // Locate user's current position
-        function locateUser() {
+            
+            // Handle klik pada peta
+            pickupMap.on('click', function(e) {
+                updatePickupLocation(e.latlng.lat, e.latlng.lng);
+            });
+            
+            // Tombol lokasi saat ini
+            document.getElementById('pickupCurrentLocation').addEventListener('click', function() {
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(
+                        function(position) {
+                            const { latitude, longitude } = position.coords;
+                            updatePickupLocation(latitude, longitude);
+                        },
+                        function(error) {
+                            alert("Gagal mendapatkan lokasi: " + error.message);
+                        }
+                    );
+                } else {
+                    alert("Browser tidak mendukung geolocation");
+                }
+            });
+            
+            // Coba dapatkan lokasi pengguna otomatis
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(
-                    (position) => {
-                        userLocation = {
-                            lat: position.coords.latitude,
-                            lng: position.coords.longitude
-                        };
-                        
-                        // Center map to user location
-                        map.setCenter(userLocation);
-                        map.setZoom(15);
-                        
-                        // Add marker for user location
-                        if (pickupMarker) pickupMarker.setMap(null);
-                        pickupMarker = new google.maps.Marker({
-                            position: userLocation,
-                            map: map,
-                            icon: {
-                                url: "https://maps.google.com/mapfiles/ms/icons/red-dot.png"
-                            },
-                            title: "Lokasi Anda"
-                        });
-                        
-                        // Update pickup input field
-                        const geocoder = new google.maps.Geocoder();
-                        geocoder.geocode({ location: userLocation }, (results, status) => {
-                            if (status === "OK" && results[0]) {
-                                document.getElementById('pickup').value = results[0].formatted_address;
-                            }
-                        });
+                    function(position) {
+                        const { latitude, longitude } = position.coords;
+                        updatePickupLocation(latitude, longitude);
                     },
-                    (error) => {
-                        alert("Tidak dapat mendapatkan lokasi Anda: " + error.message);
+                    function(error) {
+                        console.log("Pengguna menolak izin lokasi");
                     }
                 );
-            } else {
-                alert("Browser Anda tidak mendukung geolokasi");
             }
         }
         
-        // Calculate route between pickup and destination
-        function calculateRoute() {
-            if (!pickupMarker || !destinationMarker) return;
+        // Update lokasi penjemputan
+        async function updatePickupLocation(lat, lng, address = null) {
+    pickupMap.setView([lat, lng], 15);
+    
+    // Update marker
+    if (pickupMarker) {
+        pickupMarker.setLatLng([lat, lng]);
+    } else {
+        pickupMarker = L.marker([lat, lng], {
+            icon: L.icon({
+                iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
+                iconSize: [25, 41],
+                iconAnchor: [12, 41]
+            }),
+            draggable: true
+        }).addTo(pickupMap);
+        
+        pickupMarker.on('dragend', function() {
+            const newLatLng = pickupMarker.getLatLng();
+            updatePickupLocation(newLatLng.lat, newLatLng.lng);
+        });
+    }
+    
+    document.getElementById('pickupLat').value = lat.toFixed(6);
+    document.getElementById('pickupLng').value = lng.toFixed(6);
+    
+    if (address) {
+        document.getElementById('pickupLocation').value = address;
+        document.getElementById('pickupSearch').value = address;
+        return;
+    }
+    
+    try {
+        // Gunakan Leaflet Geocoder sebagai alternatif
+        const geocoder = L.Control.Geocoder.nominatim();
+        geocoder.reverse(
+            { lat: lat, lng: lng }, 
+            pickupMap.getZoom(),
+            (results) => {
+                if (results.length > 0) {
+                    const address = results[0].name || "Alamat tidak ditemukan";
+                    document.getElementById('pickupLocation').value = address;
+                    document.getElementById('pickupSearch').value = address;
+                } else {
+                    document.getElementById('pickupLocation').value = "Alamat tidak ditemukan";
+                }
+            }
+        );
+    } catch (error) {
+        console.error("Error reverse geocoding:", error);
+        document.getElementById('pickupLocation').value = "Alamat tidak ditemukan";
+    }
+}
+                
+                // Handle ketika marker dipindahkan
+                pickupMarker.on('dragend', function() {
+                    const newLatLng = pickupMarker.getLatLng();
+                    updatePickupLocation(newLatLng.lat, newLatLng.lng);
+                });
             
-            const request = {
-                origin: pickupMarker.getPosition(),
-                destination: destinationMarker.getPosition(),
-                travelMode: 'DRIVING'
-            };
             
-            directionsService.route(request, (result, status) => {
-                if (status == 'OK') {
-                    directionsRenderer.setDirections(result);
-                    
-                    // Calculate price based on distance and ride type
-                    const distance = result.routes[0].legs[0].distance.value; // in meters
-                    const duration = result.routes[0].legs[0].duration.text;
-                    
-                    // Pricing based on ride type
-                    let basePrice, distancePrice;
-                    
-                    switch(selectedRideType) {
-                        case 'regular':
-                            basePrice = 10000;
-                            distancePrice = distance * 0.003; // Rp 3 per meter
-                            break;
-                        case 'double':
-                            basePrice = 15000;
-                            distancePrice = distance * 0.004; // Rp 4 per meter
-                            break;
-                        case 'premium':
-                            basePrice = 20000;
-                            distancePrice = distance * 0.005; // Rp 5 per meter
-                            break;
-                        default:
-                            basePrice = 10000;
-                            distancePrice = distance * 0.003;
+            // Update input
+            document.getElementById('pickupLat').value = lat.toFixed(6);
+            document.getElementById('pickupLng').value = lng.toFixed(6);
+            
+            // Jika alamat sudah disediakan (dari pencarian), gunakan itu
+            if (address) {
+                document.getElementById('pickupLocation').value = address;
+                document.getElementById('pickupSearch').value = address;
+                // Removed illegal return statement here
+            }
+            
+            // Lakukan reverse geocoding via proxy server
+            fetch(`http://localhost:3000/nominatim/reverse?lat=${lat}&lon=${lng}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
                     }
-                    
-                    let totalPrice = basePrice + distancePrice;
-                    
-                    // Round to nearest 500
-                    totalPrice = Math.round(totalPrice / 500) * 500;
-                    
-                    // Update price estimate
-                    document.getElementById('priceEstimate').textContent = 
-                        "Rp " + totalPrice.toLocaleString('id-ID');
-                    
-                    // Find nearby drivers
-                    findNearbyDrivers(pickupMarker.getPosition());
+                    return response.json();
+                })
+                .then(data => {
+                    const address = data.display_name || "Alamat tidak ditemukan";
+                    document.getElementById('pickupLocation').value = address;
+                    document.getElementById('pickupSearch').value = address;
+                })
+                .catch(error => {
+                    console.error("Error reverse geocoding:", error);
+                    document.getElementById('pickupLocation').value = "Alamat tidak ditemukan";
+                });
+        
+        
+        // Setup event listeners
+        function setupEventListeners() {
+            // Tombol konfirmasi lokasi penjemputan
+            document.getElementById('confirmPickupBtn').addEventListener('click', function() {
+                const lat = document.getElementById('pickupLat').value;
+                const lng = document.getElementById('pickupLng').value;
+                const address = document.getElementById('pickupLocation').value;
+                
+                if (!lat || !lng || !address || address === "Alamat tidak ditemukan") {
+                    alert("Silakan pilih lokasi penjemputan yang valid terlebih dahulu");
+                    return;
+                }
+                
+                // Simpan data penjemputan
+                localStorage.setItem('pickupLocation', address);
+                localStorage.setItem('pickupLat', lat);
+                localStorage.setItem('pickupLng', lng);
+                
+                // Pindah ke halaman tujuan
+                initDestinationPage();
+                document.getElementById('page1').classList.remove('active');
+                document.getElementById('page2').classList.add('active');
+            });
+            
+            // Tombol konfirmasi tujuan
+            document.getElementById('confirmDestinationBtn').addEventListener('click', function() {
+                const lat = document.getElementById('destinationLat').value;
+                const lng = document.getElementById('destinationLng').value;
+                const address = document.getElementById('destinationLocation').value;
+                
+                if (!lat || !lng || !address || address === "Alamat tidak ditemukan") {
+                    alert("Silakan pilih lokasi tujuan yang valid terlebih dahulu");
+                    return;
+                }
+                
+                // Simpan data tujuan
+                localStorage.setItem('destinationLocation', address);
+                localStorage.setItem('destinationLat', lat);
+                localStorage.setItem('destinationLng', lng);
+                localStorage.setItem('paymentMethod', document.getElementById('paymentMethod').value);
+                
+                // Pindah ke halaman pembayaran
+                initPaymentPage();
+                document.getElementById('page2').classList.remove('active');
+                document.getElementById('page3').classList.add('active');
+            });
+            
+            // Tombol proses pembayaran
+            document.getElementById('processPaymentBtn').addEventListener('click', function() {
+                if (!document.getElementById('termsCheckbox').checked) {
+                    alert("Anda harus menyetujui syarat dan ketentuan terlebih dahulu");
+                    return;
+                }
+                
+                // Proses pembayaran (simulasi)
+                simulatePayment();
+            });
+            
+            // Tombol batalkan pesanan
+            document.getElementById('cancelOrderBtn').addEventListener('click', function() {
+                if (confirm("Apakah Anda yakin ingin membatalkan pesanan?")) {
+                    clearInterval(driverInterval);
+                    alert("Pesanan telah dibatalkan");
+                    // Kembali ke halaman awal
+                    document.getElementById('page4').classList.remove('active');
+                    document.getElementById('page1').classList.add('active');
+                }
+            });
+            
+            // Pilihan metode pembayaran
+            document.getElementById('paymentMethod').addEventListener('change', function() {
+                const method = this.value;
+                document.getElementById('ewalletSection').classList.add('hidden');
+                document.getElementById('creditCardSection').classList.add('hidden');
+                
+                if (method === 'ewallet') {
+                    document.getElementById('ewalletSection').classList.remove('hidden');
+                } else if (method === 'credit') {
+                    document.getElementById('creditCardSection').classList.remove('hidden');
                 }
             });
         }
         
-        // Find nearby drivers (simulated)
-        function findNearbyDrivers(location) {
-            // In a real app, this would be an API call to your backend
-            // Here we simulate with random drivers
+        // Inisialisasi halaman tujuan
+        function initDestinationPage() {
+            destinationMap = L.map('destinationMap').setView([
+                parseFloat(localStorage.getItem('pickupLat')),
+                parseFloat(localStorage.getItem('pickupLng'))
+            ], 13);
             
-            const driversList = document.getElementById('driversList');
-            driversList.innerHTML = '';
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(destinationMap);
             
-            // Generate 2-4 random drivers
-            const driverCount = Math.floor(Math.random() * 3) + 2;
-            const driverPhotos = [
-                'https://randomuser.me/api/portraits/men/32.jpg',
-                'https://randomuser.me/api/portraits/men/45.jpg',
-                'https://randomuser.me/api/portraits/women/65.jpg',
-                'https://randomuser.me/api/portraits/men/76.jpg'
-            ];
+            // Tambahkan geocoder untuk pencarian lokasi
+            const geocoder = L.Control.Geocoder.nominatim();
             
-            const driverNames = ['Budi Santoso', 'Andi Wijaya', 'Siti Rahayu', 'Joko Prasetyo'];
-            const bikeModels = ['Honda Beat', 'Yamaha NMAX', 'Scoopy', 'Vario'];
-            
-            for (let i = 0; i < driverCount; i++) {
-                const randomETA = Math.floor(Math.random() * 10) + 3; // 3-12 minutes
-                const randomRating = (Math.random() * 1 + 4).toFixed(1); // 4.0-5.0
-                
-                const driverItem = document.createElement('div');
-                driverItem.className = 'driver-card flex items-center p-3 border border-gray-100 rounded-lg hover:border-emerald-200 cursor-pointer transition';
-                driverItem.innerHTML = `
-                    <img src="${driverPhotos[i]}" alt="Driver" class="driver-avatar mr-3">
-                    <div class="flex-grow">
-                        <div class="flex justify-between items-center">
-                            <h3 class="font-semibold">${driverNames[i]}</h3>
-                            <div class="flex items-center text-yellow-400 text-xs">
-                                <i class="fas fa-star"></i>
-                                <span class="text-gray-600 ml-1">${randomRating}</span>
-                            </div>
-                        </div>
-                        <div class="flex justify-between items-center text-xs text-gray-500 mt-1">
-                            <div class="flex items-center">
-                                <i class="fas fa-motorcycle mr-1"></i>
-                                <span>${bikeModels[i]}</span>
-                            </div>
-                            <div class="flex items-center">
-                                <i class="fas fa-clock mr-1"></i>
-                                <span>${randomETA} menit</span>
-                            </div>
-                        </div>
-                    </div>
-                `;
-                
-                driversList.appendChild(driverItem);
-            }
-        }
-        
-        // Simulate order process
-        document.getElementById('orderBtn').addEventListener('click', function() {
-            const pickup = document.getElementById('pickup').value;
-            const destination = document.getElementById('destination').value;
-            
-            if (!pickup || !destination) {
-                showAlert('Harap masukkan alamat penjemputan dan tujuan terlebih dahulu');
-                return;
-            }
-            
-            // Show loading state
-            const orderText = document.getElementById('orderText');
-            const orderSpinner = document.getElementById('orderSpinner');
-            
-            orderText.textContent = 'Mencari Driver...';
-            orderSpinner.classList.remove('hidden');
-            this.disabled = true;
-            
-            // Simulate API call
-            setTimeout(() => {
-                // Show success message
-                orderText.textContent = 'Driver Ditemukan!';
-                orderSpinner.classList.add('hidden');
-                
-                // Show driver found notification
-                showSuccessNotification(`Driver ditemukan! Akan tiba dalam 3 menit ke ${pickup}`);
-                
-                // Reset button after 3 seconds
-                setTimeout(() => {
-                    orderText.textContent = 'Pesan Sekarang';
-                    this.disabled = false;
-                }, 3000);
-            }, 2000);
-        });
-        
-        // Payment method selection
-        document.querySelectorAll('.payment-method').forEach(btn => {
-            btn.addEventListener('click', function() {
-                document.querySelectorAll('.payment-method').forEach(b => {
-                    b.classList.remove('bg-emerald-50', 'border-emerald-100', 'text-emerald-600');
-                    b.classList.add('border-gray-200');
-                });
-                this.classList.add('bg-emerald-50', 'border-emerald-100', 'text-emerald-600');
-                this.classList.remove('border-gray-200');
+            // Handle pencarian lokasi
+            document.getElementById('destinationSearchBtn').addEventListener('click', function() {
+                const query = document.getElementById('destinationSearch').value;
+                if (query) {
+                    geocoder.geocode(query, function(results) {
+                        if (results.length > 0) {
+                            const latlng = results[0].center;
+                            updateDestinationLocation(latlng.lat, latlng.lng, results[0].name);
+                        } else {
+                            alert("Lokasi tidak ditemukan");
+                        }
+                    });
+                }
             });
-        });
-        
-        // Helper functions
-        function showAlert(message) {
-            alert(message);
+            
+            // Tambahkan marker saat peta diklik
+            destinationMap.on('click', function(e) {
+                updateDestinationLocation(e.latlng.lat, e.latlng.lng);
+            });
+            
+            // Tambahkan marker lokasi penjemputan sebagai referensi
+            L.marker([
+                parseFloat(localStorage.getItem('pickupLat')),
+                parseFloat(localStorage.getItem('pickupLng'))
+            ], {
+                icon: L.icon({
+                    iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
+                    iconSize: [25, 41],
+                    iconAnchor: [12, 41]
+                })
+            }).addTo(destinationMap).bindPopup("Lokasi Penjemputan");
         }
         
-        function showSuccessNotification(message) {
-            // In a real app, this would be a nice toast notification
-            alert(message);
+        // Update lokasi tujuan
+        function updateDestinationLocation(lat, lng, address = null) {
+            destinationMap.setView([lat, lng], 15);
+            
+            // Update marker
+            if (destinationMarker) {
+                destinationMarker.setLatLng([lat, lng]);
+            } else {
+                destinationMarker = L.marker([lat, lng], {
+                    icon: L.icon({
+                        iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
+                        iconSize: [25, 41],
+                        iconAnchor: [12, 41]
+                    }),
+                    draggable: true
+                }).addTo(destinationMap);
+                
+                // Handle ketika marker dipindahkan
+                destinationMarker.on('dragend', function() {
+                    const newLatLng = destinationMarker.getLatLng();
+                    updateDestinationLocation(newLatLng.lat, newLatLng.lng);
+                });
+            }
+            
+            // Update input
+            document.getElementById('destinationLat').value = lat.toFixed(6);
+            document.getElementById('destinationLng').value = lng.toFixed(6);
+            
+            // Jika alamat sudah disediakan (dari pencarian), gunakan itu
+            if (address) {
+                document.getElementById('destinationLocation').value = address;
+                document.getElementById('destinationSearch').value = address;
+                // Removed illegal return statement here
+            }
+            
+            // Lakukan reverse geocoding via proxy server
+            fetch(`http://localhost:3000/nominatim/reverse?lat=${lat}&lon=${lng}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    const address = data.display_name || "Alamat tidak ditemukan";
+                    document.getElementById('destinationLocation').value = address;
+                    document.getElementById('destinationSearch').value = address;
+                })
+                .catch(error => {
+                    console.error("Error reverse geocoding:", error);
+                    document.getElementById('destinationLocation').value = "Alamat tidak ditemukan";
+                });
+            
+            // Hitung estimasi harga berdasarkan jarak
+            const pickupLat = parseFloat(localStorage.getItem('pickupLat'));
+            const pickupLng = parseFloat(localStorage.getItem('pickupLng'));
+            const distance = calculateDistance(pickupLat, pickupLng, lat, lng);
+            const price = calculatePrice(distance);
+            document.getElementById('estimatedPrice').textContent = `Rp ${price.toLocaleString('id-ID')}`;
+        }
+        
+        // Inisialisasi halaman pembayaran
+        function initPaymentPage() {
+            // Isi data pembayaran
+            document.getElementById('paymentPickupLocation').textContent = localStorage.getItem('pickupLocation');
+            document.getElementById('paymentDestinationLocation').textContent = localStorage.getItem('destinationLocation');
+            
+            const method = localStorage.getItem('paymentMethod');
+            document.getElementById('paymentMethod').value = method;
+            
+            // Tampilkan section sesuai metode pembayaran
+            if (method === 'ewallet') {
+                document.getElementById('ewalletSection').classList.remove('hidden');
+            } else if (method === 'credit') {
+                document.getElementById('creditCardSection').classList.remove('hidden');
+            }
+            
+            // Hitung ulang harga untuk ditampilkan
+            const pickupLat = parseFloat(localStorage.getItem('pickupLat'));
+            const pickupLng = parseFloat(localStorage.getItem('pickupLng'));
+            const destLat = parseFloat(localStorage.getItem('destinationLat'));
+            const destLng = parseFloat(localStorage.getItem('destinationLng'));
+            const distance = calculateDistance(pickupLat, pickupLng, destLat, destLng);
+            const price = calculatePrice(distance);
+            
+            document.getElementById('paymentMethodDisplay').textContent = 
+                method === 'cash' ? 'Tunai' : 
+                method === 'ewallet' ? 'E-Wallet' : 'Kartu Kredit';
+            
+            document.getElementById('paymentTotal').textContent = `Rp ${price.toLocaleString('id-ID')}`;
+        }
+        
+        // Simulasi pembayaran
+        function simulatePayment() {
+            // Tampilkan loading
+            const btn = document.getElementById('processPaymentBtn');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Memproses...';
+            btn.disabled = true;
+            
+            // Simulasi delay pembayaran
+            setTimeout(() => {
+                // Pindah ke halaman menunggu driver
+                initWaitingPage();
+                document.getElementById('page3').classList.remove('active');
+                document.getElementById('page4').classList.add('active');
+                
+                // Kembalikan tombol ke semula
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }, 2000);
+        }
+        
+        // Inisialisasi halaman menunggu driver
+        function initWaitingPage() {
+            trackingMap = L.map('trackingMap').setView([
+                parseFloat(localStorage.getItem('pickupLat')),
+                parseFloat(localStorage.getItem('pickupLng'))
+            ], 13);
+            
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(trackingMap);
+            
+            // Tambahkan marker pengguna
+            userMarker = L.marker([
+                parseFloat(localStorage.getItem('pickupLat')),
+                parseFloat(localStorage.getItem('pickupLng'))
+            ], {
+                icon: L.icon({
+                    iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
+                    iconSize: [25, 41],
+                    iconAnchor: [12, 41]
+                })
+            }).addTo(trackingMap).bindPopup("Lokasi Anda");
+            
+            // Simulasikan driver ditemukan setelah 3 detik
+            setTimeout(() => {
+                document.querySelector('#page4 h2').textContent = "Driver Ditemukan!";
+                document.querySelector('#page4 p').textContent = "Driver dalam perjalanan ke lokasi Anda";
+                
+                // Tampilkan info driver
+                document.getElementById('driverName').textContent = "Budi Santoso";
+                document.getElementById('driverRating').textContent = "4.9";
+                document.getElementById('driverVehicle').textContent = "Honda Beat";
+                
+                // Tambahkan marker driver
+                const pickupLat = parseFloat(localStorage.getItem('pickupLat'));
+                const pickupLng = parseFloat(localStorage.getItem('pickupLng'));
+                
+                // Posisi awal driver (2 km dari lokasi pengguna)
+                const driverLat = pickupLat + (0.018 * (Math.random() > 0.5 ? 1 : -1));
+                const driverLng = pickupLng + (0.018 * (Math.random() > 0.5 ? 1 : -1));
+                
+                driverMarker = L.marker([driverLat, driverLng], {
+                    icon: L.icon({
+                        iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
+                        iconSize: [25, 41],
+                        iconAnchor: [12, 41]
+                    })
+                }).addTo(trackingMap).bindPopup("Driver Anda");
+                
+                // Gambar rute antara driver dan pengguna
+                const route = L.polyline([
+                    [driverLat, driverLng],
+                    [pickupLat, pickupLng]
+                ], {color: 'blue'}).addTo(trackingMap);
+                
+                trackingMap.fitBounds([
+                    [driverLat, driverLng],
+                    [pickupLat, pickupLng]
+                ]);
+                
+                // Animasikan pergerakan driver menuju pengguna
+                let progress = 0;
+                driverInterval = setInterval(() => {
+                    progress += 0.02;
+                    if (progress >= 1) {
+                        clearInterval(driverInterval);
+                        document.querySelector('#page4 h2').textContent = "Driver Telah Tiba!";
+                        document.querySelector('#page4 p').textContent = "Driver menunggu di lokasi penjemputan";
+                    } else {
+                        const lat = driverLat + (pickupLat - driverLat) * progress;
+                        const lng = driverLng + (pickupLng - driverLng) * progress;
+                        driverMarker.setLatLng([lat, lng]);
+                        route.setLatLngs([[lat, lng], [pickupLat, pickupLng]]);
+                    }
+                }, 200);
+            }, 3000);
+        }
+        
+        // Hitung jarak antara dua titik (dalam km)
+        function calculateDistance(lat1, lon1, lat2, lon2) {
+            const R = 6371; // Radius bumi dalam km
+            const dLat = (lat2 - lat1) * Math.PI / 180;
+            const dLon = (lon2 - lon1) * Math.PI / 180;
+            const a = 
+                Math.sin(dLat/2) * Math.sin(dLat/2) +
+                Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * 
+                Math.sin(dLon/2) * Math.sin(dLon/2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+            return R * c;
+        }
+        
+        // Hitung harga berdasarkan jarak
+        function calculatePrice(distance) {
+            const basePrice = 10000;
+            const pricePerKm = 5000;
+            return Math.round(basePrice + (distance * pricePerKm));
+        }
+        
+        // Timer
+        function startTimer() {
+            setInterval(() => {
+                seconds++;
+                const mins = Math.floor(seconds / 60).toString().padStart(2, '0');
+                const secs = (seconds % 60).toString().padStart(2, '0');
+                document.getElementById('timer').innerHTML = `<i class="fas fa-clock mr-1"></i><span>${mins}:${secs}</span>`;
+            }, 1000);
         }
     </script>
 </body>
